@@ -1,4 +1,4 @@
-import { quickFilters } from "@/data/requests";
+import { quickFilters, requests } from "@/data/requests";
 import { SlidersHorizontal, X } from "lucide-react";
 
 const arabicFont = {
@@ -18,7 +18,19 @@ const filterArabicLabels: Record<string, string> = {
   "Scale Up": "زيادة الموارد",
   "Scale Down": "تقليل الموارد",
   "User Access": "وصول المستخدمين",
+  "Missing Jira URL": "بدون رابط Jira",
   Platform: "منصات",
+  Networking: "شبكات",
+  Storage: "تخزين",
+  Compliance: "امتثال",
+  Access: "وصول",
+  Configuration: "إعدادات",
+  Architecture: "تصميم",
+  Accounts: "حسابات",
+  Publishing: "نشر",
+  Lifecycle: "دورة الحياة",
+  Setup: "تهيئة",
+  DevOps: "DevOps",
 };
 
 interface QuickFiltersProps {
@@ -28,6 +40,15 @@ interface QuickFiltersProps {
 
 const QuickFilters = ({ activeFilters, onToggleFilter }: QuickFiltersProps) => {
   const hasActiveFilters = activeFilters.length > 0;
+  const categoryFilters = Array.from(new Set(requests.map((request) => request.category))).filter(
+    (category) => !quickFilters.includes(category as typeof quickFilters[number])
+  );
+  const statusFilters = requests.some(
+    (request) => !request.jiraUrl?.trim() || request.jiraUrl.includes("jira.example.com")
+  )
+    ? ["Missing Jira URL"]
+    : [];
+  const availableFilters = [...quickFilters, ...categoryFilters, ...statusFilters];
 
   const clearAllFilters = () => {
     activeFilters.forEach((filter) => onToggleFilter(filter));
@@ -50,7 +71,7 @@ const QuickFilters = ({ activeFilters, onToggleFilter }: QuickFiltersProps) => {
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            {quickFilters.map((filter) => {
+            {availableFilters.map((filter) => {
               const isActive = activeFilters.includes(filter);
               const arLabel = filterArabicLabels[filter];
 

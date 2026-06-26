@@ -1,4 +1,4 @@
-import { ExternalLink, Clock, ArrowUpRight } from "lucide-react";
+import { Clock, ArrowUpRight, Link2Off } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import type { KeyboardEvent } from "react";
 import type { ServiceRequest } from "@/data/requests";
@@ -33,11 +33,16 @@ const arabicFont = {
 };
 
 const RequestCard = ({ request }: RequestCardProps) => {
+  const hasJiraUrl =
+    Boolean(request.jiraUrl?.trim()) && !request.jiraUrl?.includes("jira.example.com");
+
   const openRequest = () => {
+    if (!hasJiraUrl || !request.jiraUrl) return;
     window.open(request.jiraUrl, "_blank", "noopener,noreferrer");
   };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (!hasJiraUrl) return;
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
       openRequest();
@@ -46,20 +51,28 @@ const RequestCard = ({ request }: RequestCardProps) => {
 
   return (
     <div
-      role="link"
-      tabIndex={0}
+      role={hasJiraUrl ? "link" : "article"}
+      tabIndex={hasJiraUrl ? 0 : undefined}
       onClick={openRequest}
       onKeyDown={handleKeyDown}
-      className="card-hover group flex min-h-[13rem] cursor-pointer flex-col justify-between gap-4 rounded-lg border border-border bg-card p-5 shadow-sm outline-none hover:shadow-md focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/25"
-      aria-label={`Open ${request.title} in Jira`}
+      className={`card-hover group flex min-h-[13rem] flex-col justify-between gap-4 rounded-lg border border-border bg-card p-5 shadow-sm outline-none hover:shadow-md focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/25 ${
+        hasJiraUrl ? "cursor-pointer" : "cursor-default"
+      }`}
+      aria-label={hasJiraUrl ? `Open ${request.title} in Jira` : `${request.title} guide item`}
     >
       <div>
         <div className="mb-3 flex items-start justify-between gap-3">
           <h3 className="text-sm font-semibold leading-snug text-foreground">
             {request.title}
           </h3>
-          <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-            <ArrowUpRight className="h-3.5 w-3.5" />
+          <span
+            className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-colors ${
+              hasJiraUrl
+                ? "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground"
+                : "bg-muted text-muted-foreground"
+            }`}
+          >
+            {hasJiraUrl ? <ArrowUpRight className="h-3.5 w-3.5" /> : <Link2Off className="h-3.5 w-3.5" />}
           </span>
         </div>
 
@@ -109,16 +122,34 @@ const RequestCard = ({ request }: RequestCardProps) => {
             </span>
           </span>
         ) : (
-          <span className="text-[10px] text-muted-foreground/60">Available in Jira</span>
+          <span className="text-[10px] text-muted-foreground/60">
+            {hasJiraUrl ? "Available in Jira" : "Jira link to be added"}
+          </span>
         )}
 
-        <span className="flex items-center gap-1.5 text-xs font-semibold text-primary">
-          <span dir="rtl" lang="ar" style={arabicFont}>
-            فتح في Jira
-          </span>
-          <span className="text-muted-foreground/40">|</span>
-          Open
-          <ExternalLink className="h-3 w-3" />
+        <span
+          className={`flex items-center gap-1.5 text-xs font-semibold ${
+            hasJiraUrl ? "text-primary" : "text-muted-foreground"
+          }`}
+        >
+          {hasJiraUrl ? (
+            <>
+              <span dir="rtl" lang="ar" style={arabicFont}>
+                فتح في Jira
+              </span>
+              <span className="text-muted-foreground/40">|</span>
+              Open
+              <ArrowUpRight className="h-3 w-3" />
+            </>
+          ) : (
+            <>
+              <span dir="rtl" lang="ar" style={arabicFont}>
+                سيتم إضافة الرابط
+              </span>
+              <span className="text-muted-foreground/40">|</span>
+              Link pending
+            </>
+          )}
         </span>
       </div>
     </div>

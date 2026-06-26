@@ -27,7 +27,43 @@ const envFilterMap: Record<string, string> = {
   DR: "DR",
 };
 
-const categoryQuickFilters = ["Security", "Servers", "DNS", "SSL", "OpenShift", "Scale Up", "Scale Down"];
+const specialCategoryFilters: Record<string, (req: ServiceRequest) => boolean> = {
+  "Missing Jira URL": (req) =>
+    !req.jiraUrl?.trim() || req.jiraUrl.includes("jira.example.com"),
+  "Scale Up": (req) =>
+    req.category.toLowerCase().includes("scaling") ||
+    req.title.toLowerCase().includes("scale up") ||
+    req.keywords.some((keyword) => keyword.toLowerCase().includes("scale up")),
+  "Scale Down": (req) =>
+    req.category.toLowerCase().includes("scaling") ||
+    req.title.toLowerCase().includes("scale down") ||
+    req.keywords.some((keyword) => keyword.toLowerCase().includes("scale down")),
+};
+
+function matchesFilter(req: ServiceRequest, filter: string): boolean {
+  if (sectionFilterMap[filter]) {
+    return sectionFilterMap[filter].includes(req.section);
+  }
+
+  if (envFilterMap[filter]) {
+    return req.environment === envFilterMap[filter];
+  }
+
+  if (specialCategoryFilters[filter]) {
+    return specialCategoryFilters[filter](req);
+  }
+
+  const normalizedFilter = filter.toLowerCase();
+  return (
+    req.category.toLowerCase() === normalizedFilter ||
+    req.category.toLowerCase().includes(normalizedFilter) ||
+    req.title.toLowerCase().includes(normalizedFilter) ||
+    (req.environment || "").toLowerCase().includes(normalizedFilter) ||
+    (req.subSection || "").toLowerCase().includes(normalizedFilter) ||
+    req.section.toLowerCase().includes(normalizedFilter) ||
+    req.keywords.some((keyword) => keyword.toLowerCase().includes(normalizedFilter))
+  );
+}
 
 function matchesSearch(req: ServiceRequest, query: string): boolean {
   const q = query.toLowerCase();
@@ -62,23 +98,7 @@ const Index = () => {
 
     if (activeFilters.length > 0) {
       result = result.filter((req) => {
-        return activeFilters.every((filter) => {
-          if (sectionFilterMap[filter]) {
-            return sectionFilterMap[filter].includes(req.section);
-          }
-          if (envFilterMap[filter]) {
-            return req.environment === envFilterMap[filter];
-          }
-          if (categoryQuickFilters.includes(filter)) {
-            const fl = filter.toLowerCase();
-            return (
-              req.category.toLowerCase().includes(fl) ||
-              req.title.toLowerCase().includes(fl) ||
-              req.keywords.some((k) => k.toLowerCase().includes(fl))
-            );
-          }
-          return true;
-        });
+        return activeFilters.every((filter) => matchesFilter(req, filter));
       });
     }
 
@@ -100,8 +120,15 @@ const Index = () => {
 
   const groupedBySection = useMemo(() => {
     const groups: Record<string, ServiceRequest[]> = {};
-    for (const section of sections) {
-      const sectionRequests = filteredRequests.filter((r) => r.section === section);
+    const allSections = [
+      ...sections,
+      ...filteredRequests
+        .map((request) => request.section)
+        .filter((section): section is string => !sections.includes(section as typeof sections[number])),
+    ];
+
+    for (const section of allSections) {
+      const sectionRequests = filteredRequests.filter((request) => request.section === section);
       if (sectionRequests.length > 0) {
         groups[section] = sectionRequests;
       }

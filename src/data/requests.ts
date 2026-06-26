@@ -9,7 +9,7 @@ export interface ServiceRequest {
   arabicDescription?: string;
   deliveryTime?: string;
   keywords: string[];
-  jiraUrl: string;
+  jiraUrl?: string;
   popular?: boolean;
 }
 
