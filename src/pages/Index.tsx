@@ -103,11 +103,11 @@ const Index = () => {
   const isFiltering = searchQuery.trim() !== "" || activeFilters.length > 0;
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="portal-shell flex min-h-screen flex-col">
       <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} />
       <QuickFilters activeFilters={activeFilters} onToggleFilter={toggleFilter} />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-7 pb-16 flex-1 w-full">
+      <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-7 pb-16 sm:px-6">
         {!isFiltering && (
           <>
             <ProjectJourneyChecklist />
