@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { categoryFilters, requests, sections } from "@/data/requests";
+import { categoryFilters, sections } from "@/data/requests";
 import { ChevronDown, SlidersHorizontal, X } from "lucide-react";
 
 const arabicFont = {
@@ -10,10 +10,11 @@ const filterArabicLabels: Record<string, string> = {
   "Dev/QA": "تطوير/اختبار",
   "Staging/Production": "تجهيز/إنتاج",
   DR: "تعافي",
-  "Missing Jira URL": "بدون رابط Jira",
+  "DNS / Domain": "النطاقات",
+  "SSL / Certificate": "الشهادات",
 };
 
-const environmentFilters = ["Dev/QA", "Staging/Production", "DR"];
+const featuredFilters = ["Dev/QA", "Staging/Production", "DR", "DNS / Domain", "SSL / Certificate"];
 
 interface QuickFiltersProps {
   activeFilters: string[];
@@ -62,19 +63,14 @@ const QuickFilters = ({ activeFilters, onToggleFilter }: QuickFiltersProps) => {
   const activeFilter = activeFilters[0];
   const hasActiveFilter = Boolean(activeFilter);
 
-  const statusFilters = requests.some(
-    (request) => !request.jiraUrl?.trim() || request.jiraUrl.includes("jira.example.com")
-  )
-    ? ["Missing Jira URL"]
-    : [];
+  const advancedGroups = useMemo(() => {
+    const hiddenCategories = categoryFilters.filter((filter) => !featuredFilters.includes(filter));
 
-  const advancedGroups = useMemo(
-    () => [
+    return [
       { title: "Sections", filters: [...sections] },
-      { title: "Categories", filters: [...categoryFilters, ...statusFilters] },
-    ],
-    [statusFilters]
-  );
+      { title: "Other categories", filters: hiddenCategories },
+    ];
+  }, []);
 
   const renderChip = (filter: string) => (
     <FilterChip
@@ -87,8 +83,8 @@ const QuickFilters = ({ activeFilters, onToggleFilter }: QuickFiltersProps) => {
 
   return (
     <div className="border-b border-border bg-card">
-      <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+      <div className="mx-auto max-w-7xl px-4 py-2.5 sm:px-6">
+        <div className="flex flex-col gap-2.5 lg:flex-row lg:items-center">
           <div className="flex min-w-fit items-center gap-2 text-xs">
             <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
               <SlidersHorizontal className="h-4 w-4" />
@@ -102,9 +98,9 @@ const QuickFilters = ({ activeFilters, onToggleFilter }: QuickFiltersProps) => {
           </div>
 
           <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
-            {environmentFilters.map(renderChip)}
+            {featuredFilters.map(renderChip)}
 
-            {hasActiveFilter && !environmentFilters.includes(activeFilter) && (
+            {hasActiveFilter && !featuredFilters.includes(activeFilter) && (
               <button
                 type="button"
                 onClick={() => onToggleFilter(activeFilter)}

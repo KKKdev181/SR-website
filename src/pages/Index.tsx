@@ -12,8 +12,6 @@ import { requests, sections } from "@/data/requests";
 import type { ServiceRequest } from "@/data/requests";
 
 const specialCategoryFilters: Record<string, (req: ServiceRequest) => boolean> = {
-  "Missing Jira URL": (req) =>
-    !req.jiraUrl?.trim() || req.jiraUrl.includes("jira.example.com"),
   "Scale Up": (req) =>
     req.category.toLowerCase().includes("scale") ||
     req.title.toLowerCase().includes("scale up") ||
