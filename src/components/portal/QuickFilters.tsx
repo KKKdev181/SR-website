@@ -35,10 +35,10 @@ const FilterChip = ({
   return (
     <button
       type="button"
-      className={`inline-flex min-h-8 max-w-full items-center gap-1 rounded-full border px-3 py-1 text-xs font-medium transition-all duration-150 ${
+      className={`inline-flex min-h-9 max-w-full items-center gap-1 rounded-full border px-3.5 py-1 text-xs font-medium transition-all duration-150 ${
         isActive
           ? "border-primary bg-primary text-primary-foreground shadow-sm"
-          : "border-border bg-background text-muted-foreground hover:border-primary/40 hover:bg-muted/40 hover:text-foreground"
+          : "border-slate-200 bg-white text-slate-600 shadow-sm hover:border-primary/40 hover:bg-primary/5 hover:text-primary"
       }`}
       onClick={() => onToggle(filter)}
       aria-pressed={isActive}
@@ -82,11 +82,11 @@ const QuickFilters = ({ activeFilters, onToggleFilter }: QuickFiltersProps) => {
   );
 
   return (
-    <div className="border-b border-border bg-card">
-      <div className="mx-auto max-w-7xl px-4 py-2.5 sm:px-6">
+    <div className="border-b border-slate-200 bg-white/85 backdrop-blur">
+      <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6">
         <div className="flex flex-col gap-2.5 lg:flex-row lg:items-center">
           <div className="flex min-w-fit items-center gap-2 text-xs">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
               <SlidersHorizontal className="h-4 w-4" />
             </span>
             <div>
@@ -104,7 +104,7 @@ const QuickFilters = ({ activeFilters, onToggleFilter }: QuickFiltersProps) => {
               <button
                 type="button"
                 onClick={() => onToggleFilter(activeFilter)}
-                className="inline-flex min-h-8 max-w-full items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary hover:bg-primary/15"
+                className="inline-flex min-h-9 max-w-full items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary hover:bg-primary/15"
               >
                 <span className="truncate">{activeFilter}</span>
                 <X className="h-3 w-3 shrink-0" />
@@ -116,7 +116,7 @@ const QuickFilters = ({ activeFilters, onToggleFilter }: QuickFiltersProps) => {
             <button
               type="button"
               onClick={() => setShowMore((value) => !value)}
-              className="inline-flex min-h-8 items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:border-primary/40 hover:bg-muted/40"
+              className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-foreground shadow-sm transition-colors hover:border-primary/40 hover:bg-primary/5"
               aria-expanded={showMore}
             >
               More filters
@@ -129,7 +129,7 @@ const QuickFilters = ({ activeFilters, onToggleFilter }: QuickFiltersProps) => {
               <button
                 type="button"
                 onClick={() => onToggleFilter(activeFilter)}
-                className="inline-flex min-h-8 items-center gap-1 rounded-lg border border-destructive/20 bg-destructive/5 px-3 py-1.5 text-xs font-medium text-destructive transition-colors hover:bg-destructive/10"
+                className="inline-flex min-h-9 items-center gap-1 rounded-lg border border-destructive/20 bg-destructive/5 px-3 py-1.5 text-xs font-medium text-destructive transition-colors hover:bg-destructive/10"
               >
                 <X className="h-3.5 w-3.5" />
                 Clear
@@ -139,7 +139,7 @@ const QuickFilters = ({ activeFilters, onToggleFilter }: QuickFiltersProps) => {
         </div>
 
         {showMore && (
-          <div className="mt-3 rounded-lg border border-border/70 bg-muted/25 p-3">
+          <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50/80 p-3 shadow-sm">
             <div className="grid gap-3 lg:grid-cols-[0.7fr_1.3fr]">
               {advancedGroups.map((group) => (
                 <div key={group.title}>
