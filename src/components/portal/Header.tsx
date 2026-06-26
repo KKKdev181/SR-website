@@ -1,4 +1,4 @@
-import { Search, ExternalLink, Info, ClipboardList } from "lucide-react";
+import { Search, ExternalLink, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import elmLogo from "@/assets/elm-logo.png";
@@ -128,8 +128,8 @@ const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
 
       <div className="bg-card">
         <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6">
-          <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-            <div className="relative w-full max-w-3xl">
+          <div className="flex justify-center">
+            <div className="relative w-full max-w-4xl">
               <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 value={searchQuery}
@@ -137,15 +137,6 @@ const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
                 placeholder="Search request name, keyword, environment... | ابحث باسم الطلب أو البيئة أو الكلمة المفتاحية..."
                 className="h-12 rounded-lg border-border bg-background pl-11 text-sm shadow-sm focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary"
               />
-            </div>
-
-            <div className="flex items-center gap-2 rounded-lg border border-border bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
-              <ClipboardList className="h-4 w-4 shrink-0 text-primary" />
-              <span>Find, prepare, and open the right Jira request</span>
-              <span className="hidden text-muted-foreground/40 sm:inline">|</span>
-              <span dir="rtl" lang="ar" className="hidden sm:inline" style={arabicFont}>
-                ابحث، جهز، وافتح الطلب المناسب في Jira
-              </span>
             </div>
           </div>
         </div>

@@ -63,9 +63,7 @@ const Index = () => {
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
 
   const toggleFilter = (filter: string) => {
-    setActiveFilters((prev) =>
-      prev.includes(filter) ? prev.filter((f) => f !== filter) : [...prev, filter]
-    );
+    setActiveFilters((prev) => (prev[0] === filter ? [] : [filter]));
   };
 
   const filteredRequests = useMemo(() => {
@@ -76,9 +74,7 @@ const Index = () => {
     }
 
     if (activeFilters.length > 0) {
-      result = result.filter((req) => {
-        return activeFilters.every((filter) => matchesFilter(req, filter));
-      });
+      result = result.filter((req) => matchesFilter(req, activeFilters[0]));
     }
 
     return result;
@@ -116,44 +112,6 @@ const Index = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-7 pb-16 flex-1 w-full">
         {!isFiltering && (
           <>
-            <div className="mb-6 overflow-hidden rounded-lg border border-primary/15 bg-card px-5 py-5 shadow-sm">
-              <div className="grid gap-5 lg:grid-cols-[1fr_auto] lg:items-center">
-                <div className="max-w-3xl">
-                  <p className="text-sm font-semibold text-primary">
-                    Choose the right technology request before you submit
-                  </p>
-                  <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                    Built for project and product managers: search by goal, filter by
-                    environment, review the project journey, then open the correct Jira request.
-                  </p>
-                </div>
-
-                <div dir="rtl" lang="ar" className="max-w-3xl lg:text-right">
-                  <p className="text-sm font-semibold text-primary" style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}>
-                    اختر الطلب التقني المناسب قبل الرفع
-                  </p>
-                  <p className="mt-1 text-sm leading-relaxed text-muted-foreground" style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}>
-                    مصمم لمديري المشاريع والمنتجات: ابحث حسب الهدف، صف حسب البيئة، راجع رحلة المشروع، ثم افتح طلب Jira الصحيح.
-                  </p>
-                </div>
-              </div>
-
-              <div className="mt-5 grid gap-3 sm:grid-cols-3">
-                <div className="rounded-lg border border-border bg-muted/35 px-4 py-3">
-                  <p className="text-lg font-semibold text-foreground">{requests.length}</p>
-                  <p className="text-xs text-muted-foreground">Available requests | الطلبات المتاحة</p>
-                </div>
-                <div className="rounded-lg border border-border bg-muted/35 px-4 py-3">
-                  <p className="text-lg font-semibold text-foreground">{sections.length}</p>
-                  <p className="text-xs text-muted-foreground">Service sections | أقسام الخدمات</p>
-                </div>
-                <div className="rounded-lg border border-border bg-muted/35 px-4 py-3">
-                  <p className="text-lg font-semibold text-foreground">Jira</p>
-                  <p className="text-xs text-muted-foreground">Direct submission | رفع مباشر</p>
-                </div>
-              </div>
-            </div>
-
             <ProjectJourneyChecklist />
             <ProjectJourneyGuide />
             <GuidedWizard />
