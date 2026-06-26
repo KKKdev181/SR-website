@@ -52,13 +52,32 @@ const GuidedWizard = () => {
     if (answers.length < 2) return [];
     const [need, env] = answers;
 
-    let sectionFilter: string[] = [];
-    if (need === "Create something new") sectionFilter = ["Initiate", "Environment Preparation"];
-    else if (need === "Change something existing") sectionFilter = ["Modify"];
-    else if (need === "Publish a service") sectionFilter = ["Publishing"];
-    else if (need === "Retire a service") sectionFilter = ["Retire"];
-
-    let filtered = requests.filter((r) => sectionFilter.includes(r.section));
+    let filtered = requests;
+    if (need === "Create something new") {
+      filtered = requests.filter((r) =>
+        ["Service Setup & Environments", "Infrastructure, Cloud & Platform"].includes(r.section) ||
+        r.category === "New Service Setup" ||
+        r.category === "Environment / Server Provisioning"
+      );
+    } else if (need === "Change something existing") {
+      filtered = requests.filter((r) =>
+        ["Infrastructure, Cloud & Platform", "Network, Security & Compliance", "Data, Storage & Backup"].includes(r.section) ||
+        r.keywords.some((keyword) => ["change", "update", "modify", "increase", "reduce"].includes(keyword.toLowerCase()))
+      );
+    } else if (need === "Publish a service") {
+      filtered = requests.filter((r) =>
+        r.section === "DevOps, Release & Lifecycle" ||
+        r.category === "Release / Lifecycle" ||
+        r.keywords.some((keyword) => ["publish", "release", "go live"].includes(keyword.toLowerCase()))
+      );
+    } else if (need === "Retire a service") {
+      filtered = requests.filter((r) =>
+        r.category === "Release / Lifecycle" ||
+        r.title.toLowerCase().includes("retire") ||
+        r.title.toLowerCase().includes("decommission") ||
+        r.keywords.some((keyword) => ["retire", "decommission"].includes(keyword.toLowerCase()))
+      );
+    }
 
     if (env !== "Not sure / Any") {
       const envFiltered = filtered.filter((r) => !r.environment || r.environment === env);

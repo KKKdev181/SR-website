@@ -11,50 +11,30 @@ import Footer from "@/components/portal/Footer";
 import { requests, sections } from "@/data/requests";
 import type { ServiceRequest } from "@/data/requests";
 
-const sectionFilterMap: Record<string, string[]> = {
-  "New request": ["Initiate", "Environment Preparation"],
-  Modify: ["Modify"],
-  Publish: ["Publishing"],
-  Retire: ["Retire"],
-  "User Access": ["User Access"],
-  DevOps: ["DevOps Requests"],
-  Platform: ["Platform Services"],
-};
-
-const envFilterMap: Record<string, string> = {
-  "Dev/QA": "Dev/QA",
-  "Staging/Production": "Staging/Production",
-  DR: "DR",
-};
-
 const specialCategoryFilters: Record<string, (req: ServiceRequest) => boolean> = {
   "Missing Jira URL": (req) =>
     !req.jiraUrl?.trim() || req.jiraUrl.includes("jira.example.com"),
   "Scale Up": (req) =>
-    req.category.toLowerCase().includes("scaling") ||
+    req.category.toLowerCase().includes("scale") ||
     req.title.toLowerCase().includes("scale up") ||
+    req.title.toLowerCase().includes("increase") ||
     req.keywords.some((keyword) => keyword.toLowerCase().includes("scale up")),
   "Scale Down": (req) =>
-    req.category.toLowerCase().includes("scaling") ||
+    req.category.toLowerCase().includes("scale") ||
     req.title.toLowerCase().includes("scale down") ||
+    req.title.toLowerCase().includes("reduce") ||
     req.keywords.some((keyword) => keyword.toLowerCase().includes("scale down")),
 };
 
 function matchesFilter(req: ServiceRequest, filter: string): boolean {
-  if (sectionFilterMap[filter]) {
-    return sectionFilterMap[filter].includes(req.section);
-  }
-
-  if (envFilterMap[filter]) {
-    return req.environment === envFilterMap[filter];
-  }
-
   if (specialCategoryFilters[filter]) {
     return specialCategoryFilters[filter](req);
   }
 
   const normalizedFilter = filter.toLowerCase();
   return (
+    req.environment?.toLowerCase() === normalizedFilter ||
+    req.section.toLowerCase() === normalizedFilter ||
     req.category.toLowerCase() === normalizedFilter ||
     req.category.toLowerCase().includes(normalizedFilter) ||
     req.title.toLowerCase().includes(normalizedFilter) ||
@@ -74,8 +54,7 @@ function matchesSearch(req: ServiceRequest, query: string): boolean {
     (req.environment || "").toLowerCase().includes(q) ||
     (req.subSection || "").toLowerCase().includes(q) ||
     req.section.toLowerCase().includes(q) ||
-    req.keywords.some((k) => k.toLowerCase().includes(q)) ||
-    (req.arabicDescription || "").includes(q)
+    req.keywords.some((k) => k.toLowerCase().includes(q))
   );
 }
 
@@ -106,16 +85,7 @@ const Index = () => {
   }, [searchQuery, activeFilters]);
 
   const popularRequests = useMemo(() => {
-    const popularOrder = [
-      "mod-010",
-      "mod-011",
-      "mod-012",
-      "mod-007",
-    ];
-
-    return requests
-      .filter((r) => popularOrder.includes(r.id))
-      .sort((a, b) => popularOrder.indexOf(a.id) - popularOrder.indexOf(b.id));
+    return requests.filter((request) => request.popular).slice(0, 6);
   }, []);
 
   const groupedBySection = useMemo(() => {

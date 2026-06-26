@@ -8,24 +8,25 @@ interface RequestCardProps {
 }
 
 const categoryColorMap: Record<string, string> = {
-  Servers: "bg-elm-blue-light text-primary",
-  OpenShift: "bg-elm-green-light text-secondary",
-  DNS: "bg-elm-blue-light text-primary",
-  SSL: "bg-elm-green-light text-secondary",
-  Security: "bg-destructive/10 text-destructive",
-  Scaling: "bg-elm-blue-light text-primary",
-  Networking: "bg-elm-green-light text-secondary",
-  Storage: "bg-elm-blue-light text-primary",
-  Compliance: "bg-muted text-muted-foreground",
-  Access: "bg-elm-green-light text-secondary",
-  Configuration: "bg-muted text-muted-foreground",
-  Architecture: "bg-elm-blue-light text-primary",
-  Accounts: "bg-muted text-muted-foreground",
-  Publishing: "bg-secondary/10 text-secondary",
-  Lifecycle: "bg-muted text-muted-foreground",
-  Setup: "bg-elm-blue-light text-primary",
-  DevOps: "bg-elm-blue-light text-primary",
-  Platform: "bg-elm-green-light text-secondary",
+  "Access & Permissions": "bg-elm-green-light text-secondary",
+  "Accounts & External Services": "bg-muted text-muted-foreground",
+  "New Service Setup": "bg-elm-blue-light text-primary",
+  "Environment / Server Provisioning": "bg-elm-blue-light text-primary",
+  "Cloud / Platform": "bg-elm-green-light text-secondary",
+  "Network / Connectivity": "bg-elm-green-light text-secondary",
+  "DNS / Domain": "bg-elm-blue-light text-primary",
+  "SSL / Certificate": "bg-elm-green-light text-secondary",
+  "Load Balancer": "bg-elm-green-light text-secondary",
+  "Security / Compliance": "bg-destructive/10 text-destructive",
+  "Scale / Capacity": "bg-elm-blue-light text-primary",
+  "Database / Storage / Backup": "bg-elm-blue-light text-primary",
+  "DevOps / CI-CD": "bg-elm-blue-light text-primary",
+  "Release / Lifecycle": "bg-secondary/10 text-secondary",
+  "Monitoring / Troubleshooting": "bg-muted text-muted-foreground",
+  "Jira / Service Management": "bg-muted text-muted-foreground",
+  "Reporting / BI / Cost": "bg-elm-blue-light text-primary",
+  "Business Operations": "bg-muted text-muted-foreground",
+  "Mobile / UX / Contact Center": "bg-elm-green-light text-secondary",
 };
 
 const arabicFont = {
@@ -79,17 +80,6 @@ const RequestCard = ({ request }: RequestCardProps) => {
         <p className="mb-2 text-xs leading-relaxed text-muted-foreground">
           {request.shortDescription}
         </p>
-
-        {request.arabicDescription && (
-          <p
-            dir="rtl"
-            lang="ar"
-            className="mb-3 text-[11px] leading-relaxed text-muted-foreground/75"
-            style={arabicFont}
-          >
-            {request.arabicDescription}
-          </p>
-        )}
 
         <div className="flex flex-wrap gap-1.5">
           <Badge

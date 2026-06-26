@@ -1,4 +1,4 @@
-import { quickFilters, requests } from "@/data/requests";
+import { categoryFilters, quickFilters, requests } from "@/data/requests";
 import { SlidersHorizontal, X } from "lucide-react";
 
 const arabicFont = {
@@ -8,29 +8,20 @@ const arabicFont = {
 const filterArabicLabels: Record<string, string> = {
   "Dev/QA": "تطوير/اختبار",
   "Staging/Production": "تجهيز/إنتاج",
-  DR: "تعافي من الكوارث",
-  "New request": "طلب جديد",
-  Modify: "تعديل",
-  Publish: "نشر",
-  Retire: "إيقاف",
-  Security: "أمن",
-  Servers: "خوادم",
-  "Scale Up": "زيادة الموارد",
-  "Scale Down": "تقليل الموارد",
-  "User Access": "وصول المستخدمين",
+  DR: "تعافي",
+  "Access & Accounts": "الوصول والحسابات",
+  "Service Setup & Environments": "إعداد الخدمات والبيئات",
+  "Infrastructure, Cloud & Platform": "البنية والمنصات",
+  "Network, Security & Compliance": "الشبكات والأمن",
+  "Data, Storage & Backup": "البيانات والتخزين",
+  "DevOps, Release & Lifecycle": "الإصدارات ودورة الحياة",
+  "Monitoring, Jira & Support": "المراقبة والدعم",
+  "Business, BI, Mobile & UX": "الأعمال والتجربة",
+  "DNS / Domain": "النطاقات",
+  "SSL / Certificate": "الشهادات",
+  "Scale / Capacity": "السعة",
+  "Release / Lifecycle": "الإصدار",
   "Missing Jira URL": "بدون رابط Jira",
-  Platform: "منصات",
-  Networking: "شبكات",
-  Storage: "تخزين",
-  Compliance: "امتثال",
-  Access: "وصول",
-  Configuration: "إعدادات",
-  Architecture: "تصميم",
-  Accounts: "حسابات",
-  Publishing: "نشر",
-  Lifecycle: "دورة الحياة",
-  Setup: "تهيئة",
-  DevOps: "DevOps",
 };
 
 interface QuickFiltersProps {
@@ -40,7 +31,7 @@ interface QuickFiltersProps {
 
 const QuickFilters = ({ activeFilters, onToggleFilter }: QuickFiltersProps) => {
   const hasActiveFilters = activeFilters.length > 0;
-  const categoryFilters = Array.from(new Set(requests.map((request) => request.category))).filter(
+  const additionalCategoryFilters = categoryFilters.filter(
     (category) => !quickFilters.includes(category as typeof quickFilters[number])
   );
   const statusFilters = requests.some(
@@ -48,7 +39,7 @@ const QuickFilters = ({ activeFilters, onToggleFilter }: QuickFiltersProps) => {
   )
     ? ["Missing Jira URL"]
     : [];
-  const availableFilters = [...quickFilters, ...categoryFilters, ...statusFilters];
+  const availableFilters = [...quickFilters, ...additionalCategoryFilters, ...statusFilters];
 
   const clearAllFilters = () => {
     activeFilters.forEach((filter) => onToggleFilter(filter));
