@@ -234,7 +234,7 @@ const ProjectJourneyGuide = () => {
     return (
       <div
         onClick={() => setIsOpen(true)}
-        className="group relative mb-4 cursor-pointer overflow-hidden rounded-xl border border-indigo-200 bg-gradient-to-r from-indigo-50 via-white to-blue-50 p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-md"
+        className="group relative mb-4 cursor-pointer overflow-hidden rounded-xl border border-indigo-200 bg-gradient-to-r from-indigo-50 via-white to-blue-50 p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-md"
       >
         <div className="pointer-events-none absolute -right-12 -top-16 h-32 w-32 rounded-full bg-indigo-200/35" />
         <div className="flex items-center gap-4">
@@ -244,7 +244,7 @@ const ProjectJourneyGuide = () => {
           <div className="flex-1 min-w-0">
             <div className="mb-1 flex flex-wrap items-center gap-2">
               <h3 className="text-sm font-semibold text-foreground tracking-tight">Request Finder</h3>
-              <span className="rounded-full bg-indigo-100 px-2.5 py-1 text-[11px] font-medium text-indigo-700">Guided flow</span>
+              <span className="rounded-full bg-indigo-100 px-2 py-0.5 text-[11px] font-medium text-indigo-700">Guided flow</span>
             </div>
             <p dir="rtl" lang="ar" className="text-xs text-primary/60 font-medium" style={arabicFont}>موجّه الطلبات</p>
             <p className="text-xs text-slate-600 mt-1 leading-relaxed">
@@ -254,7 +254,7 @@ const ProjectJourneyGuide = () => {
               ما تعرف من وين تبدأ؟ بنوجّهك خطوة بخطوة للطلب المناسب
             </p>
           </div>
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-600 text-white shadow-sm transition-transform group-hover:translate-x-0.5">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-indigo-600 text-white shadow-sm transition-transform group-hover:translate-x-0.5">
             <ArrowRight className="h-4 w-4" />
           </div>
         </div>

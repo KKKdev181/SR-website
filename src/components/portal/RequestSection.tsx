@@ -52,9 +52,9 @@ const RequestSection = ({ title, requests }: RequestSectionProps) => {
     <section className="mb-10">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="group mb-4 flex w-full items-center gap-3 rounded-xl border border-slate-200 bg-white/85 px-4 py-3 text-left shadow-sm outline-none transition-colors hover:border-primary/25 hover:bg-white focus-visible:ring-2 focus-visible:ring-primary/25"
+        className="group mb-4 flex w-full items-center gap-2.5 rounded-lg px-1 py-1 text-left outline-none focus-visible:ring-2 focus-visible:ring-primary/25"
       >
-        <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
+        <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
           {icon}
         </span>
         <h2 className="text-base font-semibold text-foreground">{title}</h2>
@@ -67,9 +67,9 @@ const RequestSection = ({ title, requests }: RequestSectionProps) => {
       </button>
 
       {isOpen && (
-        <div>
+        <div className="sm:ml-10">
           {desc && (
-            <div className="mb-6 rounded-xl border border-slate-200 bg-white/70 p-4 shadow-sm">
+            <div className="mb-6 rounded-lg border border-border/60 bg-muted/50 p-4">
               <p className="mb-1 text-sm font-semibold text-foreground">{desc.title}</p>
               <p className="text-xs leading-relaxed text-muted-foreground">{desc.description}</p>
             </div>
