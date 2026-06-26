@@ -648,27 +648,26 @@ const ProjectJourneyChecklist = () => {
     return (
       <div
         onClick={() => setIsOpen(true)}
-        className="group relative mb-4 cursor-pointer overflow-hidden rounded-xl border border-sky-200 bg-gradient-to-r from-sky-50 via-white to-cyan-50 p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-sky-300 hover:shadow-md"
+        className="group mb-3 cursor-pointer overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md"
       >
-        <div className="pointer-events-none absolute -right-12 -top-16 h-32 w-32 rounded-full bg-sky-200/35" />
-        <div className="flex items-center gap-4">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-sky-200 bg-white text-sky-700 shadow-sm">
+        <div className="flex min-h-[6.75rem] items-center gap-4 border-l-4 border-primary px-5 py-4">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-primary">
             <Layers className="h-5 w-5" />
           </div>
           <div className="flex-1 min-w-0">
             <div className="mb-1 flex flex-wrap items-center gap-2">
-              <h3 className="text-sm font-semibold text-foreground tracking-tight">Project Journey Checklist</h3>
-              <span className="rounded-full bg-sky-100 px-2 py-0.5 text-[11px] font-medium text-sky-700">Project guide</span>
+              <h3 className="text-sm font-semibold tracking-tight text-slate-950">Project Journey Checklist</h3>
+              <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-medium text-primary">Project guide</span>
             </div>
             <p dir="rtl" lang="ar" className="text-xs text-primary/60 font-medium" style={arabicFont}>دليل رحلة المشروع</p>
-            <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+            <p className="mt-1 text-xs leading-relaxed text-slate-600">
               Step-by-step guide for project managers and technical teams to ensure nothing is missed.
             </p>
-            <p dir="rtl" lang="ar" className="hidden text-xs text-muted-foreground/60 mt-1 md:block" style={arabicFont}>
+            <p dir="rtl" lang="ar" className="mt-1 hidden text-xs text-slate-400 md:block" style={arabicFont}>
               دليل خطوة بخطوة لمديري المشاريع والفرق التقنية للتأكد من عدم نسيان أي شيء
             </p>
           </div>
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-sky-600 text-white shadow-sm transition-transform group-hover:translate-y-0.5">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-primary transition-colors group-hover:border-primary/30 group-hover:bg-primary group-hover:text-white">
             <ChevronDown className="h-4 w-4" />
           </div>
         </div>
