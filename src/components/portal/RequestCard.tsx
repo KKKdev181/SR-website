@@ -1,4 +1,4 @@
-import { Clock, ArrowUpRight, Link2Off } from "lucide-react";
+import { ArrowUpRight, CheckCircle2, Clock, Link2Off } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import type { KeyboardEvent } from "react";
 import type { ServiceRequest } from "@/data/requests";
@@ -29,6 +29,28 @@ const categoryColorMap: Record<string, string> = {
   "Mobile / UX / Contact Center": "bg-elm-green-light text-secondary",
 };
 
+const categoryAccentMap: Record<string, string> = {
+  "Access & Permissions": "bg-secondary",
+  "Accounts & External Services": "bg-muted-foreground",
+  "New Service Setup": "bg-primary",
+  "Environment / Server Provisioning": "bg-primary",
+  "Cloud / Platform": "bg-secondary",
+  "Network / Connectivity": "bg-secondary",
+  "DNS / Domain": "bg-primary",
+  "SSL / Certificate": "bg-secondary",
+  "Load Balancer": "bg-secondary",
+  "Security / Compliance": "bg-destructive",
+  "Scale / Capacity": "bg-primary",
+  "Database / Storage / Backup": "bg-primary",
+  "DevOps / CI-CD": "bg-primary",
+  "Release / Lifecycle": "bg-secondary",
+  "Monitoring / Troubleshooting": "bg-muted-foreground",
+  "Jira / Service Management": "bg-muted-foreground",
+  "Reporting / BI / Cost": "bg-primary",
+  "Business Operations": "bg-muted-foreground",
+  "Mobile / UX / Contact Center": "bg-secondary",
+};
+
 const arabicFont = {
   fontFamily: "'Noto Sans Arabic', 'Segoe UI', Tahoma, sans-serif",
 };
@@ -56,40 +78,43 @@ const RequestCard = ({ request }: RequestCardProps) => {
       tabIndex={hasJiraUrl ? 0 : undefined}
       onClick={openRequest}
       onKeyDown={handleKeyDown}
-      className={`card-hover group flex min-h-[13rem] flex-col justify-between gap-4 rounded-lg border border-border bg-card p-5 shadow-sm outline-none hover:shadow-md focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/25 ${
+      className={`card-hover group flex min-h-[14rem] flex-col overflow-hidden rounded-lg border border-border bg-card shadow-sm outline-none transition-all focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/25 ${
         hasJiraUrl ? "cursor-pointer" : "cursor-default"
       }`}
       aria-label={hasJiraUrl ? `Open ${request.title} in Jira` : `${request.title} guide item`}
     >
-      <div>
-        <div className="mb-3 flex items-start justify-between gap-3">
-          <h3 className="text-sm font-semibold leading-snug text-foreground">
-            {request.title}
-          </h3>
+      <div className={`h-1 w-full ${categoryAccentMap[request.category] || "bg-muted"}`} />
+
+      <div className="flex flex-1 flex-col gap-4 p-5">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <p className="mb-1 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+              {request.subSection || request.section}
+            </p>
+            <h3 className="overflow-hidden text-sm font-semibold leading-snug text-foreground [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]">
+              {request.title}
+            </h3>
+          </div>
           <span
-            className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-colors ${
+            className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors ${
               hasJiraUrl
                 ? "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground"
                 : "bg-muted text-muted-foreground"
             }`}
           >
-            {hasJiraUrl ? <ArrowUpRight className="h-3.5 w-3.5" /> : <Link2Off className="h-3.5 w-3.5" />}
+            {hasJiraUrl ? (
+              <ArrowUpRight className="h-4 w-4" />
+            ) : (
+              <Link2Off className="h-4 w-4" />
+            )}
           </span>
         </div>
 
-        <p className="mb-2 text-xs leading-relaxed text-muted-foreground">
+        <p className="overflow-hidden text-xs leading-relaxed text-muted-foreground [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:3]">
           {request.shortDescription}
         </p>
 
-        <div className="flex flex-wrap gap-1.5">
-          <Badge
-            variant="outline"
-            className={`rounded-full border-0 px-2.5 py-0.5 text-[10px] font-medium ${
-              categoryColorMap[request.category] || "bg-muted text-muted-foreground"
-            }`}
-          >
-            {request.category}
-          </Badge>
+        <div className="flex flex-wrap gap-1.5 pt-1">
           {request.environment && (
             <Badge
               variant="outline"
@@ -98,49 +123,56 @@ const RequestCard = ({ request }: RequestCardProps) => {
               {request.environment}
             </Badge>
           )}
+          <Badge
+            variant="outline"
+            className={`rounded-full border-0 px-2.5 py-0.5 text-[10px] font-medium ${
+              categoryColorMap[request.category] || "bg-muted text-muted-foreground"
+            }`}
+          >
+            {request.category}
+          </Badge>
         </div>
-      </div>
 
-      <div className="flex flex-col gap-3 border-t border-border/60 pt-3 sm:flex-row sm:items-center sm:justify-between">
-        {request.deliveryTime ? (
-          <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
-            <Clock className="h-3 w-3" />
-            <span>{request.deliveryTime}</span>
-            <span className="text-muted-foreground/45">|</span>
-            <span dir="rtl" lang="ar" className="text-muted-foreground/70" style={arabicFont}>
-              مدة التنفيذ
+        <div className="mt-auto flex items-center justify-between gap-3 border-t border-border/60 pt-3">
+          {request.deliveryTime ? (
+            <span className="flex min-w-0 items-center gap-1 text-[10px] text-muted-foreground">
+              <Clock className="h-3 w-3 shrink-0" />
+              <span className="truncate">{request.deliveryTime}</span>
             </span>
-          </span>
-        ) : (
-          <span className="text-[10px] text-muted-foreground/60">
-            {hasJiraUrl ? "Available in Jira" : "Jira link to be added"}
-          </span>
-        )}
-
-        <span
-          className={`flex items-center gap-1.5 text-xs font-semibold ${
-            hasJiraUrl ? "text-primary" : "text-muted-foreground"
-          }`}
-        >
-          {hasJiraUrl ? (
-            <>
-              <span dir="rtl" lang="ar" style={arabicFont}>
-                فتح في Jira
-              </span>
-              <span className="text-muted-foreground/40">|</span>
-              Open
-              <ArrowUpRight className="h-3 w-3" />
-            </>
           ) : (
-            <>
-              <span dir="rtl" lang="ar" style={arabicFont}>
-                سيتم إضافة الرابط
-              </span>
-              <span className="text-muted-foreground/40">|</span>
-              Link pending
-            </>
+            <span
+              className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-[10px] font-medium ${
+                hasJiraUrl ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
+              }`}
+            >
+              {hasJiraUrl ? <CheckCircle2 className="h-3 w-3" /> : <Link2Off className="h-3 w-3" />}
+              {hasJiraUrl ? "Ready in Jira" : "Link pending"}
+            </span>
           )}
-        </span>
+
+          <span
+            className={`inline-flex shrink-0 items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold ${
+              hasJiraUrl
+                ? "bg-primary text-primary-foreground group-hover:bg-primary/90"
+                : "bg-muted text-muted-foreground"
+            }`}
+          >
+            {hasJiraUrl ? (
+              <>
+                Open
+                <span dir="rtl" lang="ar" className="hidden sm:inline" style={arabicFont}>
+                  فتح
+                </span>
+                <ArrowUpRight className="h-3 w-3" />
+              </>
+            ) : (
+              <>
+                Pending
+                <Link2Off className="h-3 w-3" />
+              </>
+            )}
+          </span>
+        </div>
       </div>
     </div>
   );

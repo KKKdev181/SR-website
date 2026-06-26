@@ -23,7 +23,7 @@ const PopularRequests = ({ requests }: PopularRequestsProps) => {
           Quick access | وصول سريع
         </span>
       </div>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
         {requests.map((req) => (
           <RequestCard key={req.id} request={req} />
         ))}

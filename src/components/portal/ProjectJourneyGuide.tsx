@@ -234,26 +234,24 @@ const ProjectJourneyGuide = () => {
     return (
       <div
         onClick={() => setIsOpen(true)}
-        className="relative overflow-hidden bg-gradient-to-br from-primary/[0.08] via-primary/[0.03] to-accent/[0.06] border border-primary/20 rounded-xl p-6 cursor-pointer group hover:shadow-lg hover:border-primary/30 transition-all duration-300 mb-6"
+        className="mb-3 cursor-pointer rounded-lg border border-primary/15 bg-card p-4 shadow-sm transition-all duration-200 hover:border-primary/30 hover:shadow-md"
       >
-        <div className="absolute top-0 right-0 w-40 h-40 bg-primary/[0.04] rounded-full -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-0 left-0 w-24 h-24 bg-accent/[0.04] rounded-full translate-y-1/2 -translate-x-1/2" />
-        <div className="flex items-center gap-5 relative">
-          <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/15 flex items-center justify-center shrink-0 group-hover:bg-primary/15 group-hover:scale-105 transition-all shadow-sm">
-            <Compass className="h-6 w-6 text-primary" />
+        <div className="flex items-center gap-4">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-primary/15 bg-primary/10">
+            <Compass className="h-5 w-5 text-primary" />
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className="text-base font-semibold text-foreground tracking-tight">Request Finder</h3>
-            <p dir="rtl" lang="ar" className="text-sm text-primary/60 font-medium" style={arabicFont}>موجّه الطلبات</p>
-            <p className="text-sm text-muted-foreground mt-1.5 leading-relaxed">
+            <h3 className="text-sm font-semibold text-foreground tracking-tight">Request Finder</h3>
+            <p dir="rtl" lang="ar" className="text-xs text-primary/60 font-medium" style={arabicFont}>موجّه الطلبات</p>
+            <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
               Not sure where to start? We'll guide you step by step to the right request.
             </p>
-            <p dir="rtl" lang="ar" className="text-xs text-muted-foreground/60 mt-1" style={arabicFont}>
+            <p dir="rtl" lang="ar" className="hidden text-xs text-muted-foreground/60 mt-1 md:block" style={arabicFont}>
               ما تعرف من وين تبدأ؟ بنوجّهك خطوة بخطوة للطلب المناسب
             </p>
           </div>
-          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/15 transition-colors">
-            <ArrowRight className="h-4 w-4 text-primary" />
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-muted text-primary">
+            <ArrowRight className="h-4 w-4" />
           </div>
         </div>
       </div>
