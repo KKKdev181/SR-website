@@ -648,16 +648,16 @@ const ProjectJourneyChecklist = () => {
     return (
       <div
         onClick={() => setIsOpen(true)}
-        className="group mb-3 cursor-pointer overflow-hidden rounded-lg border border-white/15 bg-white/10 shadow-xl shadow-black/15 backdrop-blur transition-all duration-200 hover:-translate-y-0.5 hover:border-cyan-200/35 hover:bg-white/15"
+        className="premium-tool-card premium-tool-card-blue group mb-4 cursor-pointer overflow-hidden"
       >
-        <div className="flex min-h-[6.75rem] items-center gap-4 border-l-4 border-primary px-5 py-4">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-white/15 bg-cyan-300/15 text-cyan-100">
+        <div className="premium-tool-card-inner flex min-h-[7rem] items-center gap-5 px-5 py-4 sm:px-6">
+          <div className="premium-tool-icon premium-tool-icon-blue flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-cyan-100">
             <Layers className="h-5 w-5" />
           </div>
           <div className="flex-1 min-w-0">
             <div className="mb-1 flex flex-wrap items-center gap-2">
-              <h3 className="text-sm font-semibold tracking-tight text-white">Project Journey Checklist</h3>
-              <span className="rounded-full bg-cyan-300/15 px-2.5 py-0.5 text-[11px] font-medium text-cyan-100">Project guide</span>
+              <h3 className="text-base font-semibold tracking-tight text-white">Project Journey Checklist</h3>
+              <span className="rounded-full border border-cyan-200/20 bg-cyan-300/15 px-2.5 py-0.5 text-[11px] font-semibold text-cyan-100">Project guide</span>
             </div>
             <p dir="rtl" lang="ar" className="text-xs font-medium text-cyan-100/85" style={arabicFont}>دليل رحلة المشروع</p>
             <p className="mt-1 text-xs leading-relaxed text-slate-200/75">
@@ -667,7 +667,7 @@ const ProjectJourneyChecklist = () => {
               دليل خطوة بخطوة لمديري المشاريع والفرق التقنية للتأكد من عدم نسيان أي شيء
             </p>
           </div>
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-white/15 bg-white/10 text-cyan-100 transition-colors group-hover:border-cyan-200/30 group-hover:bg-white group-hover:text-primary">
+          <div className="premium-tool-cta flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-cyan-50">
             <ChevronDown className="h-4 w-4" />
           </div>
         </div>

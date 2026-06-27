@@ -93,22 +93,22 @@ const GuidedWizard = () => {
     return (
       <div
         onClick={() => setIsOpen(true)}
-        className="group mb-8 cursor-pointer overflow-hidden rounded-lg border border-white/15 bg-white/10 shadow-xl shadow-black/15 backdrop-blur transition-all duration-200 hover:-translate-y-0.5 hover:border-emerald-200/35 hover:bg-white/15"
+        className="premium-tool-card premium-tool-card-green group mb-10 cursor-pointer overflow-hidden"
       >
-        <div className="flex min-h-[6.75rem] items-center gap-4 border-l-4 border-secondary px-5 py-4">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-white/15 bg-emerald-300/15 text-emerald-100">
+        <div className="premium-tool-card-inner flex min-h-[7rem] items-center gap-5 px-5 py-4 sm:px-6">
+          <div className="premium-tool-icon premium-tool-icon-green flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-emerald-100">
             <HelpCircle className="h-5 w-5" />
           </div>
           <div className="flex-1">
             <div className="mb-1 flex flex-wrap items-center gap-2">
-              <h3 className="text-sm font-semibold tracking-tight text-white">Quick Request Match</h3>
-              <span className="rounded-full bg-secondary/10 px-2.5 py-0.5 text-[11px] font-medium text-secondary">Fast match</span>
+              <h3 className="text-base font-semibold tracking-tight text-white">Quick Request Match</h3>
+              <span className="rounded-full border border-emerald-200/20 bg-emerald-300/15 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-100">Fast match</span>
             </div>
             <p dir="rtl" lang="ar" className="mt-0.5 text-xs font-medium text-emerald-100/85" style={arabicFont}>ما تعرف وش تختار؟</p>
             <p className="mt-1 text-xs leading-relaxed text-slate-200/75">Answer a few questions and we'll suggest the correct request</p>
             <p dir="rtl" lang="ar" className="hidden text-[11px] text-muted-foreground/60 mt-0.5 md:block" style={arabicFont}>جاوب على أسئلة بسيطة وبنقترح لك الطلب المناسب</p>
           </div>
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-white/15 bg-white/10 text-emerald-100 transition-colors group-hover:border-emerald-200/30 group-hover:bg-white group-hover:text-secondary">
+          <div className="premium-tool-cta premium-tool-cta-green flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-emerald-50">
             <ArrowRight className="h-4 w-4" />
           </div>
         </div>
