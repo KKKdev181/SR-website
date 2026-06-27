@@ -104,7 +104,7 @@ const GuidedWizard = () => {
               <h3 className="text-sm font-semibold tracking-tight text-white">Quick Request Match</h3>
               <span className="rounded-full bg-secondary/10 px-2.5 py-0.5 text-[11px] font-medium text-secondary">Fast match</span>
             </div>
-            <p dir="rtl" lang="ar" className="text-xs text-accent/60 font-medium mt-0.5" style={arabicFont}>ما تعرف وش تختار؟</p>
+            <p dir="rtl" lang="ar" className="mt-0.5 text-xs font-medium text-emerald-100/85" style={arabicFont}>ما تعرف وش تختار؟</p>
             <p className="mt-1 text-xs leading-relaxed text-slate-200/75">Answer a few questions and we'll suggest the correct request</p>
             <p dir="rtl" lang="ar" className="hidden text-[11px] text-muted-foreground/60 mt-0.5 md:block" style={arabicFont}>جاوب على أسئلة بسيطة وبنقترح لك الطلب المناسب</p>
           </div>

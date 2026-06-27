@@ -657,13 +657,13 @@ const ProjectJourneyChecklist = () => {
           <div className="flex-1 min-w-0">
             <div className="mb-1 flex flex-wrap items-center gap-2">
               <h3 className="text-sm font-semibold tracking-tight text-white">Project Journey Checklist</h3>
-              <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-medium text-primary">Project guide</span>
+              <span className="rounded-full bg-cyan-300/15 px-2.5 py-0.5 text-[11px] font-medium text-cyan-100">Project guide</span>
             </div>
-            <p dir="rtl" lang="ar" className="text-xs text-primary/60 font-medium" style={arabicFont}>دليل رحلة المشروع</p>
+            <p dir="rtl" lang="ar" className="text-xs font-medium text-cyan-100/85" style={arabicFont}>دليل رحلة المشروع</p>
             <p className="mt-1 text-xs leading-relaxed text-slate-200/75">
               Step-by-step guide for project managers and technical teams to ensure nothing is missed.
             </p>
-            <p dir="rtl" lang="ar" className="mt-1 hidden text-xs text-slate-400 md:block" style={arabicFont}>
+            <p dir="rtl" lang="ar" className="mt-1 hidden text-xs text-slate-200/70 md:block" style={arabicFont}>
               دليل خطوة بخطوة لمديري المشاريع والفرق التقنية للتأكد من عدم نسيان أي شيء
             </p>
           </div>

@@ -60,10 +60,10 @@ const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
               >
                 <Button
                   size="sm"
-                  className="h-11 rounded-full bg-white px-4 text-sm font-semibold text-[#175a96] shadow-xl shadow-black/20 hover:bg-white/95"
+                  className="h-11 rounded-full border border-cyan-200/25 bg-white/12 px-4 text-sm font-semibold text-white shadow-xl shadow-black/20 backdrop-blur hover:bg-white/18"
                 >
                   My Jira Requests
-                  <span className="text-slate-300">|</span>
+                  <span className="text-cyan-100/45">|</span>
                   <span dir="rtl" lang="ar" style={arabicFont}>
                     &#1591;&#1604;&#1576;&#1575;&#1578;&#1610;
                   </span>
@@ -85,9 +85,9 @@ const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
                   </span>
                 </button>
 
-                <div className="pointer-events-none absolute right-0 top-12 z-[60] w-[min(24rem,calc(100vw-2rem))] rounded-2xl border border-slate-200 bg-white p-4 text-left opacity-0 shadow-2xl transition-opacity duration-150 group-hover:opacity-100">
-                  <p className="text-sm font-semibold text-slate-950">About Technology Center Portal</p>
-                  <p className="mt-1 text-xs leading-relaxed text-slate-600">
+                <div className="pointer-events-none absolute right-0 top-12 z-[60] w-[min(24rem,calc(100vw-2rem))] rounded-2xl border border-cyan-200/25 bg-[#111a33] p-4 text-left opacity-0 shadow-2xl transition-opacity duration-150 group-hover:opacity-100">
+                  <p className="text-sm font-semibold text-white">About Technology Center Portal</p>
+                  <p className="mt-1 text-xs leading-relaxed text-slate-200/75">
                     A single place for project and product teams to find technology services and
                     open the correct Jira request with less back-and-forth.
                   </p>
@@ -124,16 +124,16 @@ const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
 
             <div className="relative">
               <div className="absolute -inset-8 rounded-full bg-cyan-300/15 blur-3xl" />
-              <div className="relative rounded-[1.75rem] border border-white/20 bg-white/15 p-4 shadow-2xl shadow-black/25 backdrop-blur-xl">
-                <div className="rounded-[1.35rem] border border-white/20 bg-white/15 p-3">
-                  <div className="mb-2 flex items-center justify-between px-1 text-xs font-semibold text-white/80">
+              <div className="relative rounded-[1.75rem] border border-cyan-200/25 bg-[#15233e]/80 p-4 shadow-2xl shadow-black/25 backdrop-blur-xl">
+                <div className="rounded-[1.35rem] border border-cyan-200/20 bg-[#0f1931]/80 p-3">
+                  <div className="mb-2 flex items-center justify-between px-1 text-xs font-semibold text-white/90">
                     <span>Search service catalog</span>
                     <span dir="rtl" lang="ar" style={arabicFont}>
                       &#1575;&#1576;&#1581;&#1579; &#1601;&#1610; &#1575;&#1604;&#1582;&#1583;&#1605;&#1575;&#1578;
                     </span>
                   </div>
                   <div className="relative min-w-0">
-                    <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6f46d9]" />
+                    <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-primary" />
                     <Input
                       value={searchQuery}
                       onChange={(event) => onSearchChange(event.target.value)}
