@@ -93,10 +93,10 @@ const GuidedWizard = () => {
     return (
       <div
         onClick={() => setIsOpen(true)}
-        className="group mb-8 cursor-pointer overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md"
+        className="group mb-8 cursor-pointer overflow-hidden rounded-2xl border border-emerald-100 bg-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-secondary/30 hover:shadow-lg"
       >
-        <div className="flex min-h-[6.75rem] items-center gap-4 border-l-4 border-secondary px-5 py-4">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-secondary">
+        <div className="flex min-h-[7.25rem] items-center gap-4 bg-[linear-gradient(90deg,rgba(22,163,116,0.08)_0%,rgba(255,255,255,0)_46%)] px-5 py-4">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-secondary text-white shadow-lg shadow-secondary/20">
             <HelpCircle className="h-5 w-5" />
           </div>
           <div className="flex-1">
@@ -104,11 +104,11 @@ const GuidedWizard = () => {
               <h3 className="text-sm font-semibold tracking-tight text-slate-950">Quick Request Match</h3>
               <span className="rounded-full bg-secondary/10 px-2.5 py-0.5 text-[11px] font-medium text-secondary">Fast match</span>
             </div>
-            <p dir="rtl" lang="ar" className="text-xs text-accent/60 font-medium mt-0.5" style={arabicFont}>ما تعرف وش تختار؟</p>
+            <p dir="rtl" lang="ar" className="mt-0.5 text-xs font-medium text-secondary/75" style={arabicFont}>ما تعرف وش تختار؟</p>
             <p className="mt-1 text-xs leading-relaxed text-slate-600">Answer a few questions and we'll suggest the correct request</p>
-            <p dir="rtl" lang="ar" className="hidden text-[11px] text-muted-foreground/60 mt-0.5 md:block" style={arabicFont}>جاوب على أسئلة بسيطة وبنقترح لك الطلب المناسب</p>
+            <p dir="rtl" lang="ar" className="mt-0.5 hidden text-[11px] text-slate-400 md:block" style={arabicFont}>جاوب على أسئلة بسيطة وبنقترح لك الطلب المناسب</p>
           </div>
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-secondary transition-colors group-hover:border-secondary/30 group-hover:bg-secondary group-hover:text-white">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-emerald-100 bg-white text-secondary shadow-sm transition-colors group-hover:border-secondary/30 group-hover:bg-secondary group-hover:text-white">
             <ArrowRight className="h-4 w-4" />
           </div>
         </div>

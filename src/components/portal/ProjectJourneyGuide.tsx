@@ -234,18 +234,18 @@ const ProjectJourneyGuide = () => {
     return (
       <div
         onClick={() => setIsOpen(true)}
-        className="group mb-3 cursor-pointer overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md"
+        className="group mb-4 cursor-pointer overflow-hidden rounded-2xl border border-indigo-100 bg-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-lg"
       >
-        <div className="flex min-h-[6.75rem] items-center gap-4 border-l-4 border-slate-300 px-5 py-4">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-primary">
+        <div className="flex min-h-[7.25rem] items-center gap-4 bg-[linear-gradient(90deg,rgba(79,70,229,0.075)_0%,rgba(255,255,255,0)_46%)] px-5 py-4">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-indigo-600 text-white shadow-lg shadow-indigo-600/20">
             <Compass className="h-5 w-5" />
           </div>
           <div className="flex-1 min-w-0">
             <div className="mb-1 flex flex-wrap items-center gap-2">
               <h3 className="text-sm font-semibold tracking-tight text-slate-950">Request Finder</h3>
-              <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-medium text-slate-600">Guided flow</span>
+              <span className="rounded-full bg-indigo-50 px-2.5 py-0.5 text-[11px] font-medium text-indigo-700">Guided flow</span>
             </div>
-            <p dir="rtl" lang="ar" className="text-xs text-primary/60 font-medium" style={arabicFont}>موجّه الطلبات</p>
+            <p dir="rtl" lang="ar" className="text-xs font-medium text-indigo-700/75" style={arabicFont}>موجّه الطلبات</p>
             <p className="mt-1 text-xs leading-relaxed text-slate-600">
               Not sure where to start? We'll guide you step by step to the right request.
             </p>
@@ -253,7 +253,7 @@ const ProjectJourneyGuide = () => {
               ما تعرف من وين تبدأ؟ بنوجّهك خطوة بخطوة للطلب المناسب
             </p>
           </div>
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-primary transition-colors group-hover:border-primary/30 group-hover:bg-primary group-hover:text-white">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-indigo-100 bg-white text-indigo-700 shadow-sm transition-colors group-hover:border-indigo-600/30 group-hover:bg-indigo-600 group-hover:text-white">
             <ArrowRight className="h-4 w-4" />
           </div>
         </div>

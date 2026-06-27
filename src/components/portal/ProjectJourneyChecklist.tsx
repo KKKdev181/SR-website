@@ -648,10 +648,10 @@ const ProjectJourneyChecklist = () => {
     return (
       <div
         onClick={() => setIsOpen(true)}
-        className="group mb-3 cursor-pointer overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md"
+        className="group mb-4 cursor-pointer overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg"
       >
-        <div className="flex min-h-[6.75rem] items-center gap-4 border-l-4 border-primary px-5 py-4">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-primary">
+        <div className="flex min-h-[7.25rem] items-center gap-4 bg-[linear-gradient(90deg,rgba(15,79,141,0.08)_0%,rgba(255,255,255,0)_46%)] px-5 py-4">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary text-white shadow-lg shadow-primary/20">
             <Layers className="h-5 w-5" />
           </div>
           <div className="flex-1 min-w-0">
@@ -659,7 +659,7 @@ const ProjectJourneyChecklist = () => {
               <h3 className="text-sm font-semibold tracking-tight text-slate-950">Project Journey Checklist</h3>
               <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-medium text-primary">Project guide</span>
             </div>
-            <p dir="rtl" lang="ar" className="text-xs text-primary/60 font-medium" style={arabicFont}>دليل رحلة المشروع</p>
+            <p dir="rtl" lang="ar" className="text-xs font-medium text-primary/70" style={arabicFont}>دليل رحلة المشروع</p>
             <p className="mt-1 text-xs leading-relaxed text-slate-600">
               Step-by-step guide for project managers and technical teams to ensure nothing is missed.
             </p>
@@ -667,7 +667,7 @@ const ProjectJourneyChecklist = () => {
               دليل خطوة بخطوة لمديري المشاريع والفرق التقنية للتأكد من عدم نسيان أي شيء
             </p>
           </div>
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-primary transition-colors group-hover:border-primary/30 group-hover:bg-primary group-hover:text-white">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-blue-100 bg-white text-primary shadow-sm transition-colors group-hover:border-primary/30 group-hover:bg-primary group-hover:text-white">
             <ChevronDown className="h-4 w-4" />
           </div>
         </div>
