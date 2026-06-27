@@ -38,7 +38,7 @@ const FilterChip = ({
       className={`inline-flex min-h-9 max-w-full items-center gap-1 rounded-full border px-3.5 py-1 text-xs font-medium transition-all duration-150 ${
         isActive
           ? "border-primary bg-primary text-primary-foreground shadow-sm"
-          : "border-slate-200 bg-white text-slate-600 shadow-sm hover:border-primary/40 hover:bg-primary/5 hover:text-primary"
+          : "border-slate-300 bg-white text-slate-700 shadow-sm hover:border-primary/40 hover:bg-primary/5 hover:text-primary"
       }`}
       onClick={() => onToggle(filter)}
       aria-pressed={isActive}
@@ -80,12 +80,12 @@ const QuickFilters = ({ activeFilters, onToggleFilter }: QuickFiltersProps) => {
   );
 
   return (
-    <div className="border-b border-white/70 bg-white/60 backdrop-blur">
-      <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6">
-        <div className="rounded-2xl border border-white/80 bg-white/75 p-3 shadow-sm">
-          <div className="flex flex-col gap-2.5 lg:flex-row lg:items-center">
+    <div className="border-b border-slate-200 bg-slate-100/85 backdrop-blur">
+      <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6">
+        <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-md shadow-slate-950/[0.03]">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
             <div className="flex min-w-fit items-center gap-2 text-xs">
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm">
                 <SlidersHorizontal className="h-4 w-4" />
               </span>
               <div>
@@ -115,7 +115,7 @@ const QuickFilters = ({ activeFilters, onToggleFilter }: QuickFiltersProps) => {
               <button
                 type="button"
                 onClick={() => setShowMore((value) => !value)}
-                className="inline-flex min-h-9 items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-800 shadow-sm transition-colors hover:border-primary/40 hover:bg-primary/5"
+                className="inline-flex min-h-9 items-center gap-1.5 rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-800 shadow-sm transition-colors hover:border-primary/40 hover:bg-primary/5"
                 aria-expanded={showMore}
               >
                 More filters
@@ -138,7 +138,7 @@ const QuickFilters = ({ activeFilters, onToggleFilter }: QuickFiltersProps) => {
           </div>
 
           {showMore && (
-            <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50/80 p-3">
+            <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
               <div className="grid gap-3 lg:grid-cols-[0.7fr_1.3fr]">
                 {advancedGroups.map((group) => (
                   <div key={group.title}>

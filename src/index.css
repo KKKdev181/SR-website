@@ -75,7 +75,7 @@
     background:
       radial-gradient(circle at top left, hsl(var(--elm-blue-light)) 0, transparent 30rem),
       radial-gradient(circle at top right, hsl(var(--elm-green-light)) 0, transparent 26rem),
-      linear-gradient(180deg, #f8fafc 0%, #ffffff 44rem);
+      linear-gradient(180deg, #eef5fb 0%, #f6f8fb 22rem, #eef2f6 100%);
   }
 
   .card-hover {
