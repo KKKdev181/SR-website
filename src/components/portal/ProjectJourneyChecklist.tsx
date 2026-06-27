@@ -599,7 +599,7 @@ const ProjectJourneyChecklist = () => {
           {value.split(" / ").map((part) => (
             part.startsWith("http") ? (
               <a key={part} href={part} target="_blank" rel="noopener noreferrer">
-                <Button size="sm" variant="outline" className="h-7 text-xs">
+                <Button size="sm" variant="outline" className="h-7 border-cyan-200/20 bg-[#0f1931]/85 text-xs text-white hover:border-cyan-200/45 hover:bg-[#1b2c4d] hover:text-white">
                   Open
                   <ExternalLink className="h-3 w-3 ml-1" />
                 </Button>
@@ -615,7 +615,7 @@ const ProjectJourneyChecklist = () => {
     if (value.startsWith("http")) {
       return (
         <a href={value} target="_blank" rel="noopener noreferrer">
-          <Button size="sm" variant="outline" className="h-7 text-xs">
+          <Button size="sm" variant="outline" className="h-7 border-cyan-200/20 bg-[#0f1931]/85 text-xs text-white hover:border-cyan-200/45 hover:bg-[#1b2c4d] hover:text-white">
             Open Link
             <ExternalLink className="h-3 w-3 ml-1" />
           </Button>
@@ -800,7 +800,7 @@ const ProjectJourneyChecklist = () => {
                           <div className="flex flex-col gap-2 shrink-0">
                             {item.jiraUrl && (
                               <a href={item.jiraUrl} target="_blank" rel="noopener noreferrer">
-                                <Button size="sm" variant="outline" className="w-full">
+                                <Button size="sm" variant="outline" className="w-full border-cyan-200/20 bg-[#0f1931]/85 text-white hover:bg-[#1b2c4d] hover:text-white">
                                   Open in Jira
                                   <ExternalLink className="h-3 w-3 ml-1" />
                                 </Button>
@@ -809,7 +809,7 @@ const ProjectJourneyChecklist = () => {
 
                             {item.extraLinks?.map((link) => (
                               <a key={link.url} href={link.url} target="_blank" rel="noopener noreferrer">
-                                <Button size="sm" variant="outline" className="w-full">
+                                <Button size="sm" variant="outline" className="w-full border-cyan-200/20 bg-[#0f1931]/85 text-white hover:bg-[#1b2c4d] hover:text-white">
                                   {link.label}
                                   <ExternalLink className="h-3 w-3 ml-1" />
                                 </Button>
@@ -820,7 +820,7 @@ const ProjectJourneyChecklist = () => {
                               <Button
                                 size="sm"
                                 variant="outline"
-                                className="w-full"
+                                className="w-full border-cyan-200/20 bg-[#0f1931]/85 text-white hover:bg-[#1b2c4d] hover:text-white"
                                 onClick={(event) => {
                                   event.stopPropagation();
                                   document.getElementById("devqa-2")?.scrollIntoView({
@@ -903,7 +903,7 @@ const ProjectJourneyChecklist = () => {
               </div>
 
               <a href="https://jira.elm.sa/secure/CreateIssue!default.jspa" target="_blank" rel="noopener noreferrer" className="shrink-0">
-                <Button size="sm" variant="outline" className="w-full lg:w-auto">
+                <Button size="sm" variant="outline" className="w-full border-cyan-200/20 bg-[#0f1931]/85 text-white hover:border-cyan-200/45 hover:bg-[#1b2c4d] hover:text-white lg:w-auto">
                   Open Change Request in Jira
                   <ExternalLink className="h-3 w-3 ml-1" />
                 </Button>
@@ -946,7 +946,7 @@ const ProjectJourneyChecklist = () => {
                   <li>• Attach the approval and required evidence in the SR.</li>
                 </ul>
                 <a href="https://jira.elm.sa/plugins/servlet/desk/portal/14/create/205" target="_blank" rel="noopener noreferrer">
-                  <Button size="sm" variant="outline" className="flex items-center gap-1">
+                  <Button size="sm" variant="outline" className="flex items-center gap-1 border-cyan-200/20 bg-[#0f1931]/85 text-white hover:border-cyan-200/45 hover:bg-[#1b2c4d] hover:text-white">
                     Open publish request in Jira
                     <ExternalLink className="h-3 w-3" />
                   </Button>
@@ -969,7 +969,7 @@ const ProjectJourneyChecklist = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <Button size="sm" variant="outline" className="flex items-center gap-1">
+                  <Button size="sm" variant="outline" className="flex items-center gap-1 border-cyan-200/20 bg-[#0f1931]/85 text-white hover:border-cyan-200/45 hover:bg-[#1b2c4d] hover:text-white">
                     Open Service Design Change
                     <ExternalLink className="h-3 w-3" />
                   </Button>
@@ -1007,7 +1007,7 @@ const ProjectJourneyChecklist = () => {
                   </div>
                   {action.jiraUrl && (
                     <a href={action.jiraUrl} target="_blank" rel="noopener noreferrer">
-                      <Button size="sm" variant="outline">
+                      <Button size="sm" variant="outline" className="border-cyan-200/20 bg-[#0f1931]/85 text-white hover:border-cyan-200/45 hover:bg-[#1b2c4d] hover:text-white">
                         Open in Jira
                         <ExternalLink className="h-3 w-3 ml-1" />
                       </Button>
@@ -1232,7 +1232,7 @@ const ProjectJourneyChecklist = () => {
                 <div className="mt-4 flex flex-wrap gap-2">
                   {beforeProceedingLinks.map((link) => (
                     <a key={link.url} href={link.url} target="_blank" rel="noopener noreferrer">
-                      <Button size="sm" variant="outline" className="flex items-center gap-1">
+                      <Button size="sm" variant="outline" className="flex items-center gap-1 border-cyan-200/20 bg-[#0f1931]/85 text-white hover:border-cyan-200/45 hover:bg-[#1b2c4d] hover:text-white">
                         {link.label}
                         <ExternalLink className="h-3 w-3" />
                       </Button>

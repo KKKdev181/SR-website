@@ -20,14 +20,14 @@ const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
         <div className="absolute -right-24 bottom-8 h-72 w-72 rounded-full border border-white/10 bg-white/5 blur-sm" />
         <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-cyan-300/70 to-transparent" />
 
-        <div className="relative mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:py-8">
+        <div className="relative mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:py-6">
           <div className="flex flex-col gap-6 lg:flex-row-reverse lg:items-center lg:justify-between">
             <div className="flex min-w-0 items-center justify-end gap-4">
-              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-[1.15rem] border border-white/15 bg-white/10 shadow-xl shadow-black/20 backdrop-blur">
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center">
                 <img
                   src="/elmlogo.png"
                   alt="Elm Logo"
-                  className="h-11 w-11 object-contain brightness-0 invert"
+                  className="h-12 w-12 object-contain brightness-0 invert"
                 />
               </div>
 
@@ -46,9 +46,6 @@ const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
                     &#1605;&#1585;&#1603;&#1586; &#1575;&#1604;&#1578;&#1602;&#1606;&#1610;&#1577;
                   </span>
                 </div>
-                <p className="mt-1 text-xs font-medium text-cyan-100/75">
-                  Enterprise technology services
-                </p>
               </div>
             </div>
 
@@ -96,12 +93,9 @@ const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
             </div>
           </div>
 
-          <div className="grid gap-8 py-10 lg:grid-cols-[minmax(0,1fr)_minmax(22rem,34rem)] lg:items-end lg:py-14">
-            <div className="max-w-3xl">
-              <p className="mb-4 inline-flex rounded-full border border-cyan-200/25 bg-cyan-100/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-cyan-100">
-                Unified service catalog
-              </p>
-              <h2 className="max-w-4xl text-5xl font-bold leading-[1.08] text-white sm:text-6xl">
+          <div className="mx-auto flex max-w-5xl flex-col items-center gap-7 py-8 text-center lg:py-10">
+            <div>
+              <h2 className="max-w-4xl text-4xl font-bold leading-[1.08] text-white sm:text-5xl">
                 Find the right technology request
                 <span
                   className="mt-2 block text-white/92"
@@ -112,7 +106,7 @@ const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
                   &#1575;&#1601;&#1578;&#1581; &#1575;&#1604;&#1591;&#1604;&#1576; &#1575;&#1604;&#1578;&#1602;&#1606;&#1610; &#1575;&#1604;&#1605;&#1606;&#1575;&#1587;&#1576;
                 </span>
               </h2>
-              <p className="mt-5 max-w-2xl text-base leading-7 text-white/75">
+              <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-white/80">
                 Search, filter, prepare, and open the correct Jira request from one polished
                 enterprise workspace.
                 <span className="mx-2 text-white/35">|</span>
@@ -122,9 +116,9 @@ const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
               </p>
             </div>
 
-            <div className="relative">
+            <div className="relative w-full max-w-3xl">
               <div className="absolute -inset-8 rounded-full bg-cyan-300/15 blur-3xl" />
-              <div className="relative rounded-[1.75rem] border border-cyan-200/25 bg-[#15233e]/80 p-4 shadow-2xl shadow-black/25 backdrop-blur-xl">
+              <div className="relative rounded-[1.75rem] border border-cyan-200/25 bg-[#15233e]/80 p-4 text-left shadow-2xl shadow-black/25 backdrop-blur-xl">
                 <div className="rounded-[1.35rem] border border-cyan-200/20 bg-[#0f1931]/80 p-3">
                   <div className="mb-2 flex items-center justify-between px-1 text-xs font-semibold text-white/90">
                     <span>Search service catalog</span>

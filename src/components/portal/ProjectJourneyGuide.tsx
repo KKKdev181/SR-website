@@ -395,7 +395,7 @@ const ProjectJourneyGuide = () => {
                                   rel="noopener noreferrer"
                                   className="shrink-0"
                                 >
-                                  <Button size="sm" variant="outline" className="h-7 text-xs gap-1">
+                                  <Button size="sm" variant="outline" className="h-7 gap-1 border-cyan-200/20 bg-[#0f1931]/85 text-xs text-white hover:border-cyan-200/45 hover:bg-[#1b2c4d] hover:text-white">
                                     فتح في Jira | Open <ExternalLink className="h-3 w-3" />
                                   </Button>
                                 </a>
