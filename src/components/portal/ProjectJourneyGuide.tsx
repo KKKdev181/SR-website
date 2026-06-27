@@ -264,25 +264,25 @@ const ProjectJourneyGuide = () => {
   return (
     <div className="mb-10 overflow-hidden rounded-xl border border-white/15 bg-white/10 shadow-xl shadow-black/15 backdrop-blur">
       {/* Header */}
-      <div className="bg-gradient-to-r from-primary/[0.06] to-secondary/[0.04] px-6 py-5 border-b border-border">
+      <div className="bg-[#15233e]/90 px-6 py-5 border-b border-cyan-200/15">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
-              <Compass className="h-4.5 w-4.5 text-primary" />
+            <div className="w-9 h-9 rounded-lg bg-cyan-300/15 flex items-center justify-center">
+              <Compass className="h-4.5 w-4.5 text-cyan-100" />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-foreground">Request Finder | <span dir="rtl" lang="ar" style={arabicFont}>موجّه الطلبات</span></h3>
-              <p className="text-xs text-muted-foreground">Answer questions to get your personalized journey</p>
-              <p dir="rtl" lang="ar" className="text-[11px] text-muted-foreground/60" style={arabicFont}>جاوب على الأسئلة وبنعطيك الخطوات المناسبة لمشروعك</p>
+              <h3 className="text-sm font-semibold text-white">Request Finder | <span dir="rtl" lang="ar" style={arabicFont}>موجّه الطلبات</span></h3>
+              <p className="text-xs text-slate-200/75">Answer questions to get your personalized journey</p>
+              <p dir="rtl" lang="ar" className="text-[11px] text-slate-200/65" style={arabicFont}>جاوب على الأسئلة وبنعطيك الخطوات المناسبة لمشروعك</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             {showResults && (
-              <Button variant="ghost" size="sm" onClick={reset} className="h-7 text-xs gap-1 text-muted-foreground">
+              <Button variant="ghost" size="sm" onClick={reset} className="h-7 text-xs gap-1 text-slate-200/75 hover:bg-white/10 hover:text-white">
                 <RotateCcw className="h-3 w-3" /> Start over | إعادة
               </Button>
             )}
-            <Button variant="ghost" size="sm" onClick={() => { reset(); setIsOpen(false); }} className="h-7 text-xs text-muted-foreground">
+            <Button variant="ghost" size="sm" onClick={() => { reset(); setIsOpen(false); }} className="h-7 text-xs text-slate-200/75 hover:bg-white/10 hover:text-white">
               Close | إغلاق
             </Button>
           </div>
@@ -290,13 +290,13 @@ const ProjectJourneyGuide = () => {
         {/* Progress bar */}
         {!showResults && (
           <div className="mt-4 flex items-center gap-2">
-            <div className="flex-1 h-1.5 bg-border rounded-full overflow-hidden">
+            <div className="flex-1 h-1.5 bg-white/15 rounded-full overflow-hidden">
               <div
-                className="h-full bg-primary rounded-full transition-all duration-500"
+                className="h-full bg-cyan-200 rounded-full transition-all duration-500"
                 style={{ width: `${((currentQuestion) / questions.length) * 100}%` }}
               />
             </div>
-            <span className="text-xs text-muted-foreground font-medium">{currentQuestion + 1}/{questions.length}</span>
+            <span className="text-xs text-slate-200/75 font-medium">{currentQuestion + 1}/{questions.length}</span>
           </div>
         )}
       </div>
@@ -305,10 +305,10 @@ const ProjectJourneyGuide = () => {
         {/* Wizard Questions */}
         {!showResults && (
           <div>
-            <p className="text-sm font-medium text-foreground mb-1">
+            <p className="text-sm font-medium text-white mb-1">
               {questions[currentQuestion].question}
             </p>
-            <p dir="rtl" lang="ar" className="text-xs text-muted-foreground mb-4" style={arabicFont}>
+            <p dir="rtl" lang="ar" className="text-xs text-slate-200/75 mb-4" style={arabicFont}>
               {questions[currentQuestion].questionAr}
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
@@ -316,16 +316,16 @@ const ProjectJourneyGuide = () => {
                 <Button
                   key={String(opt.value)}
                   variant="outline"
-                  className="h-auto py-3.5 px-4 text-xs text-left justify-start rounded-lg hover:bg-primary/5 hover:border-primary/30 transition-all flex flex-col items-start gap-0.5"
+                  className="h-auto py-3.5 px-4 text-xs text-left justify-start rounded-lg border-cyan-200/20 bg-[#0f1931]/85 text-white hover:bg-[#1b2c4d] hover:border-cyan-200/45 transition-all flex flex-col items-start gap-0.5"
                   onClick={() => handleAnswer(questions[currentQuestion].key, opt.value)}
                 >
                   <span>{opt.label}</span>
-                  <span dir="rtl" lang="ar" className="text-[10px] text-muted-foreground/60" style={arabicFont}>{opt.labelAr}</span>
+                  <span dir="rtl" lang="ar" className="text-[10px] text-slate-200/70" style={arabicFont}>{opt.labelAr}</span>
                 </Button>
               ))}
             </div>
             {currentQuestion > 0 && (
-              <Button variant="ghost" size="sm" className="mt-3 text-xs text-muted-foreground" onClick={() => setCurrentQuestion(currentQuestion - 1)}>
+              <Button variant="ghost" size="sm" className="mt-3 text-xs text-slate-200/75 hover:bg-white/10 hover:text-white" onClick={() => setCurrentQuestion(currentQuestion - 1)}>
                 ← Back | رجوع
               </Button>
             )}
@@ -337,10 +337,10 @@ const ProjectJourneyGuide = () => {
           <div>
             <div className="flex items-center gap-2 mb-6">
               <Layers className="h-4 w-4 text-primary" />
-              <p className="text-sm font-semibold text-foreground">
+              <p className="text-sm font-semibold text-white">
                 Your Recommended Journey — {journey.length} steps
               </p>
-              <span dir="rtl" lang="ar" className="text-xs text-muted-foreground/70" style={arabicFont}>رحلتك المقترحة — {journey.length} خطوات</span>
+              <span dir="rtl" lang="ar" className="text-xs text-slate-200/75" style={arabicFont}>رحلتك المقترحة — {journey.length} خطوات</span>
             </div>
 
             <div className="space-y-0">
@@ -366,11 +366,11 @@ const ProjectJourneyGuide = () => {
                             {step.step}
                           </div>
 
-                          <div className="bg-background border border-border rounded-lg p-4 hover:shadow-sm transition-shadow">
+                          <div className="bg-[#15233e]/65 border border-cyan-200/15 rounded-lg p-4 hover:shadow-sm transition-shadow">
                             <div className="flex items-start justify-between gap-3">
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-2 flex-wrap">
-                                  <h4 className="text-sm font-semibold text-foreground">{step.title}</h4>
+                                  <h4 className="text-sm font-semibold text-white">{step.title}</h4>
                                   {step.required ? (
                                     <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-medium">
                                       <Check className="h-2.5 w-2.5" /> Required | إلزامي
@@ -386,7 +386,7 @@ const ProjectJourneyGuide = () => {
                                     </span>
                                   )}
                                 </div>
-                                <p className="text-xs text-muted-foreground mt-1">{step.explanation}</p>
+                                <p className="text-xs text-slate-200/75 mt-1">{step.explanation}</p>
                               </div>
                               {step.jiraUrl && (
                                 <a
@@ -414,8 +414,8 @@ const ProjectJourneyGuide = () => {
 
         {showResults && journey.length === 0 && (
           <div>
-            <p className="text-sm text-muted-foreground">No journey steps match your selections. Try starting over with different answers.</p>
-            <p dir="rtl" lang="ar" className="text-xs text-muted-foreground/70 mt-1" style={arabicFont}>لا توجد خطوات تتطابق مع اختياراتك. جرّب الإعادة بإجابات مختلفة.</p>
+            <p className="text-sm text-slate-200/75">No journey steps match your selections. Try starting over with different answers.</p>
+            <p dir="rtl" lang="ar" className="text-xs text-slate-200/70 mt-1" style={arabicFont}>لا توجد خطوات تتطابق مع اختياراتك. جرّب الإعادة بإجابات مختلفة.</p>
           </div>
         )}
 

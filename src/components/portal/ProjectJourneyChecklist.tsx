@@ -677,21 +677,21 @@ const ProjectJourneyChecklist = () => {
 
   return (
     <div className="mb-10 overflow-hidden rounded-xl border border-white/15 bg-white/10 shadow-xl shadow-black/15 backdrop-blur">
-      <div className="bg-gradient-to-r from-primary/[0.06] to-secondary/[0.04] px-6 py-5 border-b border-border">
+      <div className="bg-[#15233e]/90 px-6 py-5 border-b border-cyan-200/15">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
-              <Layers className="h-4.5 w-4.5 text-primary" />
+            <div className="w-9 h-9 rounded-lg bg-cyan-300/15 flex items-center justify-center">
+              <Layers className="h-4.5 w-4.5 text-cyan-100" />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-foreground">Project Journey Checklist</h3>
-              <p dir="rtl" lang="ar" className="text-xs text-muted-foreground/70" style={arabicFont}>دليل رحلة المشروع</p>
-              <p className="text-xs text-muted-foreground">Complete guide for project managers and technical teams</p>
-              <p dir="rtl" lang="ar" className="text-[11px] text-muted-foreground/60" style={arabicFont}>دليل شامل لمديري المشاريع والفرق التقنية</p>
+              <h3 className="text-sm font-semibold text-white">Project Journey Checklist</h3>
+              <p dir="rtl" lang="ar" className="text-xs text-slate-200/75" style={arabicFont}>دليل رحلة المشروع</p>
+              <p className="text-xs text-slate-200/75">Complete guide for project managers and technical teams</p>
+              <p dir="rtl" lang="ar" className="text-[11px] text-slate-200/65" style={arabicFont}>دليل شامل لمديري المشاريع والفرق التقنية</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" onClick={() => setIsOpen(false)} className="h-7 text-xs text-muted-foreground">
+            <Button variant="ghost" size="sm" onClick={() => setIsOpen(false)} className="h-7 text-xs text-slate-200/75 hover:bg-white/10 hover:text-white">
               Close | إغلاق
             </Button>
           </div>
@@ -700,20 +700,20 @@ const ProjectJourneyChecklist = () => {
 
       <div className="p-6 space-y-6">
         {phases.map((phase) => (
-          <Card key={phase.name} className="border-border">
+          <Card key={phase.name} className="border-cyan-200/15 bg-[#0f1931]/75 text-white">
             <Collapsible open={expandedPhases.has(phase.name)} onOpenChange={() => togglePhase(phase.name)}>
               <CollapsibleTrigger asChild>
-                <CardHeader className="cursor-pointer hover:bg-muted/50 transition-colors">
+                <CardHeader className="cursor-pointer hover:bg-white/10 transition-colors">
                   <CardTitle className="flex items-center justify-between text-base">
                     <div className="flex items-center gap-2">
                       <span>{phase.name}</span>
-                      <span className="text-muted-foreground/50">|</span>
-                      <span dir="rtl" lang="ar" className="text-sm text-muted-foreground" style={arabicFont}>{phase.nameAr}</span>
+                      <span className="text-slate-200/40">|</span>
+                      <span dir="rtl" lang="ar" className="text-sm text-slate-200/70" style={arabicFont}>{phase.nameAr}</span>
                     </div>
                     {expandedPhases.has(phase.name) ? (
-                      <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                      <ChevronUp className="h-4 w-4 text-slate-200/70" />
                     ) : (
-                      <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                      <ChevronDown className="h-4 w-4 text-slate-200/70" />
                     )}
                   </CardTitle>
                 </CardHeader>
@@ -722,13 +722,13 @@ const ProjectJourneyChecklist = () => {
                 <CardContent className="pt-0">
                   <div className="space-y-4">
                     {phase.items.map((item) => (
-                      <div id={item.id} key={item.id} className="border border-border rounded-lg p-4 bg-background scroll-mt-28">
+                      <div id={item.id} key={item.id} className="border border-cyan-200/15 rounded-lg p-4 bg-[#15233e]/65 scroll-mt-28">
                         <div className="flex items-start justify-between gap-4">
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-2">
-                              <h4 className="text-sm font-semibold text-foreground">{item.title}</h4>
+                              <h4 className="text-sm font-semibold text-white">{item.title}</h4>
                               {item.titleAr && (
-                                <span dir="rtl" lang="ar" className="text-xs text-muted-foreground" style={arabicFont}>{item.titleAr}</span>
+                                <span dir="rtl" lang="ar" className="text-xs text-slate-200/70" style={arabicFont}>{item.titleAr}</span>
                               )}
                             </div>
 
@@ -759,21 +759,21 @@ const ProjectJourneyChecklist = () => {
                               </div>
                             )}
 
-                            <p className="text-sm text-muted-foreground mb-2">{item.instruction}</p>
+                            <p className="text-sm text-slate-200/75 mb-2">{item.instruction}</p>
                             {item.instructionAr && (
-                              <p dir="rtl" lang="ar" className="text-xs text-muted-foreground/70 mb-2" style={arabicFont}>{item.instructionAr}</p>
+                              <p dir="rtl" lang="ar" className="text-xs text-slate-200/70 mb-2" style={arabicFont}>{item.instructionAr}</p>
                             )}
 
                             {item.serviceName && (
-                              <p className="text-xs text-muted-foreground mb-2">
+                              <p className="text-xs text-slate-200/70 mb-2">
                                 <strong>Service Name:</strong> {item.serviceName}
                               </p>
                             )}
 
                             {item.notes && (
-                              <div className="mt-3 p-2 bg-muted/50 rounded text-xs">
-                                <strong className="text-foreground">Important Notes:</strong>
-                                <ul className="mt-1 space-y-1 text-muted-foreground">
+                              <div className="mt-3 p-2 bg-white/10 rounded text-xs">
+                                <strong className="text-white">Important Notes:</strong>
+                                <ul className="mt-1 space-y-1 text-slate-200/70">
                                   {item.notes.map((note, i) => (
                                     <li key={i} className="flex items-start gap-2">
                                       <span>•</span>
@@ -782,7 +782,7 @@ const ProjectJourneyChecklist = () => {
                                   ))}
                                 </ul>
                                 {item.notesAr && (
-                                  <div dir="rtl" className="mt-2 text-muted-foreground/70" style={arabicFont}>
+                                  <div dir="rtl" className="mt-2 text-slate-200/70" style={arabicFont}>
                                     <ul className="space-y-1">
                                       {item.notesAr.map((note, i) => (
                                         <li key={i} className="flex items-start gap-2">

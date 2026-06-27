@@ -117,28 +117,28 @@ const GuidedWizard = () => {
   }
 
   return (
-    <div className="mb-10 rounded-xl border border-white/15 bg-white/10 p-6 shadow-xl shadow-black/15 backdrop-blur">
+    <div className="mb-10 rounded-xl border border-cyan-200/20 bg-[#15233e]/85 p-6 shadow-xl shadow-black/15 backdrop-blur">
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-secondary/10 flex items-center justify-center">
-            <HelpCircle className="h-3.5 w-3.5 text-secondary" />
+          <div className="w-7 h-7 rounded-lg bg-emerald-300/15 flex items-center justify-center">
+            <HelpCircle className="h-3.5 w-3.5 text-emerald-100" />
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-foreground">Guided Request Finder</h3>
-            <span dir="rtl" lang="ar" className="text-[11px] text-muted-foreground/70" style={arabicFont}>مساعد اختيار الطلب</span>
+            <h3 className="text-sm font-semibold text-white">Guided Request Finder</h3>
+            <span dir="rtl" lang="ar" className="text-[11px] text-slate-200/75" style={arabicFont}>مساعد اختيار الطلب</span>
           </div>
         </div>
-        <Button variant="ghost" size="sm" onClick={() => { reset(); setIsOpen(false); }} className="h-7 text-xs text-muted-foreground">
+        <Button variant="ghost" size="sm" onClick={() => { reset(); setIsOpen(false); }} className="h-7 text-xs text-slate-200/75 hover:bg-white/10 hover:text-white">
           Close | إغلاق
         </Button>
       </div>
 
       {answers.length < steps.length ? (
         <div>
-          <p className="text-sm text-foreground font-medium mb-1">
+          <p className="text-sm text-white font-medium mb-1">
             {steps[step].question}
           </p>
-          <p dir="rtl" lang="ar" className="text-xs text-muted-foreground mb-3" style={arabicFont}>
+          <p dir="rtl" lang="ar" className="text-xs text-slate-200/75 mb-3" style={arabicFont}>
             {steps[step].questionAr}
           </p>
           <div className="grid grid-cols-2 gap-2.5">
@@ -146,11 +146,11 @@ const GuidedWizard = () => {
               <Button
                 key={opt.label}
                 variant="outline"
-                className="h-auto py-3 text-xs text-left justify-start rounded-lg hover:bg-primary/5 hover:border-primary/30 transition-all flex flex-col items-start gap-0.5"
+                className="h-auto py-3 text-xs text-left justify-start rounded-lg border-cyan-200/20 bg-[#0f1931]/85 text-white hover:bg-[#1b2c4d] hover:border-emerald-200/45 transition-all flex flex-col items-start gap-0.5"
                 onClick={() => handleAnswer(opt.label)}
               >
                 <span>{opt.label}</span>
-                <span dir="rtl" lang="ar" className="text-[10px] text-muted-foreground/60" style={arabicFont}>{opt.labelAr}</span>
+                <span dir="rtl" lang="ar" className="text-[10px] text-slate-200/70" style={arabicFont}>{opt.labelAr}</span>
               </Button>
             ))}
           </div>
@@ -158,11 +158,11 @@ const GuidedWizard = () => {
       ) : (
         <div>
           <div className="flex items-center gap-2 mb-4">
-            <p className="text-sm text-foreground font-medium">
+            <p className="text-sm text-white font-medium">
               Recommended for you ({results.length} results)
             </p>
-            <span dir="rtl" lang="ar" className="text-xs text-muted-foreground/70" style={arabicFont}>مقترحات لك</span>
-            <Button variant="ghost" size="sm" onClick={reset} className="h-6 text-xs text-muted-foreground gap-1">
+            <span dir="rtl" lang="ar" className="text-xs text-slate-200/75" style={arabicFont}>مقترحات لك</span>
+            <Button variant="ghost" size="sm" onClick={reset} className="h-6 text-xs text-slate-200/75 hover:bg-white/10 hover:text-white gap-1">
               <RotateCcw className="h-3 w-3" /> Start over | إعادة
             </Button>
           </div>
@@ -174,8 +174,8 @@ const GuidedWizard = () => {
             </div>
           ) : (
             <div>
-              <p className="text-sm text-muted-foreground">No matching requests found. Try starting over with different answers.</p>
-              <p dir="rtl" lang="ar" className="text-xs text-muted-foreground/70 mt-1" style={arabicFont}>لم يتم العثور على طلبات مطابقة. جرّب الإعادة بإجابات مختلفة.</p>
+              <p className="text-sm text-slate-200/75">No matching requests found. Try starting over with different answers.</p>
+              <p dir="rtl" lang="ar" className="text-xs text-slate-200/70 mt-1" style={arabicFont}>لم يتم العثور على طلبات مطابقة. جرّب الإعادة بإجابات مختلفة.</p>
             </div>
           )}
         </div>
