@@ -85,4 +85,184 @@
     @apply shadow-lg -translate-y-0.5;
     border-color: hsl(var(--primary) / 0.3);
   }
+
+  .premium-hero-motion {
+    position: absolute;
+    top: 3.5rem;
+    width: 18rem;
+    height: 16rem;
+    pointer-events: none;
+    opacity: 0.86;
+    filter: drop-shadow(0 28px 42px rgba(0, 0, 0, 0.22));
+  }
+
+  .premium-hero-motion-left {
+    left: -0.5rem;
+  }
+
+  .premium-hero-motion-right {
+    right: -0.5rem;
+  }
+
+  .motion-panel {
+    position: absolute;
+    overflow: hidden;
+    border: 1px solid rgba(125, 211, 252, 0.24);
+    background:
+      linear-gradient(135deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.035)),
+      rgba(15, 25, 49, 0.78);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 18px 38px rgba(0, 0, 0, 0.24);
+    backdrop-filter: blur(16px);
+  }
+
+  .motion-panel::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(100deg, transparent 15%, rgba(125, 211, 252, 0.26) 45%, transparent 72%);
+    transform: translateX(-120%);
+    animation: motion-sheen 4.8s ease-in-out infinite;
+  }
+
+  .motion-panel-a,
+  .motion-panel-c {
+    top: 1.3rem;
+    width: 10.8rem;
+    height: 7rem;
+    border-radius: 1.35rem;
+    animation: motion-float 7s ease-in-out infinite;
+  }
+
+  .motion-panel-a {
+    left: 0.3rem;
+  }
+
+  .motion-panel-c {
+    right: 0.3rem;
+    animation-delay: -1.8s;
+  }
+
+  .motion-panel-b,
+  .motion-panel-d {
+    bottom: 1.1rem;
+    width: 12.6rem;
+    height: 5.9rem;
+    border-radius: 1.5rem;
+    animation: motion-float 8s ease-in-out infinite reverse;
+  }
+
+  .motion-panel-b {
+    right: 1.2rem;
+    animation-delay: -2.4s;
+  }
+
+  .motion-panel-d {
+    left: 1.2rem;
+    animation-delay: -3.2s;
+  }
+
+  .motion-kicker,
+  .motion-line,
+  .motion-chip {
+    position: absolute;
+    display: block;
+    border-radius: 999px;
+  }
+
+  .motion-kicker {
+    left: 1rem;
+    top: 1rem;
+    width: 3.4rem;
+    height: 0.42rem;
+    background: rgba(165, 243, 252, 0.82);
+  }
+
+  .motion-line {
+    left: 1rem;
+    top: 2.25rem;
+    width: 5.8rem;
+    height: 0.48rem;
+    background: rgba(255, 255, 255, 0.23);
+  }
+
+  .motion-line-wide {
+    top: 3.25rem;
+    width: 8rem;
+  }
+
+  .motion-chip {
+    left: 1rem;
+    top: 1.05rem;
+    width: 4.4rem;
+    height: 1.5rem;
+    background: linear-gradient(90deg, rgba(45, 212, 191, 0.75), rgba(34, 211, 238, 0.4));
+  }
+
+  .motion-chip-soft {
+    left: auto;
+    right: 1rem;
+    top: 3.2rem;
+    width: 5.2rem;
+    background: linear-gradient(90deg, rgba(196, 181, 253, 0.52), rgba(125, 211, 252, 0.26));
+  }
+
+  .motion-routes {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .motion-route {
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-dasharray: 12 16;
+    filter: drop-shadow(0 0 10px rgba(34, 211, 238, 0.35));
+    animation: motion-route 6s linear infinite;
+  }
+
+  .motion-route-one {
+    stroke: rgba(125, 211, 252, 0.6);
+  }
+
+  .motion-route-two {
+    stroke: rgba(167, 139, 250, 0.56);
+    animation-duration: 7.2s;
+    animation-direction: reverse;
+  }
+
+  @keyframes motion-float {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(0, -0.75rem, 0);
+    }
+  }
+
+  @keyframes motion-sheen {
+    0%,
+    42% {
+      transform: translateX(-125%);
+    }
+    72%,
+    100% {
+      transform: translateX(125%);
+    }
+  }
+
+  @keyframes motion-route {
+    to {
+      stroke-dashoffset: -56;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .motion-panel,
+    .motion-panel::after,
+    .motion-route {
+      animation: none;
+    }
+  }
 }

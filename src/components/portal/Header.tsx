@@ -93,8 +93,40 @@ const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
             </div>
           </div>
 
-          <div className="mx-auto flex max-w-5xl flex-col items-center gap-7 py-8 text-center lg:py-10">
-            <div>
+          <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-7 py-8 text-center lg:py-10">
+            <div aria-hidden="true" className="premium-hero-motion premium-hero-motion-left hidden xl:block">
+              <div className="motion-panel motion-panel-a">
+                <span className="motion-kicker" />
+                <span className="motion-line motion-line-wide" />
+                <span className="motion-line" />
+              </div>
+              <div className="motion-panel motion-panel-b">
+                <span className="motion-chip" />
+                <span className="motion-chip motion-chip-soft" />
+              </div>
+              <svg className="motion-routes" viewBox="0 0 280 220" fill="none">
+                <path className="motion-route motion-route-one" d="M16 116 C62 54 124 48 168 92 C210 134 238 112 264 68" />
+                <path className="motion-route motion-route-two" d="M24 166 C72 122 120 134 150 158 C190 188 224 160 258 136" />
+              </svg>
+            </div>
+
+            <div aria-hidden="true" className="premium-hero-motion premium-hero-motion-right hidden xl:block">
+              <div className="motion-panel motion-panel-c">
+                <span className="motion-kicker" />
+                <span className="motion-line motion-line-wide" />
+                <span className="motion-line" />
+              </div>
+              <div className="motion-panel motion-panel-d">
+                <span className="motion-chip" />
+                <span className="motion-chip motion-chip-soft" />
+              </div>
+              <svg className="motion-routes" viewBox="0 0 280 220" fill="none">
+                <path className="motion-route motion-route-one" d="M18 82 C70 126 116 130 152 92 C194 48 226 52 264 90" />
+                <path className="motion-route motion-route-two" d="M26 154 C70 186 118 170 152 144 C194 112 226 118 258 152" />
+              </svg>
+            </div>
+
+            <div className="relative z-10">
               <h2 className="max-w-4xl text-4xl font-bold leading-[1.08] text-white sm:text-5xl">
                 Find the right technology request
                 <span
@@ -116,7 +148,7 @@ const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
               </p>
             </div>
 
-            <div className="relative w-full max-w-3xl">
+            <div className="relative z-10 w-full max-w-3xl">
               <div className="absolute -inset-8 rounded-full bg-cyan-300/15 blur-3xl" />
               <div className="relative rounded-[1.75rem] border border-cyan-200/25 bg-[#15233e]/80 p-4 text-left shadow-2xl shadow-black/25 backdrop-blur-xl">
                 <div className="rounded-[1.35rem] border border-cyan-200/20 bg-[#0f1931]/80 p-3">
