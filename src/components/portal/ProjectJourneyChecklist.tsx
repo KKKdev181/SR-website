@@ -591,7 +591,7 @@ const ProjectJourneyChecklist = () => {
   };
 
   const renderDeveloperLink = (value: string) => {
-    if (!value) return <span className="text-muted-foreground/50">—</span>;
+    if (!value) return <span className="text-slate-200/45">—</span>;
 
     if (value.includes(" / ")) {
       return (
@@ -605,7 +605,7 @@ const ProjectJourneyChecklist = () => {
                 </Button>
               </a>
             ) : (
-              <span key={part} className="text-xs text-muted-foreground">{part}</span>
+              <span key={part} className="text-xs text-slate-200/65">{part}</span>
             )
           ))}
         </div>
@@ -747,12 +747,12 @@ const ProjectJourneyChecklist = () => {
                             </div>
 
                             {item.requirementNote && (
-                              <div className="mb-3 rounded-md border border-blue-100 bg-blue-50/70 px-3 py-2">
-                                <p className="text-xs font-medium text-blue-800">
+                              <div className="mb-3 rounded-md border border-cyan-200/20 bg-cyan-300/10 px-3 py-2">
+                                <p className="text-xs font-medium text-cyan-100">
                                   {item.requirementNote}
                                 </p>
                                 {item.requirementNoteAr && (
-                                  <p dir="rtl" lang="ar" className="text-xs text-blue-700 mt-1" style={arabicFont}>
+                                  <p dir="rtl" lang="ar" className="text-xs text-cyan-100/75 mt-1" style={arabicFont}>
                                     {item.requirementNoteAr}
                                   </p>
                                 )}
@@ -844,25 +844,25 @@ const ProjectJourneyChecklist = () => {
         ))}
 
         {/* Deployment */}
-        <Card className="border-border">
+        <Card className="overflow-hidden border border-cyan-200/15 bg-[#15233e]/78 text-white shadow-xl shadow-black/20 backdrop-blur">
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
               <Info className="h-4 w-4" />
               <span>Deployment</span>
-              <span className="text-muted-foreground/50">|</span>
-                      <span dir="rtl" lang="ar" className="text-sm text-muted-foreground" style={arabicFont}>التنفيذ</span>
+              <span className="text-cyan-100/35">|</span>
+                      <span dir="rtl" lang="ar" className="text-sm text-slate-200/75" style={arabicFont}>التنفيذ</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
               <div className="space-y-3 flex-1">
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-slate-200/75">
                   Before going live, make sure the deployment change is opened and tracked in Jira.
                 </p>
 
-                <div className="rounded-lg border border-border bg-muted/40 p-3">
-                  <h5 className="text-sm font-semibold text-foreground mb-2">Deployment Notes:</h5>
-                  <ul className="text-xs text-muted-foreground space-y-1">
+                <div className="rounded-lg border border-cyan-200/15 bg-[#0f1931]/75 p-3">
+                  <h5 className="text-sm font-semibold text-white mb-2">Deployment Notes:</h5>
+                  <ul className="text-xs text-slate-200/75 space-y-1">
                     <li className="flex items-start gap-2">
                       <CheckCircle className="h-3.5 w-3.5 mt-0.5 shrink-0" />
                       <span>Open a Change Request in Jira before deployment.</span>
@@ -881,7 +881,7 @@ const ProjectJourneyChecklist = () => {
                     </li>
                   </ul>
 
-                  <div dir="rtl" className="mt-3 text-xs text-muted-foreground space-y-1" style={arabicFont}>
+                  <div dir="rtl" className="mt-3 text-xs text-slate-200/70 space-y-1" style={arabicFont}>
                     <div className="flex items-start gap-2">
                       <CheckCircle className="h-3.5 w-3.5 mt-0.5 shrink-0" />
                       <span>افتح طلب تغيير في Jira قبل تنفيذ النشر.</span>
@@ -916,12 +916,12 @@ const ProjectJourneyChecklist = () => {
 
 
         {/* Publishing Decision */}
-        <Card className="border-border">
+        <Card className="overflow-hidden border border-cyan-200/15 bg-[#15233e]/78 text-white shadow-xl shadow-black/20 backdrop-blur">
           <CardHeader>
             <CardTitle className="text-base">Publishing</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-muted-foreground mb-4">Ask the user if they want to publish internally or externally.</p>
+            <p className="text-sm text-slate-200/75 mb-4">Ask the user if they want to publish internally or externally.</p>
             <div className="flex gap-4 mb-4">
               <Button
                 variant={publishType === 'internal' ? 'default' : 'outline'}
@@ -938,9 +938,9 @@ const ProjectJourneyChecklist = () => {
             </div>
 
             {publishType === 'external' && (
-              <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-                <h5 className="text-sm font-medium text-red-800 mb-2">External Publish Requirements:</h5>
-                <ul className="text-xs text-red-700 space-y-1 mb-3">
+              <div className="p-3 bg-rose-500/10 border border-rose-300/25 rounded-lg">
+                <h5 className="text-sm font-medium text-rose-100 mb-2">External Publish Requirements:</h5>
+                <ul className="text-xs text-rose-100/75 space-y-1 mb-3">
                   <li>• Approval from GRC team is mandatory through grc@elm.sa.</li>
                   <li>• Performance Test is required for external publish.</li>
                   <li>• Attach the approval and required evidence in the SR.</li>
@@ -955,12 +955,12 @@ const ProjectJourneyChecklist = () => {
             )}
 
             {publishType === 'internal' && (
-              <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                <h5 className="text-sm font-medium text-blue-800 mb-2">
+              <div className="p-3 bg-cyan-300/10 border border-cyan-200/20 rounded-lg">
+                <h5 className="text-sm font-medium text-cyan-100 mb-2">
                   Internal Publish Requirements:
                 </h5>
 
-                <ul className="text-xs text-blue-700 space-y-1 mb-3">
+                <ul className="text-xs text-cyan-100/75 space-y-1 mb-3">
                   <li>• Request Service Design Change for Load Balancer configuration.</li>
                 </ul>
 
@@ -980,25 +980,25 @@ const ProjectJourneyChecklist = () => {
         </Card>
 
         {/* Parallel Actions */}
-        <Card className="border-border">
+        <Card className="overflow-hidden border border-cyan-200/15 bg-[#15233e]/78 text-white shadow-xl shadow-black/20 backdrop-blur">
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
               <span>Parallel Actions</span>
-              <span className="text-muted-foreground/50">|</span>
-                      <span dir="rtl" lang="ar" className="text-sm text-muted-foreground" style={arabicFont}>الأنشطة المتوازية</span>
+              <span className="text-cyan-100/35">|</span>
+                      <span dir="rtl" lang="ar" className="text-sm text-slate-200/75" style={arabicFont}>الأنشطة المتوازية</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
               {parallelActions.map((action, i) => (
-                <div key={i} className="flex items-center justify-between p-3 border border-border rounded-lg bg-background">
+                <div key={i} className="flex items-center justify-between p-3 border border-cyan-200/15 rounded-lg bg-[#0f1931]/75">
                   <div>
                     <h5 className="text-sm font-medium">{action.title}</h5>
                     {action.titleAr && (
-                      <span dir="rtl" lang="ar" className="text-xs text-muted-foreground" style={arabicFont}>{action.titleAr}</span>
+                      <span dir="rtl" lang="ar" className="text-xs text-slate-200/70" style={arabicFont}>{action.titleAr}</span>
                     )}
                     {action.notes && (
-                      <ul className="text-xs text-muted-foreground mt-1">
+                      <ul className="text-xs text-slate-200/70 mt-1">
                         {action.notes.map((note, j) => (
                           <li key={j}>• {note}</li>
                         ))}
@@ -1019,22 +1019,22 @@ const ProjectJourneyChecklist = () => {
           </CardContent>
         </Card>
         {/* Developer Onboarding Checklist */}
-        <Card className="border-border shadow-sm">
+        <Card className="overflow-hidden border border-cyan-200/15 bg-[#15233e]/78 text-white shadow-xl shadow-black/20 backdrop-blur">
           <Collapsible open={isDeveloperChecklistOpen} onOpenChange={setIsDeveloperChecklistOpen}>
             <CollapsibleTrigger asChild>
-              <CardHeader className="cursor-pointer hover:bg-muted/40 transition-colors">
+              <CardHeader className="cursor-pointer transition-colors hover:bg-white/10">
                 <CardTitle className="flex items-center justify-between gap-4 text-base">
                   <div className="flex items-center gap-2">
                     <span>Developer Access Checklist</span>
-                    <span className="text-muted-foreground/50">|</span>
-                      <span dir="rtl" lang="ar" className="text-sm text-muted-foreground" style={arabicFont}>قائمة وصول المطور</span>
+                    <span className="text-cyan-100/35">|</span>
+                      <span dir="rtl" lang="ar" className="text-sm text-slate-200/75" style={arabicFont}>قائمة وصول المطور</span>
                   </div>
 
-                  <div className="inline-flex h-9 items-center justify-center gap-2 rounded-md border border-input bg-background px-3 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground">
+                  <div className="inline-flex h-9 items-center justify-center gap-2 rounded-md border border-cyan-200/20 bg-[#0f1931]/85 px-3 text-sm font-medium text-white shadow-sm transition-colors hover:bg-[#1b2c4d]">
                     <span dir="rtl" lang="ar" style={arabicFont}>
                       {isDeveloperChecklistOpen ? "إخفاء القائمة" : "إظهار المزيد"}
                     </span>
-                    <span className="text-muted-foreground">|</span>
+                    <span className="text-cyan-100/35">|</span>
                     <span>{isDeveloperChecklistOpen ? "Hide list" : "Show more"}</span>
                     {isDeveloperChecklistOpen ? (
                       <ChevronUp className="h-4 w-4" />
@@ -1044,7 +1044,7 @@ const ProjectJourneyChecklist = () => {
                   </div>
                 </CardTitle>
 
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-slate-200/70">
                   {isDeveloperChecklistOpen
                     ? "Developer tools and access list are visible now. Click the button to hide the list."
                     : "Developer tools, access links, owners, and comments are hidden to keep the page clean. Click إظهار المزيد to view the full list."}
@@ -1055,28 +1055,28 @@ const ProjectJourneyChecklist = () => {
           <CardContent>
             <div className="space-y-5">
               <div className="grid gap-3 sm:grid-cols-3">
-                <div className="rounded-lg border border-border bg-background p-3">
-                  <p className="text-xs text-muted-foreground">Required</p>
-                  <p className="text-xl font-semibold text-foreground">{developerSummary.required}</p>
+                <div className="rounded-lg border border-cyan-200/15 bg-[#0f1931]/75 p-3">
+                  <p className="text-xs text-slate-200/65">Required</p>
+                  <p className="text-xl font-semibold text-white">{developerSummary.required}</p>
                 </div>
-                <div className="rounded-lg border border-border bg-background p-3">
-                  <p className="text-xs text-muted-foreground">Conditional</p>
-                  <p className="text-xl font-semibold text-foreground">{developerSummary.conditional}</p>
+                <div className="rounded-lg border border-cyan-200/15 bg-[#0f1931]/75 p-3">
+                  <p className="text-xs text-slate-200/65">Conditional</p>
+                  <p className="text-xl font-semibold text-white">{developerSummary.conditional}</p>
                 </div>
-                <div className="rounded-lg border border-border bg-background p-3">
-                  <p className="text-xs text-muted-foreground">Optional</p>
-                  <p className="text-xl font-semibold text-foreground">{developerSummary.optional}</p>
+                <div className="rounded-lg border border-cyan-200/15 bg-[#0f1931]/75 p-3">
+                  <p className="text-xs text-slate-200/65">Optional</p>
+                  <p className="text-xl font-semibold text-white">{developerSummary.optional}</p>
                 </div>
               </div>
 
               <div className="grid gap-3 md:grid-cols-3">
                 {developerChecklistGuide.map((guide) => (
-                  <div key={guide.label} className="rounded-lg border border-border bg-muted/30 p-3">
+                  <div key={guide.label} className="rounded-lg border border-cyan-200/15 bg-[#0f1931]/70 p-3">
                     <Badge variant={getRequirementBadgeVariant(guide.label as DeveloperTool["required"])} className="mb-2 text-xs">
                       {guide.label}
                     </Badge>
-                    <p className="text-xs text-muted-foreground leading-relaxed">{guide.meaning}</p>
-                    <p className="text-xs text-muted-foreground/70 mt-1 leading-relaxed">{guide.action}</p>
+                    <p className="text-xs text-slate-200/75 leading-relaxed">{guide.meaning}</p>
+                    <p className="text-xs text-slate-200/60 mt-1 leading-relaxed">{guide.action}</p>
                   </div>
                 ))}
               </div>
@@ -1085,38 +1085,38 @@ const ProjectJourneyChecklist = () => {
                 const phaseTools = developerOnboarding.filter((tool) => tool.phase === phase);
 
                 return (
-                  <div key={phase} className="rounded-lg border border-border bg-background overflow-hidden">
-                    <div className="bg-muted/50 px-4 py-3 border-b border-border flex items-center justify-between gap-3">
-                      <h5 className="text-sm font-semibold text-foreground">{phase}</h5>
-                      <Badge variant="outline" className="text-xs">{phaseTools.length} items</Badge>
+                  <div key={phase} className="rounded-lg border border-cyan-200/15 bg-[#0f1931]/70 overflow-hidden">
+                    <div className="bg-white/5 px-4 py-3 border-b border-cyan-200/15 flex items-center justify-between gap-3">
+                      <h5 className="text-sm font-semibold text-white">{phase}</h5>
+                      <Badge variant="outline" className="border-cyan-200/20 text-xs text-cyan-100">{phaseTools.length} items</Badge>
                     </div>
 
-                    <div className="divide-y divide-border">
+                    <div className="divide-y divide-cyan-200/10">
                       {phaseTools.map((tool) => (
                         <div key={`${phase}-${tool.name}`} className="p-4">
                           <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
                             <div className="min-w-0 flex-1">
                               <div className="flex flex-wrap items-center gap-2 mb-2">
-                                <h6 className="text-sm font-semibold text-foreground">{tool.name}</h6>
+                                <h6 className="text-sm font-semibold text-white">{tool.name}</h6>
                                 <Badge variant={getRequirementBadgeVariant(tool.required)} className="text-xs">
                                   {tool.required}
                                 </Badge>
                               </div>
 
-                              <p className="text-xs text-muted-foreground leading-relaxed mb-3">{tool.purpose}</p>
+                              <p className="text-xs text-slate-200/70 leading-relaxed mb-3">{tool.purpose}</p>
 
                               <div className="grid gap-3 md:grid-cols-3">
                                 <div>
-                                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">Grant Access From</p>
-                                  <div className="text-xs text-foreground mt-1">{renderDeveloperLink(tool.grantAccessFrom)}</div>
+                                  <p className="text-[11px] font-semibold text-slate-200/55 uppercase tracking-wide">Grant Access From</p>
+                                  <div className="text-xs text-white mt-1">{renderDeveloperLink(tool.grantAccessFrom)}</div>
                                 </div>
                                 <div>
-                                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">Owner</p>
-                                  <p className="text-xs text-foreground mt-1">{tool.supportOwner || "—"}</p>
+                                  <p className="text-[11px] font-semibold text-slate-200/55 uppercase tracking-wide">Owner</p>
+                                  <p className="text-xs text-white mt-1">{tool.supportOwner || "—"}</p>
                                 </div>
                                 <div>
-                                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">Comment</p>
-                                  <p className="text-xs text-muted-foreground mt-1">{tool.comment || "—"}</p>
+                                  <p className="text-[11px] font-semibold text-slate-200/55 uppercase tracking-wide">Comment</p>
+                                  <p className="text-xs text-slate-200/70 mt-1">{tool.comment || "—"}</p>
                                 </div>
                               </div>
                             </div>
@@ -1137,7 +1137,7 @@ const ProjectJourneyChecklist = () => {
           </Collapsible>
         </Card>
 
-        <Card className="border-border">
+        <Card className="overflow-hidden border border-cyan-200/15 bg-[#15233e]/78 text-white shadow-xl shadow-black/20 backdrop-blur">
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
               <Info className="h-4 w-4" />
@@ -1147,8 +1147,8 @@ const ProjectJourneyChecklist = () => {
           <CardContent>
             <div className="grid gap-4 sm:grid-cols-3">
               <div>
-                <p className="text-sm font-semibold text-foreground">Operating Systems</p>
-                <ul className="text-xs text-muted-foreground mt-2 space-y-1">
+                <p className="text-sm font-semibold text-white">Operating Systems</p>
+                <ul className="text-xs text-slate-200/70 mt-2 space-y-1">
                   {supportedTech.operatingSystems.map((os) => (
                     <li key={os} className="flex items-start gap-2">
                       <span>•</span>
@@ -1158,8 +1158,8 @@ const ProjectJourneyChecklist = () => {
                 </ul>
               </div>
               <div>
-                <p className="text-sm font-semibold text-foreground">Application Level</p>
-                <ul className="text-xs text-muted-foreground mt-2 space-y-1">
+                <p className="text-sm font-semibold text-white">Application Level</p>
+                <ul className="text-xs text-slate-200/70 mt-2 space-y-1">
                   {supportedTech.applicationLevel.map((tech) => (
                     <li key={tech} className="flex items-start gap-2">
                       <span>•</span>
@@ -1169,8 +1169,8 @@ const ProjectJourneyChecklist = () => {
                 </ul>
               </div>
               <div>
-                <p className="text-sm font-semibold text-foreground">Database</p>
-                <ul className="text-xs text-muted-foreground mt-2 space-y-1">
+                <p className="text-sm font-semibold text-white">Database</p>
+                <ul className="text-xs text-slate-200/70 mt-2 space-y-1">
                   {supportedTech.databases.map((db) => (
                     <li key={db} className="flex items-start gap-2">
                       <span>•</span>
@@ -1184,17 +1184,17 @@ const ProjectJourneyChecklist = () => {
         </Card>
 
         {beforeProceedingNotes.length > 0 && (
-          <Card className="border-amber-200 bg-amber-50/40 shadow-sm">
+          <Card className="overflow-hidden border border-amber-300/30 bg-amber-300/10 text-white shadow-xl shadow-black/20 backdrop-blur">
             <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center gap-2 text-amber-900">
+              <CardTitle className="text-base flex items-center gap-2 text-amber-100">
                 <Info className="h-4 w-4" />
                 <span>Final Check Before Proceeding</span>
-                <span className="text-amber-500">|</span>
-                <span dir="rtl" lang="ar" className="text-sm text-amber-700" style={arabicFont}>
+                <span className="text-amber-100/45">|</span>
+                <span dir="rtl" lang="ar" className="text-sm text-amber-100/75" style={arabicFont}>
                   التحقق النهائي قبل المتابعة
                 </span>
               </CardTitle>
-              <p className="text-xs text-amber-700">
+              <p className="text-xs text-amber-100/75">
                 Before you move forward, make sure you have completed the checklist items below.
               </p>
             </CardHeader>
@@ -1205,10 +1205,10 @@ const ProjectJourneyChecklist = () => {
                   {beforeProceedingNotes.map((note, i) => (
                     <div
                       key={i}
-                      className="flex items-start gap-2 rounded-md border border-amber-200 bg-white/70 p-2"
+                      className="flex items-start gap-2 rounded-md border border-amber-300/25 bg-[#0f1931]/70 p-2"
                     >
-                      <CheckCircle className="h-4 w-4 text-amber-700 mt-0.5 shrink-0" />
-                      <span className="text-xs text-amber-900 leading-relaxed">{note}</span>
+                      <CheckCircle className="h-4 w-4 text-amber-200 mt-0.5 shrink-0" />
+                      <span className="text-xs text-amber-50/85 leading-relaxed">{note}</span>
                     </div>
                   ))}
                 </div>
@@ -1218,10 +1218,10 @@ const ProjectJourneyChecklist = () => {
                     {beforeProceedingNotesAr.map((note, i) => (
                       <div
                         key={i}
-                        className="flex items-start gap-2 rounded-md border border-amber-200 bg-white/70 p-2"
+                        className="flex items-start gap-2 rounded-md border border-amber-300/25 bg-[#0f1931]/70 p-2"
                       >
-                        <CheckCircle className="h-4 w-4 text-amber-700 mt-0.5 shrink-0" />
-                        <span className="text-xs text-amber-900 leading-relaxed">{note}</span>
+                        <CheckCircle className="h-4 w-4 text-amber-200 mt-0.5 shrink-0" />
+                        <span className="text-xs text-amber-50/85 leading-relaxed">{note}</span>
                       </div>
                     ))}
                   </div>
@@ -1245,7 +1245,7 @@ const ProjectJourneyChecklist = () => {
         )}
 
         {/* Technical Notes & Important Reminders */}
-        <Card className="border-border">
+        <Card className="overflow-hidden border border-cyan-200/15 bg-[#15233e]/78 text-white shadow-xl shadow-black/20 backdrop-blur">
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
               <Info className="h-4 w-4" />
@@ -1256,8 +1256,8 @@ const ProjectJourneyChecklist = () => {
             <div className="space-y-4">
               {/* Platform Support */}
               <div>
-                <h5 className="text-sm font-semibold text-foreground mb-2">Platform Runtime Support</h5>
-                <ul className="text-xs text-muted-foreground space-y-1 mb-3 pl-4">
+                <h5 className="text-sm font-semibold text-white mb-2">Platform Runtime Support</h5>
+                <ul className="text-xs text-slate-200/70 space-y-1 mb-3 pl-4">
                   {platformNotes.map((note, i) => (
                     <li key={i} className="flex items-start gap-2">
                       <span>•</span>
@@ -1269,8 +1269,8 @@ const ProjectJourneyChecklist = () => {
 
               {/* Deployment Requirements */}
               <div>
-                <h5 className="text-sm font-semibold text-foreground mb-2">Infrastructure Requirements by Platform</h5>
-                <ul className="text-xs text-muted-foreground space-y-1 mb-3 pl-4">
+                <h5 className="text-sm font-semibold text-white mb-2">Infrastructure Requirements by Platform</h5>
+                <ul className="text-xs text-slate-200/70 space-y-1 mb-3 pl-4">
                   {deploymentRequirements.map((note, i) => (
                     <li key={i} className="flex items-start gap-2">
                       <span>•</span>
@@ -1281,22 +1281,22 @@ const ProjectJourneyChecklist = () => {
               </div>
 
               {/* Critical Reminder */}
-              <div className="p-3 bg-red-50 border-2 border-red-300 rounded-lg">
-                <h5 className="text-sm font-semibold text-red-800 mb-2 flex items-center gap-2">
+              <div className="p-3 bg-rose-500/10 border border-rose-300/30 rounded-lg">
+                <h5 className="text-sm font-semibold text-rose-100 mb-2 flex items-center gap-2">
                   <span>⚠️ Critical Requirement</span>
                 </h5>
-                <p className="text-xs text-red-700 font-medium mb-2">
+                <p className="text-xs text-rose-100/80 font-medium mb-2">
                   You MUST identify and specify the supporting technology for your project before submitting any requests.
                 </p>
-                <p className="text-xs text-red-600">
+                <p className="text-xs text-rose-100/70">
                   Refer to the "Supported Technologies" section above to choose the appropriate technology stack for your infrastructure and application needs.
                 </p>
               </div>
 
               {/* Additional Notes */}
               <div>
-                <h5 className="text-sm font-semibold text-foreground mb-2">Important Notes</h5>
-                <ul className="text-xs text-muted-foreground space-y-1 pl-4">
+                <h5 className="text-sm font-semibold text-white mb-2">Important Notes</h5>
+                <ul className="text-xs text-slate-200/70 space-y-1 pl-4">
                   {importantNotes.map((note, i) => (
                     <li key={i} className="flex items-start gap-2">
                       <span>•</span>
