@@ -73,9 +73,9 @@
 @layer utilities {
   .portal-shell {
     background:
-      radial-gradient(circle at top left, hsl(var(--elm-blue-light)) 0, transparent 30rem),
-      radial-gradient(circle at top right, hsl(var(--elm-green-light)) 0, transparent 26rem),
-      linear-gradient(180deg, #eef5fb 0%, #f6f8fb 22rem, #eef2f6 100%);
+      radial-gradient(circle at 18% 10rem, rgba(83, 51, 168, 0.14) 0, transparent 26rem),
+      radial-gradient(circle at 82% 18rem, rgba(0, 126, 155, 0.16) 0, transparent 28rem),
+      linear-gradient(180deg, #130620 0%, #eef3f8 17.5rem, #f6f8fb 42rem, #eef2f6 100%);
   }
 
   .card-hover {
