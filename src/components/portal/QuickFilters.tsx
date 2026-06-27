@@ -7,11 +7,11 @@ const arabicFont = {
 };
 
 const filterArabicLabels: Record<string, string> = {
-  "Dev/QA": "تطوير/اختبار",
-  "Staging/Production": "تجهيز/إنتاج",
-  DR: "تعافي",
-  "DNS / Domain": "النطاقات",
-  "SSL / Certificate": "الشهادات",
+  "Dev/QA": "\u062a\u0637\u0648\u064a\u0631/\u0627\u062e\u062a\u0628\u0627\u0631",
+  "Staging/Production": "\u062a\u062c\u0647\u064a\u0632/\u0625\u0646\u062a\u0627\u062c",
+  DR: "\u062a\u0639\u0627\u0641\u064a",
+  "DNS / Domain": "\u0627\u0644\u0646\u0637\u0627\u0642\u0627\u062a",
+  "SSL / Certificate": "\u0627\u0644\u0634\u0647\u0627\u062f\u0627\u062a",
 };
 
 const featuredFilters = ["Dev/QA", "Staging/Production", "DR", "DNS / Domain", "SSL / Certificate"];
@@ -37,8 +37,8 @@ const FilterChip = ({
       type="button"
       className={`inline-flex min-h-9 max-w-full items-center gap-1 rounded-full border px-3.5 py-1 text-xs font-medium transition-all duration-150 ${
         isActive
-          ? "border-primary bg-primary text-primary-foreground shadow-sm"
-          : "border-slate-300 bg-white text-slate-700 shadow-sm hover:border-primary/40 hover:bg-primary/5 hover:text-primary"
+          ? "border-cyan-200 bg-white text-primary shadow-sm"
+          : "border-white/15 bg-white/10 text-slate-100 shadow-sm hover:border-cyan-200/40 hover:bg-white/15 hover:text-white"
       }`}
       onClick={() => onToggle(filter)}
       aria-pressed={isActive}
@@ -46,7 +46,7 @@ const FilterChip = ({
       <span className="truncate">{filter}</span>
       {arLabel && (
         <>
-          <span className={isActive ? "text-primary-foreground/50" : "text-slate-300"}>|</span>
+          <span className={isActive ? "text-primary/35" : "text-white/30"}>|</span>
           <span dir="rtl" lang="ar" className="truncate opacity-85" style={arabicFont}>
             {arLabel}
           </span>
@@ -80,18 +80,18 @@ const QuickFilters = ({ activeFilters, onToggleFilter }: QuickFiltersProps) => {
   );
 
   return (
-    <div className="border-b border-slate-200 bg-slate-100/85 backdrop-blur">
+    <div className="border-b border-white/10 bg-[#0f1931]/95 backdrop-blur">
       <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6">
-        <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-md shadow-slate-950/[0.03]">
+        <div className="rounded-2xl border border-white/15 bg-white/10 p-3 shadow-xl shadow-black/15 backdrop-blur">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
             <div className="flex min-w-fit items-center gap-2 text-xs">
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-primary shadow-sm">
                 <SlidersHorizontal className="h-4 w-4" />
               </span>
               <div>
-                <p className="font-semibold text-slate-950">Filters</p>
-                <p dir="rtl" lang="ar" className="text-slate-500" style={arabicFont}>
-                  الفلاتر
+                <p className="font-semibold text-white">Filters</p>
+                <p dir="rtl" lang="ar" className="text-cyan-100/65" style={arabicFont}>
+                  &#1575;&#1604;&#1601;&#1604;&#1575;&#1578;&#1585;
                 </p>
               </div>
             </div>
@@ -103,7 +103,7 @@ const QuickFilters = ({ activeFilters, onToggleFilter }: QuickFiltersProps) => {
                 <button
                   type="button"
                   onClick={() => onToggleFilter(activeFilter)}
-                  className="inline-flex min-h-9 max-w-full items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary hover:bg-primary/15"
+                  className="inline-flex min-h-9 max-w-full items-center gap-1 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-cyan-100 hover:bg-white/15"
                 >
                   <span className="truncate">{activeFilter}</span>
                   <X className="h-3 w-3 shrink-0" />
@@ -115,7 +115,7 @@ const QuickFilters = ({ activeFilters, onToggleFilter }: QuickFiltersProps) => {
               <button
                 type="button"
                 onClick={() => setShowMore((value) => !value)}
-                className="inline-flex min-h-9 items-center gap-1.5 rounded-xl border border-slate-300 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-800 shadow-sm transition-colors hover:border-primary/40 hover:bg-primary/5"
+                className="inline-flex min-h-9 items-center gap-1.5 rounded-xl border border-white/15 bg-white/10 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition-colors hover:border-cyan-200/35 hover:bg-white/15"
                 aria-expanded={showMore}
               >
                 More filters
@@ -128,7 +128,7 @@ const QuickFilters = ({ activeFilters, onToggleFilter }: QuickFiltersProps) => {
                 <button
                   type="button"
                   onClick={() => onToggleFilter(activeFilter)}
-                  className="inline-flex min-h-9 items-center gap-1 rounded-xl border border-destructive/20 bg-destructive/5 px-3 py-1.5 text-xs font-medium text-destructive transition-colors hover:bg-destructive/10"
+                  className="inline-flex min-h-9 items-center gap-1 rounded-xl border border-red-200/20 bg-red-300/10 px-3 py-1.5 text-xs font-medium text-red-100 transition-colors hover:bg-red-300/15"
                 >
                   <X className="h-3.5 w-3.5" />
                   Clear
@@ -138,11 +138,11 @@ const QuickFilters = ({ activeFilters, onToggleFilter }: QuickFiltersProps) => {
           </div>
 
           {showMore && (
-            <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
+            <div className="mt-3 rounded-xl border border-white/15 bg-[#0b1326]/70 p-3">
               <div className="grid gap-3 lg:grid-cols-[0.7fr_1.3fr]">
                 {advancedGroups.map((group) => (
                   <div key={group.title}>
-                    <p className="mb-2 text-xs font-semibold text-slate-900">{group.title}</p>
+                    <p className="mb-2 text-xs font-semibold text-white">{group.title}</p>
                     <div className="flex flex-wrap gap-2">{group.filters.map(renderChip)}</div>
                   </div>
                 ))}

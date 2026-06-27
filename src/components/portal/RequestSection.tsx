@@ -52,26 +52,26 @@ const RequestSection = ({ title, requests }: RequestSectionProps) => {
     <section className="mb-10">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="group mb-4 flex w-full items-center gap-3 rounded-2xl border border-white/80 bg-white/80 px-4 py-3 text-left shadow-sm outline-none backdrop-blur transition-colors hover:border-primary/25 hover:bg-white focus-visible:ring-2 focus-visible:ring-primary/25"
+        className="group mb-4 flex w-full items-center gap-3 rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-left shadow-xl shadow-black/15 outline-none backdrop-blur transition-colors hover:border-cyan-200/35 hover:bg-white/15 focus-visible:ring-2 focus-visible:ring-cyan-200/25"
       >
-        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
+        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-300/15 text-cyan-100">
           {icon}
         </span>
-        <h2 className="text-base font-semibold text-slate-950">{title}</h2>
+        <h2 className="text-base font-semibold text-white">{title}</h2>
         <CountBadge count={requests.length} />
         {isOpen ? (
-          <ChevronDown className="ml-auto h-4 w-4 text-muted-foreground" />
+          <ChevronDown className="ml-auto h-4 w-4 text-cyan-100/70" />
         ) : (
-          <ChevronRight className="ml-auto h-4 w-4 text-muted-foreground" />
+          <ChevronRight className="ml-auto h-4 w-4 text-cyan-100/70" />
         )}
       </button>
 
       {isOpen && (
         <div>
           {desc && (
-            <div className="mb-6 rounded-2xl border border-white/80 bg-white/70 p-4 shadow-sm backdrop-blur">
-              <p className="mb-1 text-sm font-semibold text-slate-950">{desc.title}</p>
-              <p className="text-xs leading-relaxed text-slate-600">{desc.description}</p>
+            <div className="mb-6 rounded-2xl border border-white/15 bg-white/10 p-4 shadow-xl shadow-black/10 backdrop-blur">
+              <p className="mb-1 text-sm font-semibold text-white">{desc.title}</p>
+              <p className="text-xs leading-relaxed text-slate-200/70">{desc.description}</p>
             </div>
           )}
 
@@ -79,7 +79,7 @@ const RequestSection = ({ title, requests }: RequestSectionProps) => {
             Object.entries(subGroups).map(([subSection, reqs]) => (
               <div key={subSection} className="mb-6">
                 {subSection !== "_none" && (
-                  <h3 className="mb-3 border-b border-border/50 pb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  <h3 className="mb-3 border-b border-white/10 pb-2 text-xs font-semibold uppercase tracking-wider text-cyan-100/60">
                     {subSection}
                   </h3>
                 )}
@@ -104,7 +104,7 @@ const RequestSection = ({ title, requests }: RequestSectionProps) => {
 };
 
 const CountBadge = ({ count }: { count: number }) => (
-  <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-[10px] font-semibold text-primary">
+  <span className="rounded-full bg-cyan-300/15 px-2.5 py-0.5 text-[10px] font-semibold text-cyan-100">
     {count}
   </span>
 );

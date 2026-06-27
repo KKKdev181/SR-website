@@ -648,26 +648,26 @@ const ProjectJourneyChecklist = () => {
     return (
       <div
         onClick={() => setIsOpen(true)}
-        className="group mb-3 cursor-pointer overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md"
+        className="group mb-3 cursor-pointer overflow-hidden rounded-lg border border-white/15 bg-white/10 shadow-xl shadow-black/15 backdrop-blur transition-all duration-200 hover:-translate-y-0.5 hover:border-cyan-200/35 hover:bg-white/15"
       >
         <div className="flex min-h-[6.75rem] items-center gap-4 border-l-4 border-primary px-5 py-4">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-primary">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-white/15 bg-cyan-300/15 text-cyan-100">
             <Layers className="h-5 w-5" />
           </div>
           <div className="flex-1 min-w-0">
             <div className="mb-1 flex flex-wrap items-center gap-2">
-              <h3 className="text-sm font-semibold tracking-tight text-slate-950">Project Journey Checklist</h3>
+              <h3 className="text-sm font-semibold tracking-tight text-white">Project Journey Checklist</h3>
               <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-medium text-primary">Project guide</span>
             </div>
             <p dir="rtl" lang="ar" className="text-xs text-primary/60 font-medium" style={arabicFont}>دليل رحلة المشروع</p>
-            <p className="mt-1 text-xs leading-relaxed text-slate-600">
+            <p className="mt-1 text-xs leading-relaxed text-slate-200/75">
               Step-by-step guide for project managers and technical teams to ensure nothing is missed.
             </p>
             <p dir="rtl" lang="ar" className="mt-1 hidden text-xs text-slate-400 md:block" style={arabicFont}>
               دليل خطوة بخطوة لمديري المشاريع والفرق التقنية للتأكد من عدم نسيان أي شيء
             </p>
           </div>
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-primary transition-colors group-hover:border-primary/30 group-hover:bg-primary group-hover:text-white">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-white/15 bg-white/10 text-cyan-100 transition-colors group-hover:border-cyan-200/30 group-hover:bg-white group-hover:text-primary">
             <ChevronDown className="h-4 w-4" />
           </div>
         </div>
@@ -676,7 +676,7 @@ const ProjectJourneyChecklist = () => {
   }
 
   return (
-    <div className="bg-card border border-primary/15 rounded-xl shadow-sm mb-10 overflow-hidden">
+    <div className="mb-10 overflow-hidden rounded-xl border border-white/15 bg-white/10 shadow-xl shadow-black/15 backdrop-blur">
       <div className="bg-gradient-to-r from-primary/[0.06] to-secondary/[0.04] px-6 py-5 border-b border-border">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">

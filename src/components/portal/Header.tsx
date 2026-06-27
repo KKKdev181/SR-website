@@ -1,7 +1,6 @@
-import { ChevronDown, ExternalLink, Info, Search } from "lucide-react";
+import { ExternalLink, Info, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { requests, sections } from "@/data/requests";
 
 interface HeaderProps {
   searchQuery: string;
@@ -11,24 +10,6 @@ interface HeaderProps {
 const arabicFont = {
   fontFamily: "'Noto Sans Arabic', 'Segoe UI', Tahoma, sans-serif",
 };
-
-const heroStats = [
-  {
-    value: `${requests.length}+`,
-    label: "Technology requests",
-    labelAr: "\u0637\u0644\u0628 \u062a\u0642\u0646\u064a",
-  },
-  {
-    value: `${sections.length}`,
-    label: "Service sections",
-    labelAr: "\u0623\u0642\u0633\u0627\u0645 \u0627\u0644\u062e\u062f\u0645\u0627\u062a",
-  },
-  {
-    value: "Jira",
-    label: "Direct submission",
-    labelAr: "\u0631\u0641\u0639 \u0645\u0628\u0627\u0634\u0631",
-  },
-];
 
 const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
   return (
@@ -115,22 +96,7 @@ const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
             </div>
           </div>
 
-          <nav className="mt-7 flex flex-wrap items-center justify-center gap-x-7 gap-y-2 border-y border-white/10 py-3 text-sm font-semibold text-white/85 lg:justify-end">
-            <span className="inline-flex items-center gap-1">
-              Request catalog
-              <ChevronDown className="h-3.5 w-3.5 text-white/55" />
-            </span>
-            <span className="inline-flex items-center gap-1">
-              Project guide
-              <ChevronDown className="h-3.5 w-3.5 text-white/55" />
-            </span>
-            <span>Jira services</span>
-            <span dir="rtl" lang="ar" style={arabicFont}>
-              &#1571;&#1593;&#1605;&#1575;&#1604;&#1606;&#1575;
-            </span>
-          </nav>
-
-          <div className="grid gap-8 py-10 lg:grid-cols-[minmax(0,1fr)_26rem] lg:items-center lg:py-14">
+          <div className="grid gap-8 py-10 lg:grid-cols-[minmax(0,1fr)_minmax(22rem,34rem)] lg:items-end lg:py-14">
             <div className="max-w-3xl">
               <p className="mb-4 inline-flex rounded-full border border-cyan-200/25 bg-cyan-100/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-cyan-100">
                 Unified service catalog
@@ -154,58 +120,12 @@ const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
                   &#1575;&#1576;&#1581;&#1579; &#1608;&#1589;&#1606;&#1601; &#1608;&#1575;&#1585;&#1601;&#1593; &#1575;&#1604;&#1591;&#1604;&#1576; &#1575;&#1604;&#1589;&#1581;&#1610;&#1581; &#1576;&#1587;&#1607;&#1608;&#1604;&#1577;.
                 </span>
               </p>
-
-              <div className="mt-8 grid max-w-2xl grid-cols-3 divide-x divide-white/20 rounded-2xl border border-white/15 bg-white/10 p-4 shadow-2xl shadow-black/20 backdrop-blur">
-                {heroStats.map((stat) => (
-                  <div key={stat.label} className="px-4 text-center first:pl-0 last:pr-0">
-                    <p className="text-3xl font-bold leading-none text-white">{stat.value}</p>
-                    <p className="mt-2 text-xs font-medium text-white/70">{stat.label}</p>
-                    <p
-                      dir="rtl"
-                      lang="ar"
-                      className="mt-1 text-[11px] text-cyan-100/70"
-                      style={arabicFont}
-                    >
-                      {stat.labelAr}
-                    </p>
-                  </div>
-                ))}
-              </div>
             </div>
 
             <div className="relative">
               <div className="absolute -inset-8 rounded-full bg-cyan-300/15 blur-3xl" />
-              <div className="relative overflow-hidden rounded-[1.75rem] border border-white/15 bg-white/10 p-4 shadow-2xl shadow-black/25 backdrop-blur-xl">
-                <div className="rounded-[1.25rem] border border-white/15 bg-[#080d26]/75 p-4">
-                  <div className="mb-4 flex items-center justify-between text-xs font-semibold text-white/70">
-                    <span>Service intelligence</span>
-                    <span className="rounded-full bg-emerald-300/15 px-2.5 py-1 text-emerald-100">
-                      Live catalog
-                    </span>
-                  </div>
-                  <div className="space-y-3">
-                    <div className="h-24 rounded-2xl border border-cyan-200/20 bg-[linear-gradient(135deg,rgba(0,180,210,0.3),rgba(104,72,220,0.28))] p-3">
-                      <div className="h-2 w-24 rounded-full bg-white/70" />
-                      <div className="mt-4 grid grid-cols-3 gap-2">
-                        <div className="h-11 rounded-xl bg-white/20" />
-                        <div className="h-11 rounded-xl bg-white/12" />
-                        <div className="h-11 rounded-xl bg-white/20" />
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="rounded-2xl border border-white/10 bg-white/10 p-3">
-                        <div className="h-2 w-16 rounded-full bg-cyan-200/70" />
-                        <div className="mt-3 h-8 rounded-xl bg-white/12" />
-                      </div>
-                      <div className="rounded-2xl border border-white/10 bg-white/10 p-3">
-                        <div className="h-2 w-12 rounded-full bg-violet-200/70" />
-                        <div className="mt-3 h-8 rounded-xl bg-white/12" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-4 rounded-[1.35rem] border border-white/20 bg-white/15 p-3">
+              <div className="relative rounded-[1.75rem] border border-white/20 bg-white/15 p-4 shadow-2xl shadow-black/25 backdrop-blur-xl">
+                <div className="rounded-[1.35rem] border border-white/20 bg-white/15 p-3">
                   <div className="mb-2 flex items-center justify-between px-1 text-xs font-semibold text-white/80">
                     <span>Search service catalog</span>
                     <span dir="rtl" lang="ar" style={arabicFont}>

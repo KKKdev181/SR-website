@@ -79,7 +79,7 @@ const RequestCard = ({ request }: RequestCardProps) => {
       tabIndex={0}
       onClick={openRequest}
       onKeyDown={handleKeyDown}
-      className="card-hover group flex min-h-[14.5rem] cursor-pointer flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm outline-none transition-all focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/25"
+      className="card-hover group flex min-h-[14.5rem] cursor-pointer flex-col overflow-hidden rounded-2xl border border-white/15 bg-white/10 shadow-xl shadow-black/20 outline-none backdrop-blur transition-all focus-visible:border-cyan-200/60 focus-visible:ring-2 focus-visible:ring-cyan-200/25"
       aria-label={`Open ${request.title} in Jira`}
     >
       <div className={`h-1 w-full ${categoryAccentMap[request.category] || "bg-muted"}`} />
@@ -87,19 +87,19 @@ const RequestCard = ({ request }: RequestCardProps) => {
       <div className="flex flex-1 flex-col gap-4 p-5">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <p className="mb-1 text-[10px] font-semibold uppercase text-slate-500">
+            <p className="mb-1 text-[10px] font-semibold uppercase text-cyan-100/65">
               {request.subSection || request.section}
             </p>
-            <h3 className="overflow-hidden text-[15px] font-semibold leading-snug text-slate-950 [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]">
+            <h3 className="overflow-hidden text-[15px] font-semibold leading-snug text-white [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]">
               {request.title}
             </h3>
           </div>
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-cyan-100 transition-colors group-hover:bg-white group-hover:text-primary">
             <ArrowUpRight className="h-4 w-4" />
           </span>
         </div>
 
-        <p className="overflow-hidden text-xs leading-6 text-slate-600 [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:3]">
+        <p className="overflow-hidden text-xs leading-6 text-slate-200/75 [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:3]">
           {request.shortDescription}
         </p>
 
@@ -107,7 +107,7 @@ const RequestCard = ({ request }: RequestCardProps) => {
           {request.environment && (
             <Badge
               variant="outline"
-              className="rounded-full border-0 bg-slate-100 px-2.5 py-0.5 text-[10px] font-medium text-slate-600"
+              className="rounded-full border border-white/10 bg-white/10 px-2.5 py-0.5 text-[10px] font-medium text-slate-100"
             >
               {request.environment}
             </Badge>
@@ -122,9 +122,9 @@ const RequestCard = ({ request }: RequestCardProps) => {
           </Badge>
         </div>
 
-        <div className="mt-auto flex items-center justify-between gap-3 border-t border-slate-100 pt-3">
+        <div className="mt-auto flex items-center justify-between gap-3 border-t border-white/10 pt-3">
           {request.deliveryTime ? (
-            <span className="flex min-w-0 items-center gap-1 text-[10px] text-slate-500">
+            <span className="flex min-w-0 items-center gap-1 text-[10px] text-slate-300/75">
               <Clock className="h-3 w-3 shrink-0" />
               <span className="truncate">{request.deliveryTime}</span>
             </span>
@@ -132,10 +132,10 @@ const RequestCard = ({ request }: RequestCardProps) => {
             <span aria-hidden="true" />
           )}
 
-          <span className="inline-flex min-h-9 shrink-0 items-center gap-1.5 rounded-xl bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-sm group-hover:bg-primary/90">
+          <span className="inline-flex min-h-9 shrink-0 items-center gap-1.5 rounded-xl bg-white px-3 py-1.5 text-xs font-semibold text-primary shadow-sm group-hover:bg-cyan-50">
             Open
             <span dir="rtl" lang="ar" className="hidden sm:inline" style={arabicFont}>
-              فتح
+              &#1601;&#1578;&#1581;
             </span>
             <ArrowUpRight className="h-3 w-3" />
           </span>

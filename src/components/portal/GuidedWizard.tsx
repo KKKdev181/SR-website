@@ -93,22 +93,22 @@ const GuidedWizard = () => {
     return (
       <div
         onClick={() => setIsOpen(true)}
-        className="group mb-8 cursor-pointer overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md"
+        className="group mb-8 cursor-pointer overflow-hidden rounded-lg border border-white/15 bg-white/10 shadow-xl shadow-black/15 backdrop-blur transition-all duration-200 hover:-translate-y-0.5 hover:border-emerald-200/35 hover:bg-white/15"
       >
         <div className="flex min-h-[6.75rem] items-center gap-4 border-l-4 border-secondary px-5 py-4">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-secondary">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-white/15 bg-emerald-300/15 text-emerald-100">
             <HelpCircle className="h-5 w-5" />
           </div>
           <div className="flex-1">
             <div className="mb-1 flex flex-wrap items-center gap-2">
-              <h3 className="text-sm font-semibold tracking-tight text-slate-950">Quick Request Match</h3>
+              <h3 className="text-sm font-semibold tracking-tight text-white">Quick Request Match</h3>
               <span className="rounded-full bg-secondary/10 px-2.5 py-0.5 text-[11px] font-medium text-secondary">Fast match</span>
             </div>
             <p dir="rtl" lang="ar" className="text-xs text-accent/60 font-medium mt-0.5" style={arabicFont}>ما تعرف وش تختار؟</p>
-            <p className="mt-1 text-xs leading-relaxed text-slate-600">Answer a few questions and we'll suggest the correct request</p>
+            <p className="mt-1 text-xs leading-relaxed text-slate-200/75">Answer a few questions and we'll suggest the correct request</p>
             <p dir="rtl" lang="ar" className="hidden text-[11px] text-muted-foreground/60 mt-0.5 md:block" style={arabicFont}>جاوب على أسئلة بسيطة وبنقترح لك الطلب المناسب</p>
           </div>
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-secondary transition-colors group-hover:border-secondary/30 group-hover:bg-secondary group-hover:text-white">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-white/15 bg-white/10 text-emerald-100 transition-colors group-hover:border-emerald-200/30 group-hover:bg-white group-hover:text-secondary">
             <ArrowRight className="h-4 w-4" />
           </div>
         </div>
@@ -117,7 +117,7 @@ const GuidedWizard = () => {
   }
 
   return (
-    <div className="bg-card border border-border rounded-xl p-6 mb-10 shadow-sm">
+    <div className="mb-10 rounded-xl border border-white/15 bg-white/10 p-6 shadow-xl shadow-black/15 backdrop-blur">
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-2.5">
           <div className="w-7 h-7 rounded-lg bg-secondary/10 flex items-center justify-center">
