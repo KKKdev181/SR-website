@@ -43,7 +43,7 @@ const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
                     className="text-xl font-bold leading-tight text-white/95 sm:text-2xl"
                     style={arabicFont}
                   >
-                    &#1605;&#1585;&#1603;&#1586; &#1575;&#1604;&#1578;&#1602;&#1606;&#1610;&#1577;
+                    مركز التقنية
                   </span>
                 </div>
               </div>
@@ -62,7 +62,7 @@ const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
                   My Jira Requests
                   <span className="text-cyan-100/45">|</span>
                   <span dir="rtl" lang="ar" style={arabicFont}>
-                    &#1591;&#1604;&#1576;&#1575;&#1578;&#1610;
+                    طلباتي
                   </span>
                   <ExternalLink className="h-3.5 w-3.5" />
                 </Button>
@@ -78,12 +78,14 @@ const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
                   About
                   <span className="text-white/40">|</span>
                   <span dir="rtl" lang="ar" style={arabicFont}>
-                    &#1593;&#1606; &#1575;&#1604;&#1605;&#1608;&#1602;&#1593;
+                    عن الموقع
                   </span>
                 </button>
 
                 <div className="pointer-events-none absolute right-0 top-12 z-[60] w-[min(24rem,calc(100vw-2rem))] rounded-2xl border border-cyan-200/25 bg-[#111a33] p-4 text-left opacity-0 shadow-2xl transition-opacity duration-150 group-hover:opacity-100">
-                  <p className="text-sm font-semibold text-white">About Technology Center Portal</p>
+                  <p className="text-sm font-semibold text-white">
+                    About Technology Center Portal
+                  </p>
                   <p className="mt-1 text-xs leading-relaxed text-slate-200/75">
                     A single place for project and product teams to find technology services and
                     open the correct Jira request with less back-and-forth.
@@ -94,7 +96,10 @@ const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
           </div>
 
           <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-7 py-8 text-center lg:py-10">
-            <div aria-hidden="true" className="premium-hero-motion premium-hero-motion-left hidden xl:block">
+            <div
+              aria-hidden="true"
+              className="premium-hero-motion premium-hero-motion-left hidden xl:block"
+            >
               <div className="motion-panel motion-panel-a">
                 <span className="motion-kicker" />
                 <span className="motion-line motion-line-wide" />
@@ -105,12 +110,21 @@ const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
                 <span className="motion-chip motion-chip-soft" />
               </div>
               <svg className="motion-routes" viewBox="0 0 280 220" fill="none">
-                <path className="motion-route motion-route-one" d="M16 116 C62 54 124 48 168 92 C210 134 238 112 264 68" />
-                <path className="motion-route motion-route-two" d="M24 166 C72 122 120 134 150 158 C190 188 224 160 258 136" />
+                <path
+                  className="motion-route motion-route-one"
+                  d="M16 116 C62 54 124 48 168 92 C210 134 238 112 264 68"
+                />
+                <path
+                  className="motion-route motion-route-two"
+                  d="M24 166 C72 122 120 134 150 158 C190 188 224 160 258 136"
+                />
               </svg>
             </div>
 
-            <div aria-hidden="true" className="premium-hero-motion premium-hero-motion-right hidden xl:block">
+            <div
+              aria-hidden="true"
+              className="premium-hero-motion premium-hero-motion-right hidden xl:block"
+            >
               <div className="motion-panel motion-panel-c">
                 <span className="motion-kicker" />
                 <span className="motion-line motion-line-wide" />
@@ -121,31 +135,43 @@ const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
                 <span className="motion-chip motion-chip-soft" />
               </div>
               <svg className="motion-routes" viewBox="0 0 280 220" fill="none">
-                <path className="motion-route motion-route-one" d="M18 82 C70 126 116 130 152 92 C194 48 226 52 264 90" />
-                <path className="motion-route motion-route-two" d="M26 154 C70 186 118 170 152 144 C194 112 226 118 258 152" />
+                <path
+                  className="motion-route motion-route-one"
+                  d="M18 82 C70 126 116 130 152 92 C194 48 226 52 264 90"
+                />
+                <path
+                  className="motion-route motion-route-two"
+                  d="M26 154 C70 186 118 170 152 144 C194 112 226 118 258 152"
+                />
               </svg>
             </div>
 
             <div className="relative z-10">
-              <h2 className="max-w-4xl text-4xl font-bold leading-[1.08] text-white sm:text-5xl">
-                Find the right technology request
+              <h2 className="mx-auto max-w-4xl text-3xl font-bold leading-[1.12] text-white sm:text-4xl lg:text-[2.65rem]">
+                Your guide to the right technology request
                 <span
-                  className="mt-2 block text-white/92"
+                  className="mt-2 block text-[1.85rem] leading-[1.22] text-white/92 sm:text-[2.35rem] lg:text-[2.55rem]"
                   dir="rtl"
                   lang="ar"
                   style={arabicFont}
                 >
-                  &#1575;&#1601;&#1578;&#1581; &#1575;&#1604;&#1591;&#1604;&#1576; &#1575;&#1604;&#1578;&#1602;&#1606;&#1610; &#1575;&#1604;&#1605;&#1606;&#1575;&#1587;&#1576;
+                  دليلك لاختيار الطلب التقني المناسب
                 </span>
               </h2>
-              <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-white/80">
-                Search, filter, prepare, and open the correct Jira request from one polished
-                enterprise workspace.
-                <span className="mx-2 text-white/35">|</span>
-                <span dir="rtl" lang="ar" style={arabicFont}>
-                  &#1575;&#1576;&#1581;&#1579; &#1608;&#1589;&#1606;&#1601; &#1608;&#1575;&#1585;&#1601;&#1593; &#1575;&#1604;&#1591;&#1604;&#1576; &#1575;&#1604;&#1589;&#1581;&#1610;&#1581; &#1576;&#1587;&#1607;&#1608;&#1604;&#1577;.
-                </span>
-              </p>
+
+              <div className="mx-auto mt-4 flex max-w-2xl flex-col items-center gap-1.5 text-center">
+                <p className="max-w-xl text-[13px] font-medium leading-6 text-white/78 sm:text-sm">
+                  Find the service request, review the requirements, and go directly to the correct Jira request.
+                </p>
+                <p
+                  dir="rtl"
+                  lang="ar"
+                  className="max-w-xl text-[13px] font-medium leading-6 text-white/72 sm:text-sm"
+                  style={arabicFont}
+                >
+                  ابحث عن الخدمة، راجع المتطلبات، وانتقل مباشرة إلى طلب Jira الصحيح.
+                </p>
+              </div>
             </div>
 
             <div className="relative z-10 w-full max-w-3xl">
@@ -155,9 +181,10 @@ const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
                   <div className="mb-2 flex items-center justify-between px-1 text-xs font-semibold text-white/90">
                     <span>Search service catalog</span>
                     <span dir="rtl" lang="ar" style={arabicFont}>
-                      &#1575;&#1576;&#1581;&#1579; &#1601;&#1610; &#1575;&#1604;&#1582;&#1583;&#1605;&#1575;&#1578;
+                      ابحث في الخدمات
                     </span>
                   </div>
+
                   <div className="relative min-w-0">
                     <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-primary" />
                     <Input

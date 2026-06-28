@@ -90,7 +90,7 @@ export const requests: ServiceRequest[] = [
     category: "New Service Setup",
     shortDescription: "Used for new project/service staging and production servers. New service name adding is a prerequisite. Includes request for new VLANs and servers; not for existing projects with existing VLANs/servers.",
     keywords: ["create", "new", "staging", "production", "server", "for", "project", "service", "products", "and", "projects", "requests", "setup", "environments", "used", "servers", "name", "adding"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/405?returnUrl=%2Fcategory%2Finitiate",
   },
   {
     id: "prod-and-005",
@@ -111,7 +111,7 @@ export const requests: ServiceRequest[] = [
     category: "Access & Permissions",
     shortDescription: "Request to purchase and configure a Google Maps account for business use.",
     keywords: ["order", "google", "map", "account", "products", "and", "projects", "requests", "access", "accounts", "permissions", "request", "to", "purchase", "configure", "maps", "for", "business"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/710",
   },
   {
     id: "prod-and-007",
@@ -121,7 +121,7 @@ export const requests: ServiceRequest[] = [
     category: "Accounts & External Services",
     shortDescription: "Request to create or update Google Captcha for business use.",
     keywords: ["google", "captcha", "products", "and", "projects", "requests", "access", "accounts", "external", "services", "request", "to", "create", "or", "update", "for", "business", "use"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/829",
   },
   {
     id: "prod-and-008",
@@ -131,7 +131,7 @@ export const requests: ServiceRequest[] = [
     category: "SSL / Certificate",
     shortDescription: "Request SSL certificate to secure websites or applications.",
     keywords: ["order", "ssl", "certificate", "products", "and", "projects", "requests", "network", "security", "compliance", "request", "to", "secure", "websites", "or", "applications"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/709",
   },
   {
     id: "prod-and-009",
@@ -192,7 +192,7 @@ export const requests: ServiceRequest[] = [
     category: "Environment / Server Provisioning",
     shortDescription: "Provision new servers in DR site. Requires sharing sizing sheet with detailed requirements.",
     keywords: ["create", "new", "dr", "servers", "for", "project", "service", "products", "and", "projects", "requests", "infrastructure", "cloud", "platform", "environment", "server", "provisioning", "provision"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/597?returnUrl=%2Fcategory%2Finitiate",
   },
   {
     id: "prod-and-015",
@@ -203,7 +203,7 @@ export const requests: ServiceRequest[] = [
     category: "Access & Permissions",
     shortDescription: "Allow connection from source servers of the project/service to internal or external entities for integration purposes.",
     keywords: ["access", "provisioning", "communication", "for", "staging", "production", "products", "and", "projects", "requests", "accounts", "permissions", "allow", "connection", "from", "source", "servers", "of"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/206?returnUrl=%2Fcategory%2Fmod",
     popular: true,
   },
   {
@@ -215,7 +215,7 @@ export const requests: ServiceRequest[] = [
     category: "Scale / Capacity",
     shortDescription: "Request to add new server(s) to the environment, such as staging or production.",
     keywords: ["scale", "up", "add", "new", "server", "products", "and", "projects", "requests", "infrastructure", "cloud", "platform", "capacity", "request", "to", "the", "environment", "such"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/748?returnUrl=%2Fcategory%2Fmod",
     popular: true,
   },
   {
@@ -237,7 +237,7 @@ export const requests: ServiceRequest[] = [
     category: "Scale / Capacity",
     shortDescription: "Decrease part of the infrastructure resources for the service setup.",
     keywords: ["service", "scale", "down", "products", "and", "projects", "requests", "infrastructure", "cloud", "platform", "capacity", "decrease", "part", "of", "the", "resources", "for", "setup"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/297?returnUrl=%2Fcategory%2Fmod",
   },
   {
     id: "prod-and-019",
@@ -248,7 +248,7 @@ export const requests: ServiceRequest[] = [
     category: "Monitoring / Troubleshooting",
     shortDescription: "Request changes in service design for production or staging, such as configuration or infrastructure design updates.",
     keywords: ["service", "design", "change", "for", "production", "staging", "products", "and", "projects", "requests", "monitoring", "jira", "support", "troubleshooting", "request", "changes", "in", "or"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/402?returnUrl=%2Fcategory%2Fmod",
   },
   {
     id: "prod-and-020",
@@ -280,7 +280,7 @@ export const requests: ServiceRequest[] = [
     category: "Access & Permissions",
     shortDescription: "Request secure network connectivity such as GSN, MPLS, or IPsec VPN.",
     keywords: ["secure", "network", "connectivity", "gsn", "mpls", "site", "to", "products", "and", "projects", "requests", "access", "accounts", "permissions", "request", "such", "as", "or"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/834?returnUrl=%2Fcategory%2Fmod",
   },
   {
     id: "prod-and-023",
@@ -321,7 +321,7 @@ export const requests: ServiceRequest[] = [
     category: "Release / Lifecycle",
     shortDescription: "Request to publish a new service.",
     keywords: ["new", "service", "publishing", "products", "and", "projects", "requests", "devops", "release", "lifecycle", "request", "to", "publish"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/205",
   },
   {
     id: "prod-and-027",
@@ -331,7 +331,7 @@ export const requests: ServiceRequest[] = [
     category: "Release / Lifecycle",
     shortDescription: "Request to retire/decommission an existing service.",
     keywords: ["service", "retirement", "products", "and", "projects", "requests", "devops", "release", "lifecycle", "request", "to", "retire", "decommission", "an", "existing"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/category/ret",
   },
   {
     id: "prod-and-028",
@@ -351,7 +351,7 @@ export const requests: ServiceRequest[] = [
     category: "Reporting / BI / Cost",
     shortDescription: "Request cost analysis for a project/product. If received in the first 10 days of the month, last month cost may not be included because operation cost preparation may still be in progress.",
     keywords: ["project", "product", "cost", "analysis", "products", "and", "projects", "requests", "business", "bi", "mobile", "ux", "reporting", "request", "for", "if", "received", "in"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/445",
   },
   {
     id: "prod-and-030",
@@ -361,7 +361,7 @@ export const requests: ServiceRequest[] = [
     category: "Access & Permissions",
     shortDescription: "Request database-related services such as updating data tables, backup management, user management, replication management, performance reports, and query outputs.",
     keywords: ["database", "service", "requests", "products", "and", "projects", "access", "accounts", "permissions", "request", "related", "services", "such", "as", "updating", "data", "tables", "backup"],
-    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/679",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/436",
   },
   {
     id: "prod-and-031",
@@ -371,7 +371,7 @@ export const requests: ServiceRequest[] = [
     category: "Monitoring / Troubleshooting",
     shortDescription: "Request application management support, token registration, service eligibility, and lifecycle management.",
     keywords: ["application", "service", "requests", "products", "and", "projects", "monitoring", "jira", "support", "troubleshooting", "request", "management", "token", "registration", "eligibility", "lifecycle"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/437",
   },
   {
     id: "prod-and-032",
@@ -381,7 +381,7 @@ export const requests: ServiceRequest[] = [
     category: "Database / Storage / Backup",
     shortDescription: "Request services such as taking backup, modifying backup, or restoring servers/databases.",
     keywords: ["backup", "service", "products", "and", "projects", "requests", "data", "storage", "database", "request", "services", "such", "as", "taking", "modifying", "or", "restoring", "servers"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/472",
   },
   {
     id: "prod-and-033",
@@ -391,7 +391,7 @@ export const requests: ServiceRequest[] = [
     category: "Database / Storage / Backup",
     shortDescription: "Request for new storage, expansion, or removal such as New Disk, NFS, SMB, and S3.",
     keywords: ["storage", "services", "products", "and", "projects", "requests", "data", "backup", "database", "request", "for", "new", "expansion", "or", "removal", "such", "as", "disk"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/362",
   },
   {
     id: "prod-and-034",
@@ -401,7 +401,7 @@ export const requests: ServiceRequest[] = [
     category: "Monitoring / Troubleshooting",
     shortDescription: "Request performance testing execution.",
     keywords: ["performance", "test", "request", "products", "and", "projects", "requests", "monitoring", "jira", "support", "troubleshooting", "testing", "execution"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/735",
   },
   {
     id: "prod-and-035",
@@ -421,7 +421,7 @@ export const requests: ServiceRequest[] = [
     category: "Database / Storage / Backup",
     shortDescription: "Request archive service/support.",
     keywords: ["archive", "request", "products", "and", "projects", "requests", "data", "storage", "backup", "database", "service", "support"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/736",
   },
   {
     id: "prod-and-037",
@@ -431,7 +431,7 @@ export const requests: ServiceRequest[] = [
     category: "Monitoring / Troubleshooting",
     shortDescription: "Request BI report service/support.",
     keywords: ["bi", "report", "products", "and", "projects", "requests", "monitoring", "jira", "support", "troubleshooting", "request", "service"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/737",
   },
   {
     id: "prod-and-038",
@@ -441,7 +441,7 @@ export const requests: ServiceRequest[] = [
     category: "Mobile / UX / Contact Center",
     shortDescription: "Modify existing IVR workflow to update menu options and call routing paths based on new business requirements.",
     keywords: ["request", "for", "existing", "contact", "center", "project", "products", "and", "projects", "requests", "business", "bi", "mobile", "ux", "modify", "ivr", "workflow", "to"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/612",
   },
   {
     id: "prod-and-039",
@@ -451,7 +451,7 @@ export const requests: ServiceRequest[] = [
     category: "Mobile / UX / Contact Center",
     shortDescription: "Create new IVR tree workflow with menu options and call routing paths based on new business requirements.",
     keywords: ["request", "for", "new", "contact", "center", "project", "products", "and", "projects", "requests", "business", "bi", "mobile", "ux", "create", "ivr", "tree", "workflow"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/611",
   },
   {
     id: "user-acce-001",
@@ -602,7 +602,7 @@ export const requests: ServiceRequest[] = [
     category: "Access & Permissions",
     shortDescription: "Provide user access on Jira projects, create/update scrum boards, and import test cases.",
     keywords: ["jira", "service", "request", "platform", "services", "hpsm", "cloud", "nativeservices", "access", "accounts", "permissions", "provide", "user", "on", "projects", "create", "update", "scrum"],
-    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/category/js",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/790",
   },
   {
     id: "plat-serv-002",
@@ -612,7 +612,7 @@ export const requests: ServiceRequest[] = [
     category: "Access & Permissions",
     shortDescription: "Provide users with reports from Jira.",
     keywords: ["create", "report", "platform", "services", "jira", "hpsm", "cloud", "nativeservices", "access", "accounts", "permissions", "provide", "users", "with", "reports", "from"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/537",
   },
   {
     id: "plat-serv-003",
@@ -623,7 +623,7 @@ export const requests: ServiceRequest[] = [
     category: "Cloud / Platform",
     shortDescription: "Enable minor change in a project to deliver applications to production in an agile, faster, resilient, and robust deployment model with pre-approvals to support the business.",
     keywords: ["enable", "minor", "change", "platform", "services", "jira", "hpsm", "cloud", "nativeservices", "infrastructure", "in", "project", "to", "deliver", "applications", "production", "an", "agile"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/533",
   },
   {
     id: "plat-serv-004",
@@ -633,7 +633,7 @@ export const requests: ServiceRequest[] = [
     category: "Cloud / Platform",
     shortDescription: "Troubleshoot issues on running Jira services, such as RFC issues, SLA issues, or general Jira problems.",
     keywords: ["jira", "troubleshooting", "request", "platform", "services", "hpsm", "cloud", "nativeservices", "infrastructure", "troubleshoot", "issues", "on", "running", "such", "as", "rfc", "sla", "or"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/830",
   },
   {
     id: "plat-serv-005",
@@ -643,7 +643,7 @@ export const requests: ServiceRequest[] = [
     category: "Cloud / Platform",
     shortDescription: "Create an SR for creating new process requests in the system or modifying existing workflows.",
     keywords: ["sr4sr", "platform", "services", "jira", "hpsm", "cloud", "nativeservices", "infrastructure", "create", "an", "sr", "for", "creating", "new", "process", "requests", "in", "the"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/685",
   },
   {
     id: "plat-serv-006",
@@ -653,7 +653,7 @@ export const requests: ServiceRequest[] = [
     category: "Cloud / Platform",
     shortDescription: "Provide services to support Solution Operation and Cloud Native requests.",
     keywords: ["solution", "operation", "support", "platform", "services", "jira", "hpsm", "cloud", "nativeservices", "infrastructure", "provide", "to", "and", "native", "requests"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/302",
   },
   {
     id: "plat-serv-007",
@@ -663,7 +663,7 @@ export const requests: ServiceRequest[] = [
     category: "Access & Permissions",
     shortDescription: "Provide services to support users in Cloud Native Services.",
     keywords: ["platform", "infra", "service", "services", "jira", "hpsm", "cloud", "nativeservices", "access", "accounts", "permissions", "provide", "to", "support", "users", "in", "native"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/293",
   },
   {
     id: "plat-serv-008",
@@ -693,7 +693,7 @@ export const requests: ServiceRequest[] = [
     category: "Access & Permissions",
     shortDescription: "Run internal products on corporate environment with highly scalable Kubernetes/OpenShift.",
     keywords: ["corp", "internal", "proj", "onboarding", "platform", "services", "jira", "hpsm", "cloud", "nativeservices", "access", "accounts", "permissions", "run", "products", "on", "corporate", "environment"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/681",
   },
   {
     id: "plat-serv-011",
@@ -703,7 +703,7 @@ export const requests: ServiceRequest[] = [
     category: "Cloud / Platform",
     shortDescription: "Request support for integration-related services.",
     keywords: ["integration", "support", "platform", "services", "jira", "hpsm", "cloud", "nativeservices", "infrastructure", "request", "for", "related"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/822",
   },
   {
     id: "plat-serv-012",
@@ -713,7 +713,7 @@ export const requests: ServiceRequest[] = [
     category: "Access & Permissions",
     shortDescription: "Provide user access on Micro Focus Service Manager tool, add/remove user groups, manage privileges, and update support plans.",
     keywords: ["service", "manager", "requests", "platform", "services", "jira", "hpsm", "cloud", "nativeservices", "access", "accounts", "permissions", "provide", "user", "on", "micro", "focus", "tool"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/286",
   },
   {
     id: "plat-serv-013",
@@ -723,7 +723,7 @@ export const requests: ServiceRequest[] = [
     category: "Access & Permissions",
     shortDescription: "Support users to create or update a view, mass reports, or Service Manager dashboard.",
     keywords: ["service", "manager", "views", "reports", "platform", "services", "jira", "hpsm", "cloud", "nativeservices", "access", "accounts", "permissions", "support", "users", "to", "create", "or"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/287",
   },
   {
     id: "plat-serv-014",
@@ -733,7 +733,7 @@ export const requests: ServiceRequest[] = [
     category: "Cloud / Platform",
     shortDescription: "Enhance an existing service or create a new integration service with Service Manager.",
     keywords: ["service", "manager", "enhancements", "integrations", "platform", "services", "jira", "hpsm", "cloud", "nativeservices", "infrastructure", "enhance", "an", "existing", "or", "create", "new", "integration"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/288",
   },
   {
     id: "gene-it-001",
@@ -753,7 +753,7 @@ export const requests: ServiceRequest[] = [
     category: "SSL / Certificate",
     shortDescription: "Operating system service requests such as OS Service Management, Server Software Management, Reports Management, Security and Certificate Management, and Cloud Services Management.",
     keywords: ["operating", "system", "support", "services", "general", "it", "operations", "network", "security", "compliance", "ssl", "certificate", "service", "requests", "such", "as", "os", "management"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/324",
   },
   {
     id: "gene-it-003",
@@ -773,7 +773,7 @@ export const requests: ServiceRequest[] = [
     category: "Network / Connectivity",
     shortDescription: "Request network services such as activating an office network port.",
     keywords: ["network", "services", "general", "it", "operations", "security", "compliance", "connectivity", "request", "such", "as", "activating", "an", "office", "port"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/325",
   },
   {
     id: "gene-it-005",
@@ -783,7 +783,7 @@ export const requests: ServiceRequest[] = [
     category: "Access & Permissions",
     shortDescription: "Request data center access for Elm users and external users.",
     keywords: ["data", "center", "visit", "access", "general", "it", "operations", "services", "accounts", "permissions", "request", "for", "elm", "users", "and", "external"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/719",
   },
   {
     id: "gene-it-006",
@@ -793,7 +793,7 @@ export const requests: ServiceRequest[] = [
     category: "Monitoring / Troubleshooting",
     shortDescription: "Monitor service infrastructure components for fault failures, trigger notification alerts, and generate reports related to service availability, utilization, and monitoring alerts.",
     keywords: ["monitoring", "services", "request", "general", "it", "operations", "jira", "support", "troubleshooting", "monitor", "service", "infrastructure", "components", "for", "fault", "failures", "trigger", "notification"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/439",
   },
   {
     id: "gene-it-007",
@@ -804,7 +804,7 @@ export const requests: ServiceRequest[] = [
     category: "Security / Compliance",
     shortDescription: "Apply CIS compliance on DEV/QA servers.",
     keywords: ["dev", "qa", "compliance", "general", "it", "operations", "services", "network", "security", "apply", "cis", "on", "servers"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/424",
   },
   {
     id: "gene-it-008",
@@ -814,7 +814,7 @@ export const requests: ServiceRequest[] = [
     category: "Reporting / BI / Cost",
     shortDescription: "Request estimated cost for required environments as per requirements.",
     keywords: ["boq", "costing", "general", "it", "operations", "services", "business", "bi", "mobile", "ux", "reporting", "cost", "request", "estimated", "for", "required", "environments", "as"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/506",
   },
   {
     id: "gene-it-009",
@@ -824,7 +824,7 @@ export const requests: ServiceRequest[] = [
     category: "DevOps / CI-CD",
     shortDescription: "Request operational tasks for DevSecOps tools.",
     keywords: ["request", "for", "devsecops", "services", "general", "it", "operations", "devops", "release", "lifecycle", "ci", "cd", "operational", "tasks", "tools"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/596",
   },
   {
     id: "gene-it-010",
@@ -834,7 +834,7 @@ export const requests: ServiceRequest[] = [
     category: "Security / Compliance",
     shortDescription: "Initiate an audit engagement covering requirements of NCA, AACR, and Internal Audit.",
     keywords: ["audit", "engagement", "request", "general", "it", "operations", "services", "network", "security", "compliance", "initiate", "an", "covering", "requirements", "of", "nca", "aacr", "and"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/594",
   },
   {
     id: "gene-it-011",
@@ -844,7 +844,7 @@ export const requests: ServiceRequest[] = [
     category: "Monitoring / Troubleshooting",
     shortDescription: "Request support or service related to telephony system.",
     keywords: ["request", "for", "telephony", "system", "general", "it", "operations", "services", "monitoring", "jira", "support", "troubleshooting", "or", "service", "related", "to"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/610",
   },
   {
     id: "bizo-001",
@@ -854,7 +854,7 @@ export const requests: ServiceRequest[] = [
     category: "Reporting / BI / Cost",
     shortDescription: "Request to review or update a service profile.",
     keywords: ["review", "update", "service", "profile", "request", "bizops", "business", "bi", "mobile", "ux", "reporting", "cost", "to", "or"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/704",
   },
   {
     id: "bizo-002",
@@ -864,7 +864,7 @@ export const requests: ServiceRequest[] = [
     category: "Access & Permissions",
     shortDescription: "Request access to Elm User Portal.",
     keywords: ["elm", "user", "portal", "access", "bizops", "accounts", "permissions", "request", "to"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/24/create/463",
   },
   {
     id: "bizo-003",
@@ -874,7 +874,7 @@ export const requests: ServiceRequest[] = [
     category: "Business Operations",
     shortDescription: "Request FSM support.",
     keywords: ["fsm", "support", "bizops", "business", "bi", "mobile", "ux", "operations", "request"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/17/create/835",
   },
   {
     id: "bizo-004",
@@ -884,7 +884,7 @@ export const requests: ServiceRequest[] = [
     category: "Business Operations",
     shortDescription: "Request OPM support.",
     keywords: ["opm", "support", "bizops", "business", "bi", "mobile", "ux", "operations", "request"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/17/create/754",
   },
   {
     id: "bizo-005",
@@ -894,7 +894,7 @@ export const requests: ServiceRequest[] = [
     category: "Business Operations",
     shortDescription: "Request training support or training session.",
     keywords: ["training", "request", "bizops", "business", "bi", "mobile", "ux", "operations", "support", "or", "session"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/17/create/789",
   },
   {
     id: "bizo-006",
@@ -904,7 +904,7 @@ export const requests: ServiceRequest[] = [
     category: "Reporting / BI / Cost",
     shortDescription: "Submit a general request when no specific request type applies.",
     keywords: ["general", "request", "bizops", "business", "bi", "mobile", "ux", "reporting", "cost", "submit", "when", "no", "specific", "type", "applies"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/17/create/281",
   },
   {
     id: "bizo-007",
@@ -914,7 +914,7 @@ export const requests: ServiceRequest[] = [
     category: "Business Operations",
     shortDescription: "Request SLA-related support or update.",
     keywords: ["sla", "request", "bizops", "business", "bi", "mobile", "ux", "operations", "related", "support", "or", "update"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/17/create/361",
   },
   {
     id: "bizo-008",
@@ -924,7 +924,7 @@ export const requests: ServiceRequest[] = [
     category: "Reporting / BI / Cost",
     shortDescription: "Submit finance-related request.",
     keywords: ["finance", "request", "bizops", "business", "bi", "mobile", "ux", "reporting", "cost", "submit", "related"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/17/create/443",
   },
   {
     id: "bizo-009",
@@ -934,7 +934,7 @@ export const requests: ServiceRequest[] = [
     category: "Business Operations",
     shortDescription: "Request support related to service knowledge content or documentation.",
     keywords: ["service", "knowledge", "support", "bizops", "business", "bi", "mobile", "ux", "operations", "request", "related", "to", "content", "or", "documentation"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/17/create/507",
   },
   {
     id: "bizo-010",
@@ -944,7 +944,7 @@ export const requests: ServiceRequest[] = [
     category: "Business Operations",
     shortDescription: "Request Bashir Insurance integration support.",
     keywords: ["bashir", "insurance", "integration", "request", "bizops", "business", "bi", "mobile", "ux", "operations", "support"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/17/create/553",
   },
   {
     id: "bizo-011",
@@ -954,7 +954,7 @@ export const requests: ServiceRequest[] = [
     category: "Reporting / BI / Cost",
     shortDescription: "Request ownership transfer validation.",
     keywords: ["ownership", "transfer", "validation", "request", "bizops", "business", "bi", "mobile", "ux", "reporting", "cost"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/17/create/558",
   },
   {
     id: "bizo-012",
@@ -964,7 +964,7 @@ export const requests: ServiceRequest[] = [
     category: "Release / Lifecycle",
     shortDescription: "Request release-related support.",
     keywords: ["release", "support", "bizops", "devops", "lifecycle", "request", "related"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/17/create/589",
   },
   {
     id: "bizo-013",
@@ -974,7 +974,7 @@ export const requests: ServiceRequest[] = [
     category: "Reporting / BI / Cost",
     shortDescription: "Request to add a sender.",
     keywords: ["adding", "sender", "bizops", "business", "bi", "mobile", "ux", "reporting", "cost", "request", "to", "add"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/17/create/605",
   },
   {
     id: "bizo-014",
@@ -984,7 +984,7 @@ export const requests: ServiceRequest[] = [
     category: "Business Operations",
     shortDescription: "Request BO handover support.",
     keywords: ["bo", "handover", "bizops", "business", "bi", "mobile", "ux", "operations", "request", "support"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/17/create/711",
   },
   {
     id: "bizo-015",
@@ -994,7 +994,7 @@ export const requests: ServiceRequest[] = [
     category: "Reporting / BI / Cost",
     shortDescription: "Request violation cancellation.",
     keywords: ["violation", "cancellation", "bizops", "business", "bi", "mobile", "ux", "reporting", "cost", "request"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/17/create/613",
   },
   {
     id: "bizo-016",
@@ -1004,7 +1004,7 @@ export const requests: ServiceRequest[] = [
     category: "Reporting / BI / Cost",
     shortDescription: "Request truck exceptions handling.",
     keywords: ["truck", "exceptions", "bizops", "business", "bi", "mobile", "ux", "reporting", "cost", "request", "handling"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/17/create/674",
   },
   {
     id: "bizo-017",
@@ -1014,7 +1014,7 @@ export const requests: ServiceRequest[] = [
     category: "Reporting / BI / Cost",
     shortDescription: "Submit a technical request.",
     keywords: ["technical", "request", "bizops", "business", "bi", "mobile", "ux", "reporting", "cost", "submit"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/27/create/541",
   },
   {
     id: "bizo-018",
@@ -1024,7 +1024,7 @@ export const requests: ServiceRequest[] = [
     category: "Reporting / BI / Cost",
     shortDescription: "Submit a business request.",
     keywords: ["business", "request", "bizops", "bi", "mobile", "ux", "reporting", "cost", "submit"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/27/create/540",
   },
   {
     id: "bizo-019",
@@ -1035,7 +1035,7 @@ export const requests: ServiceRequest[] = [
     category: "New Service Setup",
     shortDescription: "Request client onboarding for production environment.",
     keywords: ["client", "onboarding", "request", "production", "bizops", "service", "setup", "environments", "new", "for", "environment"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/17/create/817",
   },
   {
     id: "bizo-020",
@@ -1046,7 +1046,7 @@ export const requests: ServiceRequest[] = [
     category: "New Service Setup",
     shortDescription: "Request client onboarding for staging environment.",
     keywords: ["client", "onboarding", "request", "staging", "bizops", "service", "setup", "environments", "new", "for", "environment"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/17/create/816",
   },
   {
     id: "bizo-021",
@@ -1056,7 +1056,7 @@ export const requests: ServiceRequest[] = [
     category: "Access & Permissions",
     shortDescription: "Request or access Achievement Board service.",
     keywords: ["achievement", "board", "bizops", "access", "accounts", "permissions", "request", "or", "service"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/796",
   },
   {
     id: "bizo-022",
@@ -1066,7 +1066,7 @@ export const requests: ServiceRequest[] = [
     category: "Reporting / BI / Cost",
     shortDescription: "Request business operation services.",
     keywords: ["request", "business", "operation", "services", "bizops", "bi", "mobile", "ux", "reporting", "cost"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/17/create/827",
   },
   {
     id: "mobi-app-001",
@@ -1076,7 +1076,7 @@ export const requests: ServiceRequest[] = [
     category: "Mobile / UX / Contact Center",
     shortDescription: "Request mobile app development including planning, development, testing, and store publishing.",
     keywords: ["mobile", "app", "development", "request", "requests", "business", "bi", "ux", "contact", "center", "including", "planning", "testing", "and", "store", "publishing"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/26/create/489",
   },
   {
     id: "mobi-app-002",
@@ -1086,7 +1086,7 @@ export const requests: ServiceRequest[] = [
     category: "Mobile / UX / Contact Center",
     shortDescription: "Request an estimation for time in days and cost of mobile app development.",
     keywords: ["estimation", "for", "mobile", "app", "development", "requests", "business", "bi", "ux", "contact", "center", "request", "an", "time", "in", "days", "and", "cost"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/26/create/564",
   },
   {
     id: "mobi-app-003",
@@ -1096,7 +1096,7 @@ export const requests: ServiceRequest[] = [
     category: "Mobile / UX / Contact Center",
     shortDescription: "Request mobile app testing for quality assurance.",
     keywords: ["testing", "mobile", "app", "requests", "business", "bi", "ux", "contact", "center", "request", "for", "quality", "assurance"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/26/create/565",
   },
   {
     id: "uxui-requ-001",
@@ -1106,7 +1106,7 @@ export const requests: ServiceRequest[] = [
     category: "Mobile / UX / Contact Center",
     shortDescription: "Transform your vision into a tangible experience. UX/UI design service delivers high interactive Figma prototypes and includes requirement gathering, planning, and implementation.",
     keywords: ["ux", "ui", "design", "request", "uxui", "business", "bi", "mobile", "contact", "center", "transform", "your", "vision", "into", "tangible", "experience", "service", "delivers"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/26/create/492",
   },
   {
     id: "uxui-requ-002",
@@ -1116,7 +1116,7 @@ export const requests: ServiceRequest[] = [
     category: "Mobile / UX / Contact Center",
     shortDescription: "Develop designs into functional interfaces/web pages. The service includes requirement gathering, planning, and implementation.",
     keywords: ["frontend", "portal", "development", "uxui", "request", "business", "bi", "mobile", "ux", "contact", "center", "develop", "designs", "into", "functional", "interfaces", "web", "pages"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/26/create/493",
   },
   {
     id: "uxui-requ-003",
@@ -1126,7 +1126,7 @@ export const requests: ServiceRequest[] = [
     category: "Mobile / UX / Contact Center",
     shortDescription: "Maximize user satisfaction and product performance through usability testing or UX/UI assessment. Includes requirement gathering, planning, and implementation.",
     keywords: ["usability", "test", "or", "ux", "ui", "assessment", "request", "uxui", "business", "bi", "mobile", "contact", "center", "maximize", "user", "satisfaction", "and", "product"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/26/create/495",
   },
   {
     id: "uxui-requ-004",
@@ -1136,7 +1136,7 @@ export const requests: ServiceRequest[] = [
     category: "Mobile / UX / Contact Center",
     shortDescription: "Request an estimation for time in days and cost of UX/UI design or frontend development.",
     keywords: ["estimation", "for", "ux", "ui", "design", "frontend", "development", "uxui", "request", "business", "bi", "mobile", "contact", "center", "an", "time", "in", "days"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/26/create/538",
   },
   {
     id: "bi-serv-001",
@@ -1146,7 +1146,7 @@ export const requests: ServiceRequest[] = [
     category: "Reporting / BI / Cost",
     shortDescription: "Generate scheduled report based on shared query from end user, create a new report, enhance an existing report, delete a report, or manage recipients.",
     keywords: ["bi", "report", "request", "service", "business", "mobile", "ux", "reporting", "cost", "generate", "scheduled", "based", "on", "shared", "query", "from", "end", "user"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/26/create/563",
   },
   {
     id: "bi-serv-002",
@@ -1156,7 +1156,7 @@ export const requests: ServiceRequest[] = [
     category: "Access & Permissions",
     shortDescription: "Add/remove users and reset passwords for dashboard or self-services.",
     keywords: ["bi", "access", "management", "service", "request", "accounts", "permissions", "add", "remove", "users", "and", "reset", "passwords", "for", "dashboard", "or", "self", "services"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/26/create/562",
   },
   {
     id: "bi-serv-003",
@@ -1166,7 +1166,7 @@ export const requests: ServiceRequest[] = [
     category: "Reporting / BI / Cost",
     shortDescription: "Create, enhance, or delete BI dashboard/self-service dashboard. Also includes data migration requests.",
     keywords: ["bi", "project", "request", "service", "business", "mobile", "ux", "reporting", "cost", "create", "enhance", "or", "delete", "dashboard", "self", "also", "includes", "data"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/26/create/556",
   },
   {
     id: "bi-serv-004",
@@ -1176,7 +1176,7 @@ export const requests: ServiceRequest[] = [
     category: "Reporting / BI / Cost",
     shortDescription: "Request transactional logs from the system for a certain date range for audit purposes related to API consumption and other issues.",
     keywords: ["log", "request", "bi", "service", "business", "mobile", "ux", "reporting", "cost", "transactional", "logs", "from", "the", "system", "for", "certain", "date", "range"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/26/create/832",
   },
   {
     id: "netw-secu-001",
@@ -1186,7 +1186,7 @@ export const requests: ServiceRequest[] = [
     category: "Network / Connectivity",
     shortDescription: "Support the requester in adding a new server in any of the ITSA tools.",
     keywords: ["add", "new", "server", "network", "security", "compliance", "connectivity", "support", "the", "requester", "in", "adding", "any", "of", "itsa", "tools"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/667",
   },
   {
     id: "netw-secu-002",
@@ -1196,7 +1196,7 @@ export const requests: ServiceRequest[] = [
     category: "Access & Permissions",
     shortDescription: "Support the user in scanning the source file using FX tools and providing the scan report.",
     keywords: ["new", "scan", "file", "servers", "network", "security", "access", "accounts", "permissions", "support", "the", "user", "in", "scanning", "source", "using", "fx", "tools"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/666",
   },
   {
     id: "netw-secu-003",
@@ -1237,7 +1237,7 @@ export const requests: ServiceRequest[] = [
     category: "Access & Permissions",
     shortDescription: "Provide the user with the required report for each existing ITSA tool, including all specifications.",
     keywords: ["provide", "reports", "network", "security", "access", "accounts", "permissions", "the", "user", "with", "required", "report", "for", "each", "existing", "itsa", "tool", "including"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/665",
   },
   {
     id: "netw-secu-007",
@@ -1247,7 +1247,7 @@ export const requests: ServiceRequest[] = [
     category: "Access & Permissions",
     shortDescription: "Support the user in troubleshooting any issue related to ITSA (IT Service Assurance) tools.",
     keywords: ["troubleshoot", "network", "security", "access", "accounts", "permissions", "support", "the", "user", "in", "troubleshooting", "any", "issue", "related", "to", "itsa", "it", "service"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/664",
   },
   {
     id: "netw-secu-008",
@@ -1257,7 +1257,7 @@ export const requests: ServiceRequest[] = [
     category: "Access & Permissions",
     shortDescription: "Provide user access to all ITSA tools, including adding/removing users, managing user groups, assigning privileges, and updating support plans.",
     keywords: ["manage", "users", "network", "security", "access", "accounts", "permissions", "provide", "user", "to", "all", "itsa", "tools", "including", "adding", "removing", "managing", "groups"],
-    jiraUrl: "",
+    jiraUrl: "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/663",
   },
 ];
 
