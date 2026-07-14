@@ -1,9 +1,11 @@
 import { useMemo, useState } from "react";
 import { Search, SlidersHorizontal } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
 import Header from "@/components/portal/Header";
 import RequestCard from "@/components/portal/RequestCard";
 import EmptyState from "@/components/portal/EmptyState";
 import Footer from "@/components/portal/Footer";
+import RequestFinderModal from "@/components/portal/RequestFinderModal";
 import { requests, sections } from "@/data/requests";
 import { useLanguage } from "@/contexts/LanguageContext";
 import type { ServiceRequest } from "@/data/requests";
@@ -41,8 +43,10 @@ const sectionArabic: Record<string, string> = {
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeSection, setActiveSection] = useState<string>("All Services");
+  const [searchParams, setSearchParams] = useSearchParams();
   const { language, copy } = useLanguage();
   const isArabic = language === "ar";
+  const isRequestFinderOpen = searchParams.get("tool") === "request-finder";
 
   const sectionCounts = useMemo(
     () => Object.fromEntries(sections.map((section) => [section, requests.filter((request) => request.section === section).length])),
@@ -59,6 +63,12 @@ const Index = () => {
   const localizedSection = (section: string) => (isArabic ? sectionArabic[section] ?? section : section);
   const title = activeSection === "All Services" ? copy.catalog.allServices : localizedSection(activeSection);
   const description = activeSection === "All Services" ? copy.catalog.allDescription : copy.catalog.categoryDescription(localizedSection(activeSection));
+
+  const closeRequestFinder = () => {
+    const nextParams = new URLSearchParams(searchParams);
+    nextParams.delete("tool");
+    setSearchParams(nextParams, { replace: true });
+  };
 
   const categoryButtonClass = (isActive: boolean) =>
     `flex min-h-11 min-w-max items-center justify-between gap-4 rounded-md px-3 py-2 text-sm transition lg:w-full lg:min-w-0 ${
@@ -121,6 +131,8 @@ const Index = () => {
         </main>
       </div>
       <Footer />
+
+      <RequestFinderModal open={isRequestFinderOpen} onClose={closeRequestFinder} />
     </div>
   );
 };
