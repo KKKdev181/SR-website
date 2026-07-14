@@ -46,9 +46,7 @@ const originalText = new WeakMap<Text, string>();
 let scheduled = false;
 
 const restore = () => {
-  hiddenElements.forEach((element) => {
-    element.style.removeProperty("display");
-  });
+  hiddenElements.forEach((element) => element.style.removeProperty("display"));
   hiddenElements.clear();
 
   document.querySelectorAll<HTMLElement>(".standalone-checklist, .standalone-interactive-tool").forEach((root) => {
@@ -95,13 +93,13 @@ const hidePairedEnglishContent = (root: HTMLElement) => {
     arabicElement.style.removeProperty("display");
     const previous = arabicElement.previousElementSibling;
 
-    if (previous && !previous.hasAttribute("lang")) {
+    if (previous?.textContent?.trim() === "|") {
+      hide(previous);
+      hide(previous.previousElementSibling);
+    } else if (previous && !previous.hasAttribute("lang")) {
       const tagName = previous.tagName.toLowerCase();
       if (["p", "h3", "h4", "h5", "h6", "span", "ul"].includes(tagName)) hide(previous);
     }
-
-    const separator = previous?.previousElementSibling;
-    if (separator?.textContent?.trim() === "|") hide(separator);
   });
 
   root.querySelectorAll<HTMLElement>('div[dir="rtl"]').forEach((arabicBlock) => {
@@ -156,3 +154,5 @@ if (document.readyState === "loading") {
 } else {
   start();
 }
+
+export {};
