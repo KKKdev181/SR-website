@@ -8,6 +8,7 @@ import ProjectJourneyGuide from "@/components/portal/ProjectJourneyGuide";
 import GuidedWizard from "@/components/portal/GuidedWizard";
 import { useLanguage } from "@/contexts/LanguageContext";
 import "@/styles/standalone-tools.css";
+import "@/styles/tool-localization.css";
 
 type ToolType = "checklist" | "finder" | "match";
 
