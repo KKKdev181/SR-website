@@ -1,0 +1,15 @@
+/* Final visual layer for the Project Journey Checklist modal.
+   Keeps all existing content and phase categories while applying a consistent Elm-style system. */
+
+.tool-modal-project-journey-checklist.journey-redesign {
+  --elm-blue: #0057b8;
+  --elm-blue-dark: #003f88;
+  --elm-blue-soft: #edf5ff;
+  --elm-cyan: #00a6c8;
+  --elm-ink: #102a43;
+  --elm-muted: #5f738c;
+  --elm-border: #d8e2ec;
+  --elm-border-strong: #bfd0e0;
+  --elm-surface: #ffffff;
+  --elm-page: #f4f7fa;
+  --elm
