@@ -7,7 +7,9 @@
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-.tool-modal-content > .premium-tool-card {
+/* The modal owns the title and close action. Hide legacy launch cards. */
+.tool-modal-content > .premium-tool-card,
+.tool-modal-content .premium-tool-card {
   display: none !important;
 }
 
@@ -15,30 +17,72 @@
   margin-bottom: 0 !important;
 }
 
-.tool-modal-request-finder > div,
-.tool-modal-quick-request-match > div {
+/* Request Finder: remove its old embedded header and internal close button. */
+.tool-modal-request-finder > div {
+  overflow: visible !important;
   border: 0 !important;
   border-radius: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
 }
 
-.tool-modal-quick-request-match > div {
+.tool-modal-request-finder > div > div:first-child {
+  display: none !important;
+}
+
+.tool-modal-request-finder > div > div:last-child {
   padding: 4px !important;
 }
 
+/* Quick Match is now a native modal body with no second heading or close control. */
+.tool-modal-quick-request-match > div,
+.tool-modal-quick-request-match .quick-match-tool {
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  padding: 2px !important;
+  box-shadow: none !important;
+}
+
+/* Checklist: remove the old sticky blue tool header; the modal header replaces it. */
 .tool-modal-project-journey-checklist {
   scroll-behavior: smooth;
 }
 
+.tool-modal-project-journey-checklist > div > div:first-child,
 .tool-modal-project-journey-checklist .journey-redesign > div > div:first-child {
-  position: static !important;
+  display: none !important;
+}
+
+.tool-modal-project-journey-checklist > div,
+.tool-modal-project-journey-checklist .journey-redesign > div {
+  overflow: visible !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.tool-modal-project-journey-checklist .journey-redesign > div > div:nth-child(2),
+.tool-modal-project-journey-checklist > div > div:nth-child(2) {
+  padding: 0 !important;
 }
 
 .tool-modal-project-journey-checklist .journey-redesign [id^="prep-"],
 .tool-modal-project-journey-checklist .journey-redesign [id^="devqa-"],
 .tool-modal-project-journey-checklist .journey-redesign [id^="staging-"] {
   scroll-margin-top: 24px;
+}
+
+/* Ensure only the modal shell controls scrolling. */
+.tool-modal-content {
+  scrollbar-gutter: stable;
+}
+
+.tool-modal-content button:focus-visible,
+.tool-modal-content a:focus-visible {
+  outline: 2px solid #0c66e4;
+  outline-offset: 2px;
 }
 
 @media (max-width: 640px) {
