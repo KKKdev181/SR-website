@@ -36,64 +36,69 @@ const iconMap: Record<string, ReactNode> = {
 
 const RequestSection = ({ title, requests }: RequestSectionProps) => {
   const [isOpen, setIsOpen] = useState(true);
-  const desc = sectionDescriptions[title];
+  const description = sectionDescriptions[title];
   const icon = iconMap[sectionIcons[title]] ?? iconMap.Layers;
 
-  const subGroups = requests.reduce<Record<string, ServiceRequest[]>>((acc, req) => {
-    const key = req.subSection || "_none";
-    if (!acc[key]) acc[key] = [];
-    acc[key].push(req);
-    return acc;
+  const groups = requests.reduce<Record<string, ServiceRequest[]>>((result, request) => {
+    const key = request.subSection || "_none";
+    (result[key] ||= []).push(request);
+    return result;
   }, {});
 
-  const hasSubGroups = Object.keys(subGroups).length > 1 || !subGroups["_none"];
+  const hasSubgroups = Object.keys(groups).length > 1 || !groups._none;
 
   return (
-    <section className="mb-10">
+    <section className="mb-12" aria-labelledby={`section-${title}`}>
       <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="group mb-4 flex w-full items-center gap-3 rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-left shadow-xl shadow-black/15 outline-none backdrop-blur transition-colors hover:border-cyan-200/35 hover:bg-white/15 focus-visible:ring-2 focus-visible:ring-cyan-200/25"
+        type="button"
+        onClick={() => setIsOpen((value) => !value)}
+        aria-expanded={isOpen}
+        className="mb-4 flex w-full items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-start shadow-[0_10px_35px_rgba(15,23,42,0.05)] transition hover:border-blue-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
       >
-        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-300/15 text-cyan-100">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-700">
           {icon}
         </span>
-        <h2 className="text-base font-semibold text-white">{title}</h2>
-        <CountBadge count={requests.length} />
+        <h2 id={`section-${title}`} className="min-w-0 truncate text-base font-semibold text-slate-950">
+          {title}
+        </h2>
+        <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-semibold text-slate-600">
+          {requests.length}
+        </span>
         {isOpen ? (
-          <ChevronDown className="ml-auto h-4 w-4 text-cyan-100/70" />
+          <ChevronDown className="ms-auto h-4 w-4 text-slate-500" />
         ) : (
-          <ChevronRight className="ml-auto h-4 w-4 text-cyan-100/70" />
+          <ChevronRight className="ms-auto h-4 w-4 text-slate-500 rtl:rotate-180" />
         )}
       </button>
 
       {isOpen && (
         <div>
-          {desc && (
-            <div className="mb-6 rounded-2xl border border-white/15 bg-white/10 p-4 shadow-xl shadow-black/10 backdrop-blur">
-              <p className="mb-1 text-sm font-semibold text-white">{desc.title}</p>
-              <p className="text-xs leading-relaxed text-slate-200/70">{desc.description}</p>
+          {description && (
+            <div className="mb-6 rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4">
+              <p className="text-sm font-semibold text-slate-900">{description.title}</p>
+              <p className="mt-1 text-xs leading-6 text-slate-600">{description.description}</p>
             </div>
           )}
 
-          {hasSubGroups ? (
-            Object.entries(subGroups).map(([subSection, reqs]) => (
-              <div key={subSection} className="mb-6">
+          {hasSubgroups ? (
+            Object.entries(groups).map(([subSection, sectionRequests]) => (
+              <div key={subSection} className="mb-8">
                 {subSection !== "_none" && (
-                  <h3 className="mb-3 border-b border-white/10 pb-2 text-xs font-semibold uppercase tracking-wider text-cyan-100/60">
+                  <h3 className="mb-4 border-b border-slate-200 pb-3 text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">
                     {subSection}
                   </h3>
                 )}
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-                  {reqs.map((req) => (
-                    <RequestCard key={req.id} request={req} />
+                <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+                  {sectionRequests.map((request) => (
+                    <RequestCard key={request.id} request={request} />
                   ))}
                 </div>
               </div>
             ))
           ) : (
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {requests.map((req) => (
-                <RequestCard key={req.id} request={req} />
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+              {requests.map((request) => (
+                <RequestCard key={request.id} request={request} />
               ))}
             </div>
           )}
@@ -102,11 +107,5 @@ const RequestSection = ({ title, requests }: RequestSectionProps) => {
     </section>
   );
 };
-
-const CountBadge = ({ count }: { count: number }) => (
-  <span className="rounded-full bg-cyan-300/15 px-2.5 py-0.5 text-[10px] font-semibold text-cyan-100">
-    {count}
-  </span>
-);
 
 export default RequestSection;
