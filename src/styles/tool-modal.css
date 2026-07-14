@@ -1,0 +1,61 @@
+.tool-modal-shell {
+  animation: tool-modal-enter 180ms ease-out;
+}
+
+@keyframes tool-modal-enter {
+  from { opacity: 0; transform: translateY(10px) scale(0.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.tool-modal-content > .premium-tool-card {
+  display: none !important;
+}
+
+.tool-modal-content > div {
+  margin-bottom: 0 !important;
+}
+
+.tool-modal-request-finder > div,
+.tool-modal-quick-request-match > div {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.tool-modal-quick-request-match > div {
+  padding: 4px !important;
+}
+
+.tool-modal-project-journey-checklist {
+  scroll-behavior: smooth;
+}
+
+.tool-modal-project-journey-checklist .journey-redesign > div > div:first-child {
+  position: static !important;
+}
+
+.tool-modal-project-journey-checklist .journey-redesign [id^="prep-"],
+.tool-modal-project-journey-checklist .journey-redesign [id^="devqa-"],
+.tool-modal-project-journey-checklist .journey-redesign [id^="staging-"] {
+  scroll-margin-top: 24px;
+}
+
+@media (max-width: 640px) {
+  .tool-modal-shell {
+    max-height: 98vh !important;
+    border-radius: 14px !important;
+  }
+
+  .tool-modal-header {
+    align-items: flex-start;
+  }
+
+  .tool-modal-content {
+    padding: 10px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tool-modal-shell { animation: none; }
+}
