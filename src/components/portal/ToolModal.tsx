@@ -1,13 +1,12 @@
 import { useEffect, useRef } from "react";
 import { HelpCircle, Layers3, WandSparkles, X } from "lucide-react";
 import ProjectJourneyChecklist from "@/components/portal/ProjectJourneyChecklist";
-import ProjectJourneyGuide from "@/components/portal/ProjectJourneyGuide";
+import CatalogRequestFinder from "@/components/portal/CatalogRequestFinder";
 import GuidedWizard from "@/components/portal/GuidedWizard";
 import { useLanguage } from "@/contexts/LanguageContext";
 import "@/styles/standalone-tools.css";
 import "@/styles/tool-localization.css";
 import "@/styles/project-journey-redesign.css";
-import "@/styles/request-finder-modal.css";
 import "@/styles/tool-modal.css";
 
 export type PortalTool = "project-journey-checklist" | "request-finder" | "quick-request-match";
@@ -34,8 +33,11 @@ const ToolModal = ({ tool, onClose }: ToolModalProps) => {
 
     document.addEventListener("keydown", handleEscape);
 
+    // The checklist still has a legacy collapsed launcher internally.
     const timer = window.setTimeout(() => {
-      contentRef.current?.querySelector<HTMLElement>(".premium-tool-card")?.click();
+      if (tool === "project-journey-checklist") {
+        contentRef.current?.querySelector<HTMLElement>(".premium-tool-card")?.click();
+      }
     }, 0);
 
     return () => {
@@ -59,10 +61,10 @@ const ToolModal = ({ tool, onClose }: ToolModalProps) => {
     "request-finder": {
       title: isArabic ? "معالج متطلبات المشروع" : "Project Requirements Wizard",
       description: isArabic
-        ? "أجب على أسئلة بسيطة واحصل على رحلة وطلبات مناسبة لمشروعك."
-        : "Answer a few questions to get a recommended project journey and request list.",
+        ? "أجب على أسئلة بسيطة واحصل على الطلبات الأنسب من كامل الكتالوج."
+        : "Answer a few questions to find the best matches from the complete request catalog.",
       icon: HelpCircle,
-      width: "max-w-5xl",
+      width: "max-w-6xl",
     },
     "quick-request-match": {
       title: copy.navigation.quickRequestMatch,
@@ -70,7 +72,7 @@ const ToolModal = ({ tool, onClose }: ToolModalProps) => {
         ? "أجب عن سؤالين للوصول بسرعة إلى أنسب طلبات الخدمات التقنية."
         : "Answer two quick questions to find the most relevant technology requests.",
       icon: WandSparkles,
-      width: "max-w-5xl",
+      width: "max-w-6xl",
     },
   }[tool];
 
@@ -113,11 +115,11 @@ const ToolModal = ({ tool, onClose }: ToolModalProps) => {
         <div
           ref={contentRef}
           className={`tool-modal-content tool-modal-${tool} min-h-0 flex-1 overflow-y-auto bg-[#f7f8f9] p-3 sm:p-5 ${
-            tool === "project-journey-checklist" ? "standalone-checklist journey-redesign" : "standalone-interactive-tool"
+            tool === "project-journey-checklist" ? "standalone-checklist journey-redesign" : ""
           }`}
         >
           {tool === "project-journey-checklist" && <ProjectJourneyChecklist />}
-          {tool === "request-finder" && <ProjectJourneyGuide />}
+          {tool === "request-finder" && <CatalogRequestFinder />}
           {tool === "quick-request-match" && <GuidedWizard />}
         </div>
       </div>
