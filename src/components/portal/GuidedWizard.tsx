@@ -1,46 +1,45 @@
 import { useState } from "react";
-import { HelpCircle, ArrowRight, RotateCcw } from "lucide-react";
+import { HelpCircle, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { requests } from "@/data/requests";
 import RequestCard from "./RequestCard";
+import { useLanguage } from "@/contexts/LanguageContext";
 import type { ServiceRequest } from "@/data/requests";
-
-const arabicFont = { fontFamily: "'Noto Sans Arabic', sans-serif" };
 
 const steps = [
   {
     question: "What do you need?",
-    questionAr: "ما الذي تحتاجه؟",
+    questionAr: "وش تحتاج؟",
     options: [
-      { label: "Create something new", labelAr: "إنشاء شيء جديد" },
-      { label: "Change something existing", labelAr: "تعديل شيء موجود" },
+      { label: "Create something new", labelAr: "إنشاء خدمة أو بيئة جديدة" },
+      { label: "Change something existing", labelAr: "تعديل خدمة أو إعداد موجود" },
       { label: "Publish a service", labelAr: "نشر خدمة" },
       { label: "Retire a service", labelAr: "إيقاف خدمة" },
     ],
   },
   {
     question: "Which environment?",
-    questionAr: "أي بيئة؟",
+    questionAr: "أي Environment؟",
     options: [
-      { label: "Dev/QA", labelAr: "التطوير/ضمان الجودة" },
-      { label: "Staging/Production", labelAr: "التجهيز/الإنتاج" },
-      { label: "DR", labelAr: "التعافي من الكوارث" },
-      { label: "Not sure / Any", labelAr: "غير متأكد / أي بيئة" },
+      { label: "Dev/QA", labelAr: "Dev/QA" },
+      { label: "Staging/Production", labelAr: "Staging/Production" },
+      { label: "DR", labelAr: "DR" },
+      { label: "Not sure / Any", labelAr: "غير متأكد / أي Environment" },
     ],
   },
-];
+] as const;
 
 const GuidedWizard = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<string[]>([]);
+  const { language, copy } = useLanguage();
+  const isArabic = language === "ar";
 
   const handleAnswer = (answer: string) => {
     const newAnswers = [...answers, answer];
     setAnswers(newAnswers);
-    if (step < steps.length - 1) {
-      setStep(step + 1);
-    }
+    if (step < steps.length - 1) setStep(step + 1);
   };
 
   const reset = () => {
@@ -54,129 +53,119 @@ const GuidedWizard = () => {
 
     let filtered = requests;
     if (need === "Create something new") {
-      filtered = requests.filter((r) =>
-        ["Service Setup & Environments", "Infrastructure, Cloud & Platform"].includes(r.section) ||
-        r.category === "New Service Setup" ||
-        r.category === "Environment / Server Provisioning"
+      filtered = requests.filter((request) =>
+        ["Service Setup & Environments", "Infrastructure, Cloud & Platform"].includes(request.section) ||
+        request.category === "New Service Setup" ||
+        request.category === "Environment / Server Provisioning",
       );
     } else if (need === "Change something existing") {
-      filtered = requests.filter((r) =>
-        ["Infrastructure, Cloud & Platform", "Network, Security & Compliance", "Data, Storage & Backup"].includes(r.section) ||
-        r.keywords.some((keyword) => ["change", "update", "modify", "increase", "reduce"].includes(keyword.toLowerCase()))
+      filtered = requests.filter((request) =>
+        ["Infrastructure, Cloud & Platform", "Network, Security & Compliance", "Data, Storage & Backup"].includes(request.section) ||
+        request.keywords.some((keyword) => ["change", "update", "modify", "increase", "reduce"].includes(keyword.toLowerCase())),
       );
     } else if (need === "Publish a service") {
-      filtered = requests.filter((r) =>
-        r.section === "DevOps, Release & Lifecycle" ||
-        r.category === "Release / Lifecycle" ||
-        r.keywords.some((keyword) => ["publish", "release", "go live"].includes(keyword.toLowerCase()))
+      filtered = requests.filter((request) =>
+        request.section === "DevOps, Release & Lifecycle" ||
+        request.category === "Release / Lifecycle" ||
+        request.keywords.some((keyword) => ["publish", "release", "go live"].includes(keyword.toLowerCase())),
       );
     } else if (need === "Retire a service") {
-      filtered = requests.filter((r) =>
-        r.category === "Release / Lifecycle" ||
-        r.title.toLowerCase().includes("retire") ||
-        r.title.toLowerCase().includes("decommission") ||
-        r.keywords.some((keyword) => ["retire", "decommission"].includes(keyword.toLowerCase()))
+      filtered = requests.filter((request) =>
+        request.category === "Release / Lifecycle" ||
+        request.title.toLowerCase().includes("retire") ||
+        request.title.toLowerCase().includes("decommission") ||
+        request.keywords.some((keyword) => ["retire", "decommission"].includes(keyword.toLowerCase())),
       );
     }
 
     if (env !== "Not sure / Any") {
-      const envFiltered = filtered.filter((r) => !r.environment || r.environment === env);
-      if (envFiltered.length > 0) filtered = envFiltered;
+      const environmentMatches = filtered.filter((request) => !request.environment || request.environment === env);
+      if (environmentMatches.length > 0) filtered = environmentMatches;
     }
 
     return filtered.slice(0, 6);
   };
 
   const results = answers.length >= 2 ? getResults() : [];
+  const current = steps[step];
 
   if (!isOpen) {
     return (
-      <div
+      <button
+        type="button"
         onClick={() => setIsOpen(true)}
-        className="premium-tool-card premium-tool-card-green group mb-10 cursor-pointer overflow-hidden"
+        className="premium-tool-card premium-tool-card-green group mb-10 w-full cursor-pointer overflow-hidden text-start"
       >
-        <div className="premium-tool-card-inner flex min-h-[7rem] items-center gap-5 px-5 py-4 sm:px-6">
-          <div className="premium-tool-icon premium-tool-icon-green flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-emerald-100">
+        <span className="premium-tool-card-inner flex min-h-[7rem] items-center gap-5 px-5 py-4 sm:px-6">
+          <span className="premium-tool-icon premium-tool-icon-green flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-emerald-100">
             <HelpCircle className="h-5 w-5" />
-          </div>
-          <div className="flex-1">
-            <div className="mb-1 flex flex-wrap items-center gap-2">
-              <h3 className="text-base font-semibold tracking-tight text-white">Quick Request Match</h3>
-              <span className="rounded-full border border-emerald-200/20 bg-emerald-300/15 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-100">Fast match</span>
-            </div>
-            <p dir="rtl" lang="ar" className="mt-0.5 text-xs font-medium text-emerald-100/85" style={arabicFont}>ما تعرف وش تختار؟</p>
-            <p className="mt-1 text-xs leading-relaxed text-slate-200/75">Answer a few questions and we'll suggest the correct request</p>
-            <p dir="rtl" lang="ar" className="hidden text-[11px] text-muted-foreground/60 mt-0.5 md:block" style={arabicFont}>جاوب على أسئلة بسيطة وبنقترح لك الطلب المناسب</p>
-          </div>
-          <div className="premium-tool-cta premium-tool-cta-green flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-emerald-50">
-            <ArrowRight className="h-4 w-4" />
-          </div>
-        </div>
-      </div>
+          </span>
+          <span className="flex-1">
+            <span className="mb-1 flex flex-wrap items-center gap-2">
+              <span className="text-base font-semibold tracking-tight text-white">{copy.tools.matchTitle}</span>
+              <span className="rounded-full border border-emerald-200/20 bg-emerald-300/15 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-100">
+                {isArabic ? "مطابقة سريعة" : "Fast match"}
+              </span>
+            </span>
+            <span className="block text-xs leading-relaxed text-slate-200/75">{copy.tools.matchDescription}</span>
+          </span>
+        </span>
+      </button>
     );
   }
 
   return (
-    <div className="mb-10 rounded-xl border border-cyan-200/20 bg-[#15233e]/85 p-6 shadow-xl shadow-black/15 backdrop-blur">
-      <div className="flex items-center justify-between mb-5">
-        <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-emerald-300/15 flex items-center justify-center">
-            <HelpCircle className="h-3.5 w-3.5 text-emerald-100" />
-          </div>
+    <div className="mb-10 rounded-xl border border-[#dfe1e6] bg-white p-5 shadow-[0_1px_3px_rgba(9,30,66,0.12)] sm:p-6">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-[#ebecf0] pb-5">
+        <div className="flex items-center gap-3">
+          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
+            <HelpCircle className="h-5 w-5" />
+          </span>
           <div>
-            <h3 className="text-sm font-semibold text-white">Guided Request Finder</h3>
-            <span dir="rtl" lang="ar" className="text-[11px] text-slate-200/75" style={arabicFont}>مساعد اختيار الطلب</span>
+            <h2 className="text-lg font-semibold text-[#172b4d]">{copy.tools.matchTitle}</h2>
+            <p className="text-sm text-[#5e6c84]">{copy.tools.matchDescription}</p>
           </div>
         </div>
-        <Button variant="ghost" size="sm" onClick={() => { reset(); setIsOpen(false); }} className="h-7 text-xs text-slate-200/75 hover:bg-white/10 hover:text-white">
-          Close | إغلاق
+        <Button variant="ghost" size="sm" onClick={() => { reset(); setIsOpen(false); }}>
+          {copy.common.close}
         </Button>
       </div>
 
       {answers.length < steps.length ? (
         <div>
-          <p className="text-sm text-white font-medium mb-1">
-            {steps[step].question}
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[#0c66e4]">
+            {copy.tools.questionProgress(step + 1, steps.length)}
           </p>
-          <p dir="rtl" lang="ar" className="text-xs text-slate-200/75 mb-3" style={arabicFont}>
-            {steps[step].questionAr}
-          </p>
-          <div className="grid grid-cols-2 gap-2.5">
-            {steps[step].options.map((opt) => (
+          <h3 className="mb-4 text-lg font-semibold text-[#172b4d]">{isArabic ? current.questionAr : current.question}</h3>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {current.options.map((option) => (
               <Button
-                key={opt.label}
+                key={option.label}
                 variant="outline"
-                className="h-auto py-3 text-xs text-left justify-start rounded-lg border-cyan-200/20 bg-[#0f1931]/85 text-white hover:bg-[#1b2c4d] hover:border-emerald-200/45 transition-all flex flex-col items-start gap-0.5"
-                onClick={() => handleAnswer(opt.label)}
+                className="h-auto min-h-14 justify-start rounded-lg border-[#dfe1e6] bg-white px-4 py-3 text-start text-sm font-medium text-[#172b4d] hover:border-[#0c66e4] hover:bg-[#e9f2ff]"
+                onClick={() => handleAnswer(option.label)}
               >
-                <span>{opt.label}</span>
-                <span dir="rtl" lang="ar" className="text-[10px] text-slate-200/70" style={arabicFont}>{opt.labelAr}</span>
+                {isArabic ? option.labelAr : option.label}
               </Button>
             ))}
           </div>
         </div>
       ) : (
         <div>
-          <div className="flex items-center gap-2 mb-4">
-            <p className="text-sm text-white font-medium">
-              Recommended for you ({results.length} results)
-            </p>
-            <span dir="rtl" lang="ar" className="text-xs text-slate-200/75" style={arabicFont}>مقترحات لك</span>
-            <Button variant="ghost" size="sm" onClick={reset} className="h-6 text-xs text-slate-200/75 hover:bg-white/10 hover:text-white gap-1">
-              <RotateCcw className="h-3 w-3" /> Start over | إعادة
+          <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+            <h3 className="text-lg font-semibold text-[#172b4d]">{copy.tools.recommended} ({results.length})</h3>
+            <Button variant="outline" size="sm" onClick={reset} className="gap-2">
+              <RotateCcw className="h-4 w-4" />
+              {copy.common.reset}
             </Button>
           </div>
+
           {results.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {results.map((req) => (
-                <RequestCard key={req.id} request={req} />
-              ))}
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {results.map((request) => <RequestCard key={request.id} request={request} />)}
             </div>
           ) : (
-            <div>
-              <p className="text-sm text-slate-200/75">No matching requests found. Try starting over with different answers.</p>
-              <p dir="rtl" lang="ar" className="text-xs text-slate-200/70 mt-1" style={arabicFont}>لم يتم العثور على طلبات مطابقة. جرّب الإعادة بإجابات مختلفة.</p>
-            </div>
+            <p className="rounded-lg border border-[#dfe1e6] bg-[#f7f8f9] p-4 text-sm text-[#5e6c84]">{copy.common.noResults}</p>
           )}
         </div>
       )}
