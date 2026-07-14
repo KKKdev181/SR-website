@@ -5,27 +5,23 @@ html[lang="en"] .standalone-interactive-tool [lang="ar"] {
   display: none !important;
 }
 
-html[lang="ar"] .standalone-checklist p:not([lang]):has(+ p[lang="ar"]),
-html[lang="ar"] .standalone-checklist h3:not([lang]):has(+ [lang="ar"]),
-html[lang="ar"] .standalone-checklist h4:not([lang]):has(+ [lang="ar"]),
-html[lang="ar"] .standalone-checklist h5:not([lang]):has(+ [lang="ar"]),
-html[lang="ar"] .standalone-checklist h6:not([lang]):has(+ [lang="ar"]),
-html[lang="ar"] .standalone-checklist span:not([lang]):has(+ span[lang="ar"]),
-html[lang="ar"] .standalone-interactive-tool p:not([lang]):has(+ p[lang="ar"]),
-html[lang="ar"] .standalone-interactive-tool h3:not([lang]):has(+ [lang="ar"]),
-html[lang="ar"] .standalone-interactive-tool h4:not([lang]):has(+ [lang="ar"]),
-html[lang="ar"] .standalone-interactive-tool span:not([lang]):has(+ span[lang="ar"]) {
-  display: none !important;
+html[lang="ar"] .standalone-checklist,
+html[lang="ar"] .standalone-interactive-tool {
+  direction: rtl;
+  text-align: right;
 }
 
 html[lang="ar"] .standalone-checklist [lang="ar"],
 html[lang="ar"] .standalone-interactive-tool [lang="ar"] {
+  display: block;
   direction: rtl;
   text-align: right;
 }
 
 html[lang="ar"] .standalone-checklist [dir="ltr"],
-html[lang="ar"] .standalone-interactive-tool [dir="ltr"] {
+html[lang="ar"] .standalone-interactive-tool [dir="ltr"],
+html[lang="ar"] code,
+html[lang="ar"] .technical-term {
   direction: ltr;
   unicode-bidi: isolate;
 }
@@ -37,9 +33,58 @@ html[lang="ar"] .standalone-interactive-tool a {
   text-align: right;
 }
 
-html[lang="ar"] code,
-html[lang="ar"] [dir="ltr"],
-html[lang="ar"] .technical-term {
-  direction: ltr;
-  unicode-bidi: isolate;
+html[lang="ar"] .standalone-checklist .flex.items-start.justify-between,
+html[lang="ar"] .standalone-interactive-tool .flex.items-start.justify-between {
+  flex-direction: row;
+}
+
+html[lang="ar"] .standalone-checklist .flex.items-center.justify-between,
+html[lang="ar"] .standalone-interactive-tool .flex.items-center.justify-between {
+  flex-direction: row;
+}
+
+html[lang="ar"] .standalone-checklist .shrink-0,
+html[lang="ar"] .standalone-interactive-tool .shrink-0 {
+  margin-right: auto;
+  margin-left: 0;
+}
+
+html[lang="ar"] .standalone-checklist ul,
+html[lang="ar"] .standalone-checklist ol,
+html[lang="ar"] .standalone-interactive-tool ul,
+html[lang="ar"] .standalone-interactive-tool ol {
+  padding-right: 1.25rem;
+  padding-left: 0;
+}
+
+html[lang="ar"] .standalone-checklist svg,
+html[lang="ar"] .standalone-interactive-tool svg {
+  flex-shrink: 0;
+}
+
+html[lang="ar"] aside nav button {
+  direction: rtl;
+  text-align: right;
+}
+
+html[lang="ar"] aside nav button > span:first-child {
+  text-align: right;
+}
+
+html[lang="ar"] aside nav button > span:last-child {
+  margin-right: auto;
+  margin-left: 0;
+}
+
+@media (max-width: 768px) {
+  html[lang="ar"] .standalone-checklist .flex.items-start.justify-between,
+  html[lang="ar"] .standalone-interactive-tool .flex.items-start.justify-between {
+    flex-direction: column;
+  }
+
+  html[lang="ar"] .standalone-checklist .shrink-0,
+  html[lang="ar"] .standalone-interactive-tool .shrink-0 {
+    width: 100%;
+    margin: 0;
+  }
 }
