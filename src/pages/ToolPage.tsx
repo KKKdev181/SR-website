@@ -7,7 +7,7 @@ import ProjectJourneyChecklist from "@/components/portal/ProjectJourneyChecklist
 import ProjectJourneyGuide from "@/components/portal/ProjectJourneyGuide";
 import GuidedWizard from "@/components/portal/GuidedWizard";
 import { useLanguage } from "@/contexts/LanguageContext";
-import "@/styles/checklist-standalone.css";
+import "@/styles/standalone-tools.css";
 
 type ToolType = "checklist" | "finder" | "match";
 
@@ -52,10 +52,15 @@ const ToolPage = ({ tool }: ToolPageProps) => {
     collapsedCard?.click();
   }, [tool]);
 
+  const featureLabels = isArabic
+    ? ["جميع التفاصيل محفوظة", "روابط Jira مباشرة", "مراحل قابلة للفتح"]
+    : ["All details preserved", "Direct Jira links", "Expandable phases"];
+
   return (
     <div className="min-h-screen bg-[#f4f5f7] text-[#172b4d]">
       <Header />
-      <main className="mx-auto w-full max-w-[1600px] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+
+      <main className="standalone-tool-shell mx-auto w-full max-w-[1600px] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
         <Link
           to="/"
           className="mb-5 inline-flex min-h-10 items-center gap-2 rounded-md px-2 text-sm font-semibold text-[#0c66e4] transition hover:bg-[#e9f2ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0c66e4]/30"
@@ -64,13 +69,14 @@ const ToolPage = ({ tool }: ToolPageProps) => {
           {isArabic ? "العودة إلى جميع الخدمات" : "Back to all services"}
         </Link>
 
-        <section className="mb-6 overflow-hidden rounded-xl border border-[#dfe1e6] bg-white shadow-[0_1px_2px_rgba(9,30,66,0.08)]">
+        <section className="standalone-tool-intro mb-6 overflow-hidden rounded-xl">
           <div className="grid gap-5 px-5 py-6 sm:px-7 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
             <div className="flex min-w-0 items-start gap-4">
               <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#e9f2ff] text-[#0c66e4]">
                 {tool === "checklist" ? <Layers3 className="h-6 w-6" /> : <CheckCircle2 className="h-6 w-6" />}
               </span>
-              <div>
+
+              <div className="min-w-0">
                 <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#0c66e4]">
                   {isArabic ? "أداة مركز التقنية" : "Technology Center tool"}
                 </p>
@@ -85,8 +91,11 @@ const ToolPage = ({ tool }: ToolPageProps) => {
 
             {tool === "checklist" && (
               <div className="flex flex-wrap gap-2 lg:max-w-sm lg:justify-end">
-                {[isArabic ? "جميع التفاصيل محفوظة" : "All details preserved", isArabic ? "روابط Jira مباشرة" : "Direct Jira links", isArabic ? "مراحل قابلة للفتح" : "Expandable phases"].map((label) => (
-                  <span key={label} className="rounded-full border border-[#b6d7ff] bg-[#e9f2ff] px-3 py-1.5 text-xs font-semibold text-[#0747a6]">
+                {featureLabels.map((label) => (
+                  <span
+                    key={label}
+                    className="rounded-full border border-[#b6d7ff] bg-[#e9f2ff] px-3 py-1.5 text-xs font-semibold text-[#0747a6]"
+                  >
                     {label}
                   </span>
                 ))}
@@ -105,6 +114,7 @@ const ToolPage = ({ tool }: ToolPageProps) => {
           {tool === "match" && <GuidedWizard />}
         </section>
       </main>
+
       <Footer />
     </div>
   );
