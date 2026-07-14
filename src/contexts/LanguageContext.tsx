@@ -1,11 +1,14 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
+import { getTranslations } from "@/i18n/translations";
+import type { TranslationSet } from "@/i18n/translations";
 
 export type Language = "en" | "ar";
 
 interface LanguageContextValue {
   language: Language;
   direction: "ltr" | "rtl";
+  copy: TranslationSet;
   setLanguage: (language: Language) => void;
   toggleLanguage: () => void;
 }
@@ -22,6 +25,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     const direction = language === "ar" ? "rtl" : "ltr";
     document.documentElement.lang = language;
     document.documentElement.dir = direction;
+    document.body.dir = direction;
     window.localStorage.setItem("portal-language", language);
   }, [language]);
 
@@ -29,6 +33,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     () => ({
       language,
       direction: language === "ar" ? "rtl" : "ltr",
+      copy: getTranslations(language),
       setLanguage,
       toggleLanguage: () => setLanguage((current) => (current === "en" ? "ar" : "en")),
     }),
