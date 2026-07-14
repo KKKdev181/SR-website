@@ -1,5 +1,6 @@
-import { ArrowUpRight, Clock } from "lucide-react";
+import { ArrowUpRight, Clock, ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/contexts/LanguageContext";
 import type { KeyboardEvent } from "react";
 import type { ServiceRequest } from "@/data/requests";
 
@@ -7,141 +8,96 @@ interface RequestCardProps {
   request: ServiceRequest;
 }
 
-const categoryColorMap: Record<string, string> = {
-  "Access & Permissions": "bg-elm-green-light text-secondary",
-  "Accounts & External Services": "bg-muted text-muted-foreground",
-  "New Service Setup": "bg-elm-blue-light text-primary",
-  "Environment / Server Provisioning": "bg-elm-blue-light text-primary",
-  "Cloud / Platform": "bg-elm-green-light text-secondary",
-  "Network / Connectivity": "bg-elm-green-light text-secondary",
-  "DNS / Domain": "bg-elm-blue-light text-primary",
-  "SSL / Certificate": "bg-elm-green-light text-secondary",
-  "Load Balancer": "bg-elm-green-light text-secondary",
-  "Security / Compliance": "bg-destructive/10 text-destructive",
-  "Scale / Capacity": "bg-elm-blue-light text-primary",
-  "Database / Storage / Backup": "bg-elm-blue-light text-primary",
-  "DevOps / CI-CD": "bg-elm-blue-light text-primary",
-  "Release / Lifecycle": "bg-secondary/10 text-secondary",
-  "Monitoring / Troubleshooting": "bg-muted text-muted-foreground",
-  "Jira / Service Management": "bg-muted text-muted-foreground",
-  "Reporting / BI / Cost": "bg-elm-blue-light text-primary",
-  "Business Operations": "bg-muted text-muted-foreground",
-  "Mobile / UX / Contact Center": "bg-elm-green-light text-secondary",
-};
-
-const categoryAccentMap: Record<string, string> = {
-  "Access & Permissions": "bg-secondary",
-  "Accounts & External Services": "bg-muted-foreground",
-  "New Service Setup": "bg-primary",
-  "Environment / Server Provisioning": "bg-primary",
-  "Cloud / Platform": "bg-secondary",
-  "Network / Connectivity": "bg-secondary",
-  "DNS / Domain": "bg-primary",
-  "SSL / Certificate": "bg-secondary",
-  "Load Balancer": "bg-secondary",
-  "Security / Compliance": "bg-destructive",
-  "Scale / Capacity": "bg-primary",
-  "Database / Storage / Backup": "bg-primary",
-  "DevOps / CI-CD": "bg-primary",
-  "Release / Lifecycle": "bg-secondary",
-  "Monitoring / Troubleshooting": "bg-muted-foreground",
-  "Jira / Service Management": "bg-muted-foreground",
-  "Reporting / BI / Cost": "bg-primary",
-  "Business Operations": "bg-muted-foreground",
-  "Mobile / UX / Contact Center": "bg-secondary",
-};
-
-const arabicFont = {
-  fontFamily: "'Noto Sans Arabic', 'Segoe UI', Tahoma, sans-serif",
+const categoryStyles: Record<string, string> = {
+  "Access & Permissions": "bg-emerald-50 text-emerald-700",
+  "Accounts & External Services": "bg-slate-100 text-slate-700",
+  "New Service Setup": "bg-blue-50 text-blue-700",
+  "Environment / Server Provisioning": "bg-blue-50 text-blue-700",
+  "Cloud / Platform": "bg-cyan-50 text-cyan-700",
+  "Network / Connectivity": "bg-teal-50 text-teal-700",
+  "DNS / Domain": "bg-indigo-50 text-indigo-700",
+  "SSL / Certificate": "bg-emerald-50 text-emerald-700",
+  "Load Balancer": "bg-cyan-50 text-cyan-700",
+  "Security / Compliance": "bg-rose-50 text-rose-700",
+  "Scale / Capacity": "bg-lime-50 text-lime-700",
+  "Database / Storage / Backup": "bg-emerald-50 text-emerald-700",
+  "DevOps / CI-CD": "bg-violet-50 text-violet-700",
+  "Release / Lifecycle": "bg-amber-50 text-amber-700",
+  "Monitoring / Troubleshooting": "bg-slate-100 text-slate-700",
+  "Jira / Service Management": "bg-blue-50 text-blue-700",
+  "Reporting / BI / Cost": "bg-indigo-50 text-indigo-700",
+  "Business Operations": "bg-orange-50 text-orange-700",
+  "Mobile / UX / Contact Center": "bg-fuchsia-50 text-fuchsia-700",
 };
 
 const RequestCard = ({ request }: RequestCardProps) => {
-  const requestUrl =
-    request.jiraUrl?.trim() && !request.jiraUrl.includes("jira.example.com")
-      ? request.jiraUrl
-      : "#";
+  const { language } = useLanguage();
+  const isArabic = language === "ar";
+  const hasUrl = Boolean(request.jiraUrl?.trim()) && !request.jiraUrl.includes("jira.example.com");
 
   const openRequest = () => {
-    if (requestUrl === "#") return;
-    window.open(requestUrl, "_blank", "noopener,noreferrer");
+    if (hasUrl) window.open(request.jiraUrl, "_blank", "noopener,noreferrer");
   };
 
-  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === "Enter" || event.key === " ") {
+  const handleKeyDown = (event: KeyboardEvent<HTMLElement>) => {
+    if (hasUrl && (event.key === "Enter" || event.key === " ")) {
       event.preventDefault();
       openRequest();
     }
   };
 
   return (
-    <div
-      role="link"
-      tabIndex={0}
+    <article
+      role={hasUrl ? "link" : undefined}
+      tabIndex={hasUrl ? 0 : undefined}
       onClick={openRequest}
       onKeyDown={handleKeyDown}
-      className="card-hover group flex min-h-[14.5rem] cursor-pointer flex-col overflow-hidden rounded-2xl border border-white/15 bg-white/10 shadow-xl shadow-black/20 outline-none backdrop-blur transition-all focus-visible:border-cyan-200/60 focus-visible:ring-2 focus-visible:ring-cyan-200/25"
-      aria-label={`Open ${request.title} in Jira`}
+      aria-label={hasUrl ? `${isArabic ? "فتح" : "Open"} ${request.title} ${isArabic ? "في Jira" : "in Jira"}` : request.title}
+      className={`group flex min-h-[17rem] flex-col rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_8px_30px_rgba(15,23,42,0.045)] transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+        hasUrl ? "cursor-pointer hover:-translate-y-1 hover:border-blue-200 hover:shadow-[0_18px_42px_rgba(15,23,42,0.09)]" : "opacity-80"
+      }`}
     >
-      <div className={`h-1 w-full ${categoryAccentMap[request.category] || "bg-muted"}`} />
-
-      <div className="flex flex-1 flex-col gap-4 p-5">
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <p className="mb-1 text-[10px] font-semibold uppercase text-cyan-100/65">
-              {request.subSection || request.section}
-            </p>
-            <h3 className="overflow-hidden text-[15px] font-semibold leading-snug text-white [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]">
-              {request.title}
-            </h3>
-          </div>
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-cyan-100 transition-colors group-hover:bg-white group-hover:text-primary">
-            <ArrowUpRight className="h-4 w-4" />
-          </span>
+      <div className="flex items-start justify-between gap-4">
+        <div className="min-w-0">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-400">
+            {request.subSection || request.section}
+          </p>
+          <h3 className="mt-2 line-clamp-2 text-[15px] font-semibold leading-6 text-slate-950">{request.title}</h3>
         </div>
-
-        <p className="overflow-hidden text-xs leading-6 text-slate-200/75 [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:3]">
-          {request.shortDescription}
-        </p>
-
-        <div className="flex flex-wrap gap-1.5 pt-1">
-          {request.environment && (
-            <Badge
-              variant="outline"
-              className="rounded-full border border-white/10 bg-white/10 px-2.5 py-0.5 text-[10px] font-medium text-slate-100"
-            >
-              {request.environment}
-            </Badge>
-          )}
-          <Badge
-            variant="outline"
-            className={`rounded-full border-0 px-2.5 py-0.5 text-[10px] font-medium ${
-              categoryColorMap[request.category] || "bg-muted text-muted-foreground"
-            }`}
-          >
-            {request.category}
-          </Badge>
-        </div>
-
-        <div className="mt-auto flex items-center justify-between gap-3 border-t border-white/10 pt-3">
-          {request.deliveryTime ? (
-            <span className="flex min-w-0 items-center gap-1 text-[10px] text-slate-300/75">
-              <Clock className="h-3 w-3 shrink-0" />
-              <span className="truncate">{request.deliveryTime}</span>
-            </span>
-          ) : (
-            <span aria-hidden="true" />
-          )}
-
-          <span className="inline-flex min-h-9 shrink-0 items-center gap-1.5 rounded-xl bg-white px-3 py-1.5 text-xs font-semibold text-primary shadow-sm group-hover:bg-cyan-50">
-            Open
-            <span dir="rtl" lang="ar" className="hidden sm:inline" style={arabicFont}>
-              &#1601;&#1578;&#1581;
-            </span>
-            <ArrowUpRight className="h-3 w-3" />
-          </span>
-        </div>
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-50 text-slate-500 transition group-hover:bg-blue-50 group-hover:text-blue-700">
+          {hasUrl ? <ArrowUpRight className="h-4 w-4" /> : <ExternalLink className="h-4 w-4" />}
+        </span>
       </div>
-    </div>
+
+      <p className="mt-4 line-clamp-3 text-xs leading-6 text-slate-600">{request.shortDescription}</p>
+
+      <div className="mt-4 flex flex-wrap gap-2">
+        <Badge className={`border-0 px-2.5 py-1 text-[10px] font-semibold ${categoryStyles[request.category] || "bg-slate-100 text-slate-700"}`}>
+          {request.category}
+        </Badge>
+        {request.environment && (
+          <Badge variant="outline" className="border-slate-200 bg-white px-2.5 py-1 text-[10px] font-semibold text-slate-600">
+            {request.environment}
+          </Badge>
+        )}
+      </div>
+
+      <div className="mt-auto flex items-center justify-between gap-3 border-t border-slate-100 pt-4">
+        {request.deliveryTime ? (
+          <span className="flex min-w-0 items-center gap-1.5 text-[10px] text-slate-500">
+            <Clock className="h-3.5 w-3.5 shrink-0" />
+            <span className="truncate">{request.deliveryTime}</span>
+          </span>
+        ) : (
+          <span className="text-[10px] text-slate-400">{request.section}</span>
+        )}
+
+        <span className={`inline-flex min-h-10 shrink-0 items-center gap-2 rounded-xl px-3.5 text-xs font-semibold ${hasUrl ? "bg-slate-950 text-white group-hover:bg-blue-700" : "bg-slate-100 text-slate-400"}`}>
+          {hasUrl ? (isArabic ? "فتح في Jira" : "Open in Jira") : isArabic ? "الرابط غير متوفر" : "Link unavailable"}
+          {hasUrl && <ArrowUpRight className={`h-3.5 w-3.5 ${isArabic ? "rotate-[-90deg]" : ""}`} />}
+        </span>
+      </div>
+    </article>
   );
 };
 
