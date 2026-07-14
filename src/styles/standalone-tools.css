@@ -13,4 +13,237 @@
 .standalone-tool-intro {
   background: linear-gradient(135deg, #ffffff 0%, #f7faff 100%);
   border: 1px solid var(--tool-border);
-  box-shadow: 0 1px 2px rgba
+  box-shadow: 0 1px 2px rgba(9, 30, 66, 0.08);
+}
+
+.standalone-checklist .premium-tool-card,
+.standalone-interactive-tool .premium-tool-card {
+  display: none !important;
+}
+
+.standalone-checklist > div,
+.standalone-interactive-tool > div {
+  margin-bottom: 0 !important;
+  overflow: visible !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+.standalone-checklist > div > div:first-child {
+  margin-bottom: 20px;
+  border: 1px solid #0747a6 !important;
+  border-radius: 14px !important;
+  background: linear-gradient(135deg, #0c66e4 0%, #0747a6 100%) !important;
+  padding: 22px 24px !important;
+  box-shadow: 0 8px 24px rgba(9, 30, 66, 0.16) !important;
+}
+
+.standalone-checklist > div > div:first-child button {
+  display: none !important;
+}
+
+.standalone-checklist > div > div:first-child h3,
+.standalone-checklist > div > div:first-child p,
+.standalone-checklist > div > div:first-child span {
+  color: #ffffff !important;
+}
+
+.standalone-checklist > div > div:nth-child(2) {
+  padding: 0 !important;
+}
+
+.standalone-checklist [class*="bg-[#0f1931]"],
+.standalone-checklist [class*="bg-[#15233e]"],
+.standalone-checklist [class*="bg-white/10"],
+.standalone-checklist [class*="bg-white/5"],
+.standalone-interactive-tool [class*="bg-[#0f1931]"],
+.standalone-interactive-tool [class*="bg-[#15233e]"],
+.standalone-interactive-tool [class*="bg-white/10"],
+.standalone-interactive-tool [class*="bg-white/5"] {
+  background: #ffffff !important;
+}
+
+.standalone-checklist [class*="border-cyan"],
+.standalone-checklist [class*="border-white"],
+.standalone-interactive-tool [class*="border-cyan"],
+.standalone-interactive-tool [class*="border-white"] {
+  border-color: var(--tool-border) !important;
+}
+
+.standalone-checklist [class*="shadow-xl"],
+.standalone-checklist [class*="shadow-black"],
+.standalone-interactive-tool [class*="shadow-xl"],
+.standalone-interactive-tool [class*="shadow-black"] {
+  box-shadow: 0 1px 3px rgba(9, 30, 66, 0.1) !important;
+}
+
+.standalone-checklist [class*="text-white"],
+.standalone-interactive-tool [class*="text-white"] {
+  color: var(--tool-ink) !important;
+}
+
+.standalone-checklist [class*="text-slate-200"],
+.standalone-checklist [class*="text-cyan-100"],
+.standalone-interactive-tool [class*="text-slate-200"],
+.standalone-interactive-tool [class*="text-cyan-100"],
+.standalone-interactive-tool [class*="text-emerald-100"] {
+  color: var(--tool-muted) !important;
+}
+
+.standalone-checklist [data-state] {
+  border-radius: 12px;
+}
+
+.standalone-checklist .space-y-6 > * + * {
+  margin-top: 18px !important;
+}
+
+.standalone-checklist h3,
+.standalone-checklist h4,
+.standalone-checklist h5,
+.standalone-checklist h6,
+.standalone-interactive-tool h3,
+.standalone-interactive-tool h4,
+.standalone-interactive-tool h5,
+.standalone-interactive-tool h6 {
+  color: var(--tool-ink);
+  letter-spacing: -0.01em;
+}
+
+.standalone-checklist p,
+.standalone-checklist li,
+.standalone-checklist span,
+.standalone-interactive-tool p,
+.standalone-interactive-tool li,
+.standalone-interactive-tool span {
+  line-height: 1.65;
+}
+
+.standalone-checklist [class*="bg-cyan-300/10"],
+.standalone-checklist [class*="bg-cyan-300/15"] {
+  background: #e9f2ff !important;
+}
+
+.standalone-checklist [class*="bg-amber-300/10"] {
+  background: #fff7d6 !important;
+}
+
+.standalone-checklist [class*="border-amber"] {
+  border-color: #f5cd47 !important;
+}
+
+.standalone-checklist [class*="text-amber-100"],
+.standalone-checklist [class*="text-amber-50"] {
+  color: #7f5f01 !important;
+}
+
+.standalone-checklist [class*="bg-rose-500/10"] {
+  background: #fff0ed !important;
+}
+
+.standalone-checklist [class*="border-rose"] {
+  border-color: #ffbdad !important;
+}
+
+.standalone-checklist [class*="text-rose-100"] {
+  color: #ae2a19 !important;
+}
+
+.standalone-checklist a button,
+.standalone-checklist button[class*="border-cyan"] {
+  min-height: 36px;
+  border-color: #b3d4ff !important;
+  background: #ffffff !important;
+  color: var(--tool-blue) !important;
+  box-shadow: none !important;
+}
+
+.standalone-checklist a button:hover,
+.standalone-checklist button[class*="border-cyan"]:hover {
+  border-color: var(--tool-blue) !important;
+  background: #e9f2ff !important;
+  color: var(--tool-blue-dark) !important;
+}
+
+.standalone-interactive-tool > div {
+  border: 1px solid var(--tool-border) !important;
+  border-radius: 14px !important;
+  background: var(--tool-surface) !important;
+  padding: 24px !important;
+  box-shadow: 0 1px 3px rgba(9, 30, 66, 0.1) !important;
+}
+
+.standalone-interactive-tool > div > div:first-child {
+  margin-bottom: 24px !important;
+  border-bottom: 1px solid #ebecf0;
+  padding-bottom: 18px;
+}
+
+.standalone-interactive-tool button {
+  min-height: 44px;
+  border-color: #c7d1e0 !important;
+  background: #ffffff !important;
+  color: var(--tool-ink) !important;
+  box-shadow: none !important;
+}
+
+.standalone-interactive-tool button:hover {
+  border-color: var(--tool-blue) !important;
+  background: #e9f2ff !important;
+  color: var(--tool-blue-dark) !important;
+}
+
+.standalone-interactive-tool button[class*="bg-primary"],
+.standalone-interactive-tool button[data-state="active"] {
+  border-color: var(--tool-blue) !important;
+  background: var(--tool-blue) !important;
+  color: #ffffff !important;
+}
+
+.standalone-interactive-tool [class*="grid-cols-2"] {
+  gap: 12px !important;
+}
+
+.standalone-interactive-tool .premium-tool-icon,
+.standalone-interactive-tool .premium-tool-cta {
+  background: #e9f2ff !important;
+  border-color: #b6d7ff !important;
+  color: var(--tool-blue) !important;
+  box-shadow: none !important;
+}
+
+.standalone-checklist [class*="divide-y"] > * + * {
+  border-color: #ebecf0 !important;
+}
+
+[dir="rtl"] .standalone-checklist [dir="rtl"],
+[dir="rtl"] .standalone-interactive-tool [dir="rtl"] {
+  text-align: right;
+}
+
+@media (max-width: 768px) {
+  .standalone-checklist > div > div:first-child,
+  .standalone-interactive-tool > div {
+    padding: 18px !important;
+  }
+
+  .standalone-checklist [class*="flex items-start justify-between"] {
+    flex-direction: column !important;
+  }
+
+  .standalone-checklist [class*="shrink-0"] {
+    width: 100%;
+  }
+
+  .standalone-checklist a,
+  .standalone-checklist a button {
+    width: 100%;
+  }
+
+  .standalone-interactive-tool [class*="grid-cols-2"] {
+    grid-template-columns: 1fr !important;
+  }
+}
