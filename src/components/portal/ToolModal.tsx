@@ -9,6 +9,7 @@ import "@/styles/tool-localization.css";
 import "@/styles/project-journey-redesign.css";
 import "@/styles/tool-modal.css";
 import "@/styles/checklist-modal-layout.css";
+import "@/styles/checklist-section-fixes.css";
 
 export type PortalTool =
   | "project-journey-checklist"
@@ -19,6 +20,79 @@ interface ToolModalProps {
   tool: PortalTool | null;
   onClose: () => void;
 }
+
+const arabicChecklistTerms: Record<string, string> = {
+  "Final Check Before Proceeding": "التحقق النهائي قبل المتابعة",
+  "Before you move forward, make sure you have completed the checklist items below.":
+    "قبل المتابعة، تأكد من إكمال جميع عناصر قائمة التحقق أدناه.",
+  "Platform & Deployment Guidelines": "إرشادات Platform وDeployment",
+  "Platform Runtime Support": "التقنيات المدعومة على Platform",
+  "Infrastructure Requirements by Platform": "متطلبات Infrastructure حسب Platform",
+  "Critical Requirement": "متطلب أساسي",
+  "Important Notes": "ملاحظات مهمة",
+  "Operating Systems": "أنظمة التشغيل",
+  "Application Level": "تقنيات التطبيق",
+  "Database": "Database",
+  "Supported Technologies": "التقنيات المدعومة",
+  "Developer Access Checklist": "قائمة صلاحيات المطور",
+  "Required": "إلزامي",
+  "Conditional": "حسب الحاجة",
+  "Optional": "اختياري",
+  "Grant Access From": "طلب الصلاحية من",
+  "Owner": "الفريق المسؤول",
+  "Comment": "ملاحظة",
+  "Open in Jira": "فتح الطلب في Jira",
+  "Open Change Request in Jira": "فتح Change Request في Jira",
+  "Open publish request in Jira": "فتح طلب النشر في Jira",
+  "Open Service Design Change": "فتح Service Design Change",
+  "Internal Publish": "نشر داخلي",
+  "External Publish": "نشر خارجي",
+  "Internal Publish Requirements:": "متطلبات النشر الداخلي:",
+  "External Publish Requirements:": "متطلبات النشر الخارجي:",
+  "Publishing": "النشر",
+  "Parallel Actions": "الأنشطة المتوازية",
+  "Deployment": "Deployment",
+  "Deployment Notes:": "ملاحظات Deployment:",
+  "You MUST identify and specify the supporting technology for your project before submitting any requests.":
+    "يجب تحديد التقنية الداعمة للمشروع قبل إرسال أي طلب.",
+  'Refer to the "Supported Technologies" section above to choose the appropriate technology stack for your infrastructure and application needs.':
+    "راجع قسم التقنيات المدعومة أعلاه لاختيار Technology Stack المناسب لاحتياج Infrastructure والتطبيق.",
+  "MRF document can be found at: wiki.elm.sa": "يمكن العثور على مستند MRF في: wiki.elm.sa",
+  "Always identify the supporting technology required before proceeding":
+    "حدد التقنية الداعمة المطلوبة دائماً قبل المتابعة.",
+  "OpenShift (OCP) supported runtime technologies: Java, .NET, Node.js, Python":
+    "تقنيات Runtime المدعومة على OpenShift (OCP): Java و.NET وNode.js وPython",
+  "Virtual Machines (VMs) supported operating systems: Linux, Windows":
+    "أنظمة التشغيل المدعومة على Virtual Machines (VMs): Linux وWindows",
+  "For VMs: Load Balancer and Web Application Firewall (WAF) must be configured":
+    "لـ VMs: يجب إعداد Load Balancer وWeb Application Firewall (WAF).",
+  "For OCP: No Load Balancer or WAF configuration is required":
+    "لـ OCP: لا يلزم إعداد Load Balancer أو WAF.",
+};
+
+const localizeChecklistContent = (root: HTMLElement, isArabic: boolean) => {
+  root.dataset.language = isArabic ? "ar" : "en";
+  if (!isArabic) return;
+
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  const textNodes: Text[] = [];
+  let current = walker.nextNode();
+
+  while (current) {
+    textNodes.push(current as Text);
+    current = walker.nextNode();
+  }
+
+  textNodes.forEach((node) => {
+    const original = node.nodeValue?.trim();
+    if (!original) return;
+
+    const translated = arabicChecklistTerms[original];
+    if (translated) {
+      node.nodeValue = node.nodeValue?.replace(original, translated) ?? translated;
+    }
+  });
+};
 
 const ToolModal = ({ tool, onClose }: ToolModalProps) => {
   const { language, copy } = useLanguage();
@@ -51,6 +125,19 @@ const ToolModal = ({ tool, onClose }: ToolModalProps) => {
       document.body.style.overflow = previousOverflow;
     };
   }, [tool, onClose]);
+
+  useEffect(() => {
+    if (tool !== "project-journey-checklist" || !contentRef.current) return;
+
+    const root = contentRef.current;
+    const applyLocalization = () => localizeChecklistContent(root, isArabic);
+    applyLocalization();
+
+    const observer = new MutationObserver(applyLocalization);
+    observer.observe(root, { childList: true, subtree: true });
+
+    return () => observer.disconnect();
+  }, [tool, isArabic]);
 
   if (!tool) return null;
 
