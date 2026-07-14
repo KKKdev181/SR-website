@@ -12,4 +12,152 @@
   --elm-border-strong: #bfd0e0;
   --elm-surface: #ffffff;
   --elm-page: #f4f7fa;
-  --elm
+  --elm-note: #f7fbff;
+  --elm-warning: #fff8e6;
+  background: var(--elm-page) !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign > div > div:nth-child(2) > div {
+  border: 1px solid var(--elm-border) !important;
+  border-radius: 14px !important;
+  background: var(--elm-surface) !important;
+  box-shadow: 0 4px 14px rgba(16, 42, 67, 0.06) !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign [data-state] > div:first-child {
+  min-height: 64px;
+  padding: 16px 20px !important;
+  border-bottom: 1px solid var(--elm-border) !important;
+  background: #fff !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign [data-state] > div:first-child > div::before {
+  background: var(--elm-blue-soft) !important;
+  color: var(--elm-blue) !important;
+  border: 1px solid #cfe3fb;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign [data-state] > div:first-child span,
+.tool-modal-project-journey-checklist.journey-redesign h4,
+.tool-modal-project-journey-checklist.journey-redesign h5,
+.tool-modal-project-journey-checklist.journey-redesign h6,
+.tool-modal-project-journey-checklist.journey-redesign strong {
+  color: var(--elm-ink) !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign [data-state] > div:nth-child(2) {
+  padding: 18px !important;
+  background: #f7f9fc !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign [id^="prep-"],
+.tool-modal-project-journey-checklist.journey-redesign [id^="devqa-"],
+.tool-modal-project-journey-checklist.journey-redesign [id^="staging-"] {
+  border: 1px solid var(--elm-border) !important;
+  border-radius: 12px !important;
+  background: #fff !important;
+  box-shadow: none !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign [id^="prep-"] > div > div:last-child,
+.tool-modal-project-journey-checklist.journey-redesign [id^="devqa-"] > div > div:last-child,
+.tool-modal-project-journey-checklist.journey-redesign [id^="staging-"] > div > div:last-child {
+  background: #f4f8fc !important;
+  border-inline-start: 1px solid var(--elm-border) !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign p,
+.tool-modal-project-journey-checklist.journey-redesign li,
+.tool-modal-project-journey-checklist.journey-redesign span {
+  color: var(--elm-muted);
+}
+
+.tool-modal-project-journey-checklist.journey-redesign [class*="bg-cyan-300/10"],
+.tool-modal-project-journey-checklist.journey-redesign [class*="bg-cyan-300/15"] {
+  border: 1px solid #b9d8fb !important;
+  border-inline-start: 4px solid var(--elm-blue) !important;
+  border-radius: 10px !important;
+  background: var(--elm-blue-soft) !important;
+  color: var(--elm-blue-dark) !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign [class*="bg-white/10"] {
+  border: 1px solid var(--elm-border) !important;
+  border-inline-start: 4px solid var(--elm-cyan) !important;
+  border-radius: 10px !important;
+  background: var(--elm-note) !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign button,
+.tool-modal-project-journey-checklist.journey-redesign a button {
+  min-height: 42px;
+  border-radius: 8px !important;
+  border-color: #9cc3ef !important;
+  background: #fff !important;
+  color: var(--elm-blue) !important;
+  font-weight: 700 !important;
+  box-shadow: none !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign button:hover,
+.tool-modal-project-journey-checklist.journey-redesign a button:hover {
+  border-color: var(--elm-blue) !important;
+  background: var(--elm-blue-soft) !important;
+  color: var(--elm-blue-dark) !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign [class*="bg-amber"] {
+  border: 1px solid #d9e3ed !important;
+  background: #fff !important;
+  color: var(--elm-ink) !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign [class*="bg-amber"] > h5 {
+  color: var(--elm-ink) !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign [class*="bg-amber"] > p {
+  color: var(--elm-muted) !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign [class*="bg-amber"] [class*="border-amber"] {
+  border: 1px solid var(--elm-border) !important;
+  border-inline-start: 4px solid var(--elm-blue) !important;
+  background: #f8fbff !important;
+  color: var(--elm-ink) !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign [class*="bg-rose"] {
+  border: 1px solid #ffc6c0 !important;
+  border-inline-start: 4px solid #d14343 !important;
+  background: #fff5f4 !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign table {
+  border: 1px solid var(--elm-border) !important;
+  background: #fff !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign th {
+  background: #eef3f8 !important;
+  color: var(--elm-ink) !important;
+}
+
+html[dir="rtl"] .tool-modal-project-journey-checklist.journey-redesign {
+  text-align: right;
+}
+
+@media (max-width: 900px) {
+  .tool-modal-project-journey-checklist.journey-redesign [id^="prep-"] > div,
+  .tool-modal-project-journey-checklist.journey-redesign [id^="devqa-"] > div,
+  .tool-modal-project-journey-checklist.journey-redesign [id^="staging-"] > div {
+    grid-template-columns: 1fr !important;
+  }
+
+  .tool-modal-project-journey-checklist.journey-redesign [id^="prep-"] > div > div:last-child,
+  .tool-modal-project-journey-checklist.journey-redesign [id^="devqa-"] > div > div:last-child,
+  .tool-modal-project-journey-checklist.journey-redesign [id^="staging-"] > div > div:last-child {
+    border-inline-start: 0 !important;
+    border-top: 1px solid var(--elm-border) !important;
+  }
+}
