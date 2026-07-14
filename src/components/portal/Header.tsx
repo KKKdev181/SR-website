@@ -26,9 +26,9 @@ const Header = () => {
   }, []);
 
   const tools = [
-    { to: "/tools/project-journey-checklist", icon: ListChecks, label: copy.navigation.projectJourneyChecklist },
+    { to: "/?tool=project-journey-checklist", icon: ListChecks, label: copy.navigation.projectJourneyChecklist },
     { to: "/?tool=request-finder", icon: Route, label: copy.navigation.requestFinder },
-    { to: "/tools/quick-request-match", icon: WandSparkles, label: copy.navigation.quickRequestMatch },
+    { to: "/?tool=quick-request-match", icon: WandSparkles, label: copy.navigation.quickRequestMatch },
   ];
 
   return (
