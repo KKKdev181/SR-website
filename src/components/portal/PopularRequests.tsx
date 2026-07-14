@@ -1,35 +1,39 @@
 import { Star } from "lucide-react";
 import RequestCard from "./RequestCard";
+import { useLanguage } from "@/contexts/LanguageContext";
 import type { ServiceRequest } from "@/data/requests";
 
 interface PopularRequestsProps {
   requests: ServiceRequest[];
 }
 
-const arabicFont = { fontFamily: "'Noto Sans Arabic', sans-serif" };
-
 const PopularRequests = ({ requests }: PopularRequestsProps) => {
+  const { isArabic } = useLanguage();
+
   if (requests.length === 0) return null;
 
   return (
-    <section className="mb-10">
-      <div className="mb-5 flex flex-wrap items-center gap-2.5 rounded-2xl border border-white/15 bg-white/10 px-4 py-3 shadow-xl shadow-black/15 backdrop-blur">
-        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-300/15">
-          <Star className="h-4 w-4 fill-emerald-200 text-emerald-200" />
+    <section className="mb-12" aria-labelledby="popular-requests-title">
+      <div className="mb-5 flex items-center gap-3 rounded-3xl border border-slate-200 bg-white px-5 py-4 shadow-[0_14px_34px_rgba(15,23,42,0.06)]">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-amber-50 text-amber-600">
+          <Star className="h-4 w-4 fill-current" aria-hidden="true" />
         </div>
         <div className="min-w-0">
-          <h2 className="text-base font-semibold text-white">Popular Requests</h2>
-          <p dir="rtl" lang="ar" className="text-xs text-cyan-100/70" style={arabicFont}>
-            &#1575;&#1604;&#1591;&#1604;&#1576;&#1575;&#1578; &#1575;&#1604;&#1571;&#1603;&#1579;&#1585; &#1575;&#1587;&#1578;&#1582;&#1583;&#1575;&#1605;&#1575;
+          <h2 id="popular-requests-title" className="text-base font-semibold text-slate-950">
+            {isArabic ? "الطلبات الأكثر استخدامًا" : "Popular requests"}
+          </h2>
+          <p className="mt-0.5 text-xs text-slate-500">
+            {isArabic ? "وصول سريع إلى الطلبات الشائعة" : "Quick access to frequently used requests"}
           </p>
         </div>
-        <span className="ml-auto rounded-full bg-emerald-300/15 px-2.5 py-1 text-[10px] font-medium text-emerald-100">
-          Quick access | &#1608;&#1589;&#1608;&#1604; &#1587;&#1585;&#1610;&#1593;
+        <span className="ms-auto hidden rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-semibold text-slate-600 sm:inline-flex">
+          {isArabic ? "وصول سريع" : "Quick access"}
         </span>
       </div>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {requests.map((req) => (
-          <RequestCard key={req.id} request={req} />
+
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+        {requests.map((request) => (
+          <RequestCard key={request.id} request={request} />
         ))}
       </div>
     </section>
