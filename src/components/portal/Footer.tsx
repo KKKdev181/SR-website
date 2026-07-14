@@ -2,7 +2,7 @@ import { Mail } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const Footer = () => {
-  const { isArabic } = useLanguage();
+  const { copy } = useLanguage();
 
   return (
     <footer className="border-t border-slate-200 bg-white/90">
@@ -12,16 +12,13 @@ const Footer = () => {
             <Mail className="h-4 w-4" aria-hidden="true" />
           </span>
           <p>
-            {isArabic ? "تحتاج مساعدة في اختيار الطلب المناسب؟" : "Need help choosing the right request?"}{" "}
-            <a
-              href="mailto:td@elm.sa"
-              className="font-semibold text-blue-700 underline-offset-4 hover:underline focus-visible:rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-            >
+            {copy.footer.help}{" "}
+            <a href="mailto:td@elm.sa" className="font-semibold text-blue-700 underline-offset-4 hover:underline focus-visible:rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
               td@elm.sa
             </a>
           </p>
         </div>
-        <p className="text-xs text-slate-400">Technology Center Portal</p>
+        <p className="text-xs text-slate-400">{copy.footer.portal}</p>
       </div>
     </footer>
   );
