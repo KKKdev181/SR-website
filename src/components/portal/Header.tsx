@@ -1,5 +1,6 @@
 import { ChevronDown, ExternalLink, Globe2, ListChecks, Route, WandSparkles } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const Header = () => {
@@ -10,30 +11,35 @@ const Header = () => {
 
   useEffect(() => {
     const handlePointerDown = (event: PointerEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setIsToolsOpen(false);
-      }
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) setIsToolsOpen(false);
+    };
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsToolsOpen(false);
     };
 
     document.addEventListener("pointerdown", handlePointerDown);
-    return () => document.removeEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleEscape);
+    };
   }, []);
 
   const tools = [
     {
-      href: "#project-journey-checklist",
+      to: "/tools/project-journey-checklist",
       icon: ListChecks,
       en: "Project Journey Checklist",
       ar: "قائمة رحلة المشروع",
     },
     {
-      href: "#request-finder",
+      to: "/tools/request-finder",
       icon: Route,
       en: "Request Finder",
       ar: "موجّه الطلبات",
     },
     {
-      href: "#quick-request-match",
+      to: "/tools/quick-request-match",
       icon: WandSparkles,
       en: "Quick Request Match",
       ar: "المطابقة السريعة للطلب",
@@ -47,8 +53,8 @@ const Header = () => {
         className="mx-auto flex min-h-[64px] max-w-[1920px] items-center justify-between gap-3 px-4 sm:px-6"
       >
         <div className="flex min-w-0 items-center gap-3 sm:gap-4">
-          <a
-            href="/"
+          <Link
+            to="/"
             className="flex shrink-0 items-center gap-3 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
           >
             <img src="/elmlogo.png" alt="Elm" className="h-9 w-auto brightness-0 invert" />
@@ -56,7 +62,7 @@ const Header = () => {
             <span className="hidden whitespace-nowrap text-lg font-semibold sm:block">
               {isArabic ? "مركز التقنية" : "Technology Center"}
             </span>
-          </a>
+          </Link>
 
           <div ref={menuRef} className="relative hidden md:block">
             <button
@@ -80,9 +86,9 @@ const Header = () => {
                 {tools.map((tool) => {
                   const Icon = tool.icon;
                   return (
-                    <a
-                      key={tool.href}
-                      href={tool.href}
+                    <Link
+                      key={tool.to}
+                      to={tool.to}
                       role="menuitem"
                       onClick={() => setIsToolsOpen(false)}
                       className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold transition hover:bg-blue-50 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
@@ -91,7 +97,7 @@ const Header = () => {
                         <Icon className="h-4 w-4" />
                       </span>
                       <span>{isArabic ? tool.ar : tool.en}</span>
-                    </a>
+                    </Link>
                   );
                 })}
               </div>
