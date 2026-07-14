@@ -23,10 +23,26 @@ import "@/styles/tool-localization.css";
 import "@/styles/project-journey-redesign.css";
 
 type ToolType = "checklist" | "finder" | "match";
+type JourneyStageKey = "prepare" | "devqa" | "staging" | "deployment" | "publishing";
 
 interface ToolPageProps {
   tool: ToolType;
 }
+
+interface JourneyStage {
+  key: JourneyStageKey;
+  targetId?: string;
+  phaseNames?: string[];
+  sectionNames?: string[];
+  icon: typeof ListChecks;
+  en: string;
+  ar: string;
+  descriptionEn: string;
+  descriptionAr: string;
+}
+
+const normalizeText = (value: string): string =>
+  value.replace(/[|\s\u200e\u200f]+/g, "").toLowerCase();
 
 const ToolPage = ({ tool }: ToolPageProps) => {
   const { language, copy } = useLanguage();
@@ -56,9 +72,11 @@ const ToolPage = ({ tool }: ToolPageProps) => {
     ? [copy.common.allDetailsPreserved, copy.common.directJiraLinks, copy.common.expandablePhases]
     : [copy.common.guidedExperience, copy.common.liveRequestData, copy.common.directJiraLinks];
 
-  const journeyStages = [
+  const journeyStages: JourneyStage[] = [
     {
-      href: "#prep-1",
+      key: "prepare",
+      targetId: "prep-1",
+      phaseNames: ["Preparation", "التحضير"],
       icon: ListChecks,
       en: "Prepare",
       ar: "التحضير",
@@ -66,7 +84,9 @@ const ToolPage = ({ tool }: ToolPageProps) => {
       descriptionAr: "أنشئ المشروع وتأكد من المتطلبات الأساسية.",
     },
     {
-      href: "#devqa-1",
+      key: "devqa",
+      targetId: "devqa-1",
+      phaseNames: ["Dev/QA (VMs)", "التطوير/الاختبار", "Dev/QA"],
       icon: ServerCog,
       en: "Build Dev/QA",
       ar: "تجهيز Dev/QA",
@@ -74,7 +94,9 @@ const ToolPage = ({ tool }: ToolPageProps) => {
       descriptionAr: "اختر VM أو OCP وجهّز بيئة Dev/QA.",
     },
     {
-      href: "#staging-prod-1",
+      key: "staging",
+      targetId: "staging-prod-1",
+      phaseNames: ["Staging and Production", "التجهيز والإنتاج", "Staging وProduction"],
       icon: Layers3,
       en: "Prepare Staging & Production",
       ar: "تجهيز Staging وProduction",
@@ -82,7 +104,8 @@ const ToolPage = ({ tool }: ToolPageProps) => {
       descriptionAr: "جهّز البيئات المستهدفة وأكمل متطلبات الجاهزية.",
     },
     {
-      href: "#journey-deployment",
+      key: "deployment",
+      sectionNames: ["Deployment", "التنفيذ", "Deployment التنفيذ"],
       icon: CheckCircle2,
       en: "Deploy",
       ar: "تنفيذ Deployment",
@@ -90,7 +113,8 @@ const ToolPage = ({ tool }: ToolPageProps) => {
       descriptionAr: "افتح Change ونسّق Deployment وأكمل التسليم.",
     },
     {
-      href: "#journey-publishing",
+      key: "publishing",
+      sectionNames: ["Publishing", "النشر"],
       icon: Rocket,
       en: "Publish & Go Live",
       ar: "النشر والإطلاق",
@@ -99,18 +123,59 @@ const ToolPage = ({ tool }: ToolPageProps) => {
     },
   ];
 
-  const scrollToJourneySection = (href: string) => {
-    const checklist = toolRootRef.current;
-    if (!checklist) return;
+  const scrollElementIntoView = (element: HTMLElement, block: ScrollLogicalPosition = "start") => {
+    element.scrollIntoView({ behavior: "smooth", block });
+  };
 
-    if (href === "#journey-deployment" || href === "#journey-publishing") {
-      const cards = checklist.querySelectorAll<HTMLElement>(".journey-redesign > div > div:nth-child(2) > div");
-      const targetIndex = href === "#journey-deployment" ? 3 : 4;
-      cards[targetIndex]?.scrollIntoView({ behavior: "smooth", block: "start" });
+  const findExactTextElement = (root: HTMLElement, names: string[]): HTMLElement | null => {
+    const expected = new Set(names.map(normalizeText));
+    const candidates = root.querySelectorAll<HTMLElement>(
+      "h1, h2, h3, h4, h5, h6, [class*='font-semibold'], [class*='font-bold']",
+    );
+
+    return Array.from(candidates).find((element) => {
+      const text = normalizeText(element.textContent ?? "");
+      return expected.has(text);
+    }) ?? null;
+  };
+
+  const openPhaseAndScroll = (stage: JourneyStage, root: HTMLElement) => {
+    const scrollToTarget = () => {
+      const target = stage.targetId ? document.getElementById(stage.targetId) : null;
+      if (target) scrollElementIntoView(target, "center");
+    };
+
+    const existingTarget = stage.targetId ? document.getElementById(stage.targetId) : null;
+    if (existingTarget) {
+      scrollElementIntoView(existingTarget, "center");
       return;
     }
 
-    document.querySelector<HTMLElement>(href)?.scrollIntoView({ behavior: "smooth", block: "center" });
+    const phaseLabel = findExactTextElement(root, stage.phaseNames ?? []);
+    const trigger = phaseLabel?.closest<HTMLElement>("button[data-state], [role='button'][data-state]");
+
+    if (trigger?.getAttribute("data-state") === "closed") trigger.click();
+    window.setTimeout(scrollToTarget, 180);
+  };
+
+  const scrollToStandaloneSection = (stage: JourneyStage, root: HTMLElement) => {
+    const heading = findExactTextElement(root, stage.sectionNames ?? []);
+    if (!heading) return;
+
+    const card = heading.closest<HTMLElement>(".overflow-hidden") ?? heading.closest<HTMLElement>("[class*='rounded']") ?? heading;
+    scrollElementIntoView(card, "start");
+  };
+
+  const navigateToJourneyStage = (stage: JourneyStage) => {
+    const root = toolRootRef.current;
+    if (!root) return;
+
+    if (stage.targetId) {
+      openPhaseAndScroll(stage, root);
+      return;
+    }
+
+    scrollToStandaloneSection(stage, root);
   };
 
   return (
@@ -169,10 +234,11 @@ const ToolPage = ({ tool }: ToolPageProps) => {
                 const Icon = stage.icon;
                 return (
                   <button
-                    key={stage.href}
+                    key={stage.key}
                     type="button"
-                    onClick={() => scrollToJourneySection(stage.href)}
+                    onClick={() => navigateToJourneyStage(stage)}
                     className="journey-stage-card"
+                    aria-label={isArabic ? `الانتقال إلى مرحلة ${stage.ar}` : `Go to ${stage.en} stage`}
                   >
                     <span className="journey-stage-number">{index + 1}</span>
                     <span className="journey-stage-icon"><Icon className="h-5 w-5" /></span>
