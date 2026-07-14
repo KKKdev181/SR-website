@@ -1,0 +1,267 @@
+.tool-modal-project-journey-checklist.journey-redesign {
+  --checklist-ink: #172b4d;
+  --checklist-muted: #5e6c84;
+  --checklist-border: #dfe1e6;
+  --checklist-blue: #0c66e4;
+  --checklist-soft-blue: #e9f2ff;
+  padding: 22px !important;
+  scroll-behavior: smooth;
+}
+
+/* Keep one modal header only. */
+.tool-modal-project-journey-checklist.journey-redesign > div {
+  width: min(100%, 1120px);
+  margin-inline: auto !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign > div > div:first-child {
+  display: none !important;
+}
+
+/* Main journey stack. */
+.tool-modal-project-journey-checklist.journey-redesign > div > div:nth-child(2) {
+  display: grid !important;
+  gap: 18px !important;
+  padding: 0 !important;
+  counter-reset: journey-phase;
+}
+
+/* Every top-level phase/section becomes a clear panel. */
+.tool-modal-project-journey-checklist.journey-redesign > div > div:nth-child(2) > div {
+  overflow: hidden !important;
+  border: 1px solid var(--checklist-border) !important;
+  border-radius: 16px !important;
+  background: #fff !important;
+  color: var(--checklist-ink) !important;
+  box-shadow: 0 2px 8px rgba(9, 30, 66, 0.07) !important;
+}
+
+/* Phase accordion title. */
+.tool-modal-project-journey-checklist.journey-redesign > div > div:nth-child(2) > div > [data-state] > div:first-child {
+  min-height: 68px;
+  padding: 14px 18px !important;
+  border-bottom: 1px solid #ebecf0 !important;
+  background: linear-gradient(180deg, #fff 0%, #f7f9fc 100%) !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign > div > div:nth-child(2) > div > [data-state] > div:first-child > div {
+  gap: 12px !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign > div > div:nth-child(2) > div > [data-state] > div:first-child > div::before {
+  counter-increment: journey-phase;
+  content: counter(journey-phase);
+  display: inline-flex;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  background: var(--checklist-soft-blue);
+  color: var(--checklist-blue);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign > div > div:nth-child(2) > div > [data-state] > div:first-child span {
+  color: var(--checklist-ink) !important;
+  font-size: 15px !important;
+  font-weight: 750 !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign > div > div:nth-child(2) > div > [data-state] > div:nth-child(2) {
+  padding: 18px !important;
+  background: #f7f8fa !important;
+}
+
+/* Individual request card. */
+.tool-modal-project-journey-checklist.journey-redesign [id^="prep-"],
+.tool-modal-project-journey-checklist.journey-redesign [id^="devqa-"],
+.tool-modal-project-journey-checklist.journey-redesign [id^="staging-"] {
+  padding: 0 !important;
+  overflow: hidden;
+  border: 1px solid #dfe3e8 !important;
+  border-radius: 13px !important;
+  background: #fff !important;
+  scroll-margin-top: 20px;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign [id^="prep-"] > div,
+.tool-modal-project-journey-checklist.journey-redesign [id^="devqa-"] > div,
+.tool-modal-project-journey-checklist.journey-redesign [id^="staging-"] > div {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 205px;
+  gap: 0 !important;
+  align-items: stretch !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign [id^="prep-"] > div > div:first-child,
+.tool-modal-project-journey-checklist.journey-redesign [id^="devqa-"] > div > div:first-child,
+.tool-modal-project-journey-checklist.journey-redesign [id^="staging-"] > div > div:first-child {
+  min-width: 0;
+  padding: 20px 22px;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign [id^="prep-"] > div > div:last-child,
+.tool-modal-project-journey-checklist.journey-redesign [id^="devqa-"] > div > div:last-child,
+.tool-modal-project-journey-checklist.journey-redesign [id^="staging-"] > div > div:last-child {
+  width: auto !important;
+  padding: 18px;
+  border-inline-start: 1px solid #ebecf0;
+  background: #f7f9fc;
+  align-self: stretch !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign [id^="prep-"] h4,
+.tool-modal-project-journey-checklist.journey-redesign [id^="devqa-"] h4,
+.tool-modal-project-journey-checklist.journey-redesign [id^="staging-"] h4 {
+  margin: 0 !important;
+  color: var(--checklist-ink) !important;
+  font-size: 16px !important;
+  line-height: 1.45 !important;
+}
+
+/* Status badge is visually separated from the title. */
+.tool-modal-project-journey-checklist.journey-redesign [id^="prep-"] [class*="Badge"],
+.tool-modal-project-journey-checklist.journey-redesign [id^="devqa-"] [class*="Badge"],
+.tool-modal-project-journey-checklist.journey-redesign [id^="staging-"] [class*="Badge"] {
+  width: fit-content;
+}
+
+/* Requirement / instruction / notes hierarchy. */
+.tool-modal-project-journey-checklist.journey-redesign [class*="bg-cyan-300/10"],
+.tool-modal-project-journey-checklist.journey-redesign [class*="bg-cyan-300/15"] {
+  margin: 14px 0 !important;
+  padding: 12px 14px !important;
+  border: 1px solid #b6d7ff !important;
+  border-radius: 10px !important;
+  background: var(--checklist-soft-blue) !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign [class*="bg-white/10"] {
+  margin-top: 16px !important;
+  padding: 14px 16px !important;
+  border: 1px solid #e2e6ea !important;
+  border-radius: 10px !important;
+  background: #fafbfc !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign p,
+.tool-modal-project-journey-checklist.journey-redesign li {
+  color: var(--checklist-muted) !important;
+  line-height: 1.7 !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign strong,
+.tool-modal-project-journey-checklist.journey-redesign h4,
+.tool-modal-project-journey-checklist.journey-redesign h5 {
+  color: var(--checklist-ink) !important;
+}
+
+/* Action rail. */
+.tool-modal-project-journey-checklist.journey-redesign [id^="prep-"] a,
+.tool-modal-project-journey-checklist.journey-redesign [id^="devqa-"] a,
+.tool-modal-project-journey-checklist.journey-redesign [id^="staging-"] a {
+  display: block;
+  width: 100%;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign [id^="prep-"] button,
+.tool-modal-project-journey-checklist.journey-redesign [id^="devqa-"] button,
+.tool-modal-project-journey-checklist.journey-redesign [id^="staging-"] button {
+  width: 100% !important;
+  min-height: 42px;
+  justify-content: space-between !important;
+  border: 1px solid #b6d7ff !important;
+  border-radius: 9px !important;
+  background: #fff !important;
+  color: var(--checklist-blue) !important;
+  font-weight: 700 !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign [id^="prep-"] button:hover,
+.tool-modal-project-journey-checklist.journey-redesign [id^="devqa-"] button:hover,
+.tool-modal-project-journey-checklist.journey-redesign [id^="staging-"] button:hover {
+  border-color: var(--checklist-blue) !important;
+  background: var(--checklist-soft-blue) !important;
+}
+
+/* Final check becomes a scannable two-column checklist. */
+.tool-modal-project-journey-checklist.journey-redesign [class*="bg-amber"] {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px !important;
+  padding: 22px !important;
+  border: 1px solid #f5b700 !important;
+  border-radius: 14px !important;
+  background: #fff8db !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign [class*="bg-amber"] > h5,
+.tool-modal-project-journey-checklist.journey-redesign [class*="bg-amber"] > p {
+  grid-column: 1 / -1;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign [class*="bg-amber"] > div,
+.tool-modal-project-journey-checklist.journey-redesign [class*="bg-amber"] > li {
+  min-width: 0;
+  border-radius: 9px;
+}
+
+/* Supporting tables. */
+.tool-modal-project-journey-checklist.journey-redesign table {
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--checklist-border);
+  border-radius: 12px;
+  background: #fff;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign th {
+  background: #f1f2f4 !important;
+  color: var(--checklist-ink) !important;
+  font-weight: 750 !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign td {
+  color: var(--checklist-muted) !important;
+}
+
+html[dir="rtl"] .tool-modal-project-journey-checklist.journey-redesign [id^="prep-"] > div > div:last-child,
+html[dir="rtl"] .tool-modal-project-journey-checklist.journey-redesign [id^="devqa-"] > div > div:last-child,
+html[dir="rtl"] .tool-modal-project-journey-checklist.journey-redesign [id^="staging-"] > div > div:last-child {
+  border-inline-start: 1px solid #ebecf0;
+  border-inline-end: 0;
+}
+
+@media (max-width: 900px) {
+  .tool-modal-project-journey-checklist.journey-redesign {
+    padding: 12px !important;
+  }
+
+  .tool-modal-project-journey-checklist.journey-redesign [id^="prep-"] > div,
+  .tool-modal-project-journey-checklist.journey-redesign [id^="devqa-"] > div,
+  .tool-modal-project-journey-checklist.journey-redesign [id^="staging-"] > div {
+    grid-template-columns: 1fr;
+  }
+
+  .tool-modal-project-journey-checklist.journey-redesign [id^="prep-"] > div > div:last-child,
+  .tool-modal-project-journey-checklist.journey-redesign [id^="devqa-"] > div > div:last-child,
+  .tool-modal-project-journey-checklist.journey-redesign [id^="staging-"] > div > div:last-child {
+    border-top: 1px solid #ebecf0;
+    border-inline-start: 0;
+  }
+
+  .tool-modal-project-journey-checklist.journey-redesign [class*="bg-amber"] {
+    grid-template-columns: 1fr;
+  }
+
+  .tool-modal-project-journey-checklist.journey-redesign [class*="bg-amber"] > h5,
+  .tool-modal-project-journey-checklist.journey-redesign [class*="bg-amber"] > p {
+    grid-column: auto;
+  }
+}
