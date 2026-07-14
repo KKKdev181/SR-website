@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { HelpCircle, X } from "lucide-react";
 import ProjectJourneyGuide from "@/components/portal/ProjectJourneyGuide";
 import { useLanguage } from "@/contexts/LanguageContext";
+import "@/styles/request-finder-modal.css";
 
 interface RequestFinderModalProps {
   open: boolean;
@@ -74,7 +75,7 @@ const RequestFinderModal = ({ open, onClose }: RequestFinderModalProps) => {
           </button>
         </div>
 
-        <div ref={contentRef} className="request-finder-modal min-h-0 flex-1 overflow-y-auto bg-[#f7f8f9] p-4 sm:p-6">
+        <div ref={contentRef} className="request-finder-modal standalone-interactive-tool min-h-0 flex-1 overflow-y-auto bg-[#f7f8f9] p-4 sm:p-6">
           <ProjectJourneyGuide />
         </div>
       </div>
