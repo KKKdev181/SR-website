@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import Header from "@/components/portal/Header";
 import QuickFilters from "@/components/portal/QuickFilters";
 import PopularRequests from "@/components/portal/PopularRequests";
@@ -11,48 +11,30 @@ import Footer from "@/components/portal/Footer";
 import { requests, sections } from "@/data/requests";
 import type { ServiceRequest } from "@/data/requests";
 
-const specialCategoryFilters: Record<string, (req: ServiceRequest) => boolean> = {
-  "Scale Up": (req) =>
-    req.category.toLowerCase().includes("scale") ||
-    req.title.toLowerCase().includes("scale up") ||
-    req.title.toLowerCase().includes("increase") ||
-    req.keywords.some((keyword) => keyword.toLowerCase().includes("scale up")),
-  "Scale Down": (req) =>
-    req.category.toLowerCase().includes("scale") ||
-    req.title.toLowerCase().includes("scale down") ||
-    req.title.toLowerCase().includes("reduce") ||
-    req.keywords.some((keyword) => keyword.toLowerCase().includes("scale down")),
-};
-
-function matchesFilter(req: ServiceRequest, filter: string): boolean {
-  if (specialCategoryFilters[filter]) {
-    return specialCategoryFilters[filter](req);
-  }
-
-  const normalizedFilter = filter.toLowerCase();
+function matchesFilter(request: ServiceRequest, filter: string): boolean {
+  const normalized = filter.toLowerCase();
   return (
-    req.environment?.toLowerCase() === normalizedFilter ||
-    req.section.toLowerCase() === normalizedFilter ||
-    req.category.toLowerCase() === normalizedFilter ||
-    req.category.toLowerCase().includes(normalizedFilter) ||
-    req.title.toLowerCase().includes(normalizedFilter) ||
-    (req.environment || "").toLowerCase().includes(normalizedFilter) ||
-    (req.subSection || "").toLowerCase().includes(normalizedFilter) ||
-    req.section.toLowerCase().includes(normalizedFilter) ||
-    req.keywords.some((keyword) => keyword.toLowerCase().includes(normalizedFilter))
+    request.environment?.toLowerCase() === normalized ||
+    request.section.toLowerCase() === normalized ||
+    request.category.toLowerCase() === normalized ||
+    request.category.toLowerCase().includes(normalized) ||
+    request.title.toLowerCase().includes(normalized) ||
+    (request.environment || "").toLowerCase().includes(normalized) ||
+    (request.subSection || "").toLowerCase().includes(normalized) ||
+    request.keywords.some((keyword) => keyword.toLowerCase().includes(normalized))
   );
 }
 
-function matchesSearch(req: ServiceRequest, query: string): boolean {
-  const q = query.toLowerCase();
+function matchesSearch(request: ServiceRequest, query: string): boolean {
+  const normalized = query.toLowerCase();
   return (
-    req.title.toLowerCase().includes(q) ||
-    req.shortDescription.toLowerCase().includes(q) ||
-    req.category.toLowerCase().includes(q) ||
-    (req.environment || "").toLowerCase().includes(q) ||
-    (req.subSection || "").toLowerCase().includes(q) ||
-    req.section.toLowerCase().includes(q) ||
-    req.keywords.some((k) => k.toLowerCase().includes(q))
+    request.title.toLowerCase().includes(normalized) ||
+    request.shortDescription.toLowerCase().includes(normalized) ||
+    request.category.toLowerCase().includes(normalized) ||
+    request.section.toLowerCase().includes(normalized) ||
+    (request.environment || "").toLowerCase().includes(normalized) ||
+    (request.subSection || "").toLowerCase().includes(normalized) ||
+    request.keywords.some((keyword) => keyword.toLowerCase().includes(normalized))
   );
 }
 
@@ -61,58 +43,56 @@ const Index = () => {
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
 
   const toggleFilter = (filter: string) => {
-    setActiveFilters((prev) => (prev[0] === filter ? [] : [filter]));
+    setActiveFilters((current) => (current[0] === filter ? [] : [filter]));
   };
 
   const filteredRequests = useMemo(() => {
     let result = requests;
+    const query = searchQuery.trim();
 
-    if (searchQuery.trim()) {
-      result = result.filter((r) => matchesSearch(r, searchQuery.trim()));
-    }
-
-    if (activeFilters.length > 0) {
-      result = result.filter((req) => matchesFilter(req, activeFilters[0]));
-    }
+    if (query) result = result.filter((request) => matchesSearch(request, query));
+    if (activeFilters[0]) result = result.filter((request) => matchesFilter(request, activeFilters[0]));
 
     return result;
   }, [searchQuery, activeFilters]);
 
-  const popularRequests = useMemo(() => {
-    return requests.filter((request) => request.popular).slice(0, 6);
-  }, []);
+  const popularRequests = useMemo(
+    () => requests.filter((request) => request.popular && request.jiraUrl?.trim()).slice(0, 6),
+    [],
+  );
 
   const groupedBySection = useMemo(() => {
     const groups: Record<string, ServiceRequest[]> = {};
-    const allSections = [
+    const orderedSections = [
       ...sections,
       ...filteredRequests
         .map((request) => request.section)
-        .filter((section): section is string => !sections.includes(section as typeof sections[number])),
+        .filter((section) => !sections.includes(section as (typeof sections)[number])),
     ];
 
-    for (const section of allSections) {
+    orderedSections.forEach((section) => {
       const sectionRequests = filteredRequests.filter((request) => request.section === section);
-      if (sectionRequests.length > 0) {
-        groups[section] = sectionRequests;
-      }
-    }
+      if (sectionRequests.length > 0) groups[section] = sectionRequests;
+    });
+
     return groups;
   }, [filteredRequests]);
 
-  const isFiltering = searchQuery.trim() !== "" || activeFilters.length > 0;
+  const isFiltering = Boolean(searchQuery.trim() || activeFilters.length);
 
   return (
-    <div className="portal-shell flex min-h-screen flex-col">
+    <div className="min-h-screen bg-[#f4f7fb] text-slate-950">
       <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} />
       <QuickFilters activeFilters={activeFilters} onToggleFilter={toggleFilter} />
 
-      <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-7 pb-16 sm:px-6">
+      <main className="mx-auto w-full max-w-7xl px-4 py-8 pb-16 sm:px-6 lg:px-8">
         {!isFiltering && (
           <>
-            <ProjectJourneyChecklist />
-            <ProjectJourneyGuide />
-            <GuidedWizard />
+            <div className="mb-8 grid gap-4 lg:grid-cols-3">
+              <ProjectJourneyChecklist />
+              <ProjectJourneyGuide />
+              <GuidedWizard />
+            </div>
             <PopularRequests requests={popularRequests} />
           </>
         )}
@@ -120,8 +100,8 @@ const Index = () => {
         {filteredRequests.length === 0 ? (
           <EmptyState />
         ) : (
-          Object.entries(groupedBySection).map(([section, reqs]) => (
-            <RequestSection key={section} title={section} requests={reqs} />
+          Object.entries(groupedBySection).map(([section, sectionRequests]) => (
+            <RequestSection key={section} title={section} requests={sectionRequests} />
           ))
         )}
       </main>
