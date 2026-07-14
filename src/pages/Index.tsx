@@ -34,12 +34,8 @@ const Index = () => {
 
   const filteredRequests = useMemo(() => {
     let result = requests;
-    if (activeSection !== "All Services") {
-      result = result.filter((request) => request.section === activeSection);
-    }
-    if (searchQuery.trim()) {
-      result = result.filter((request) => matchesSearch(request, searchQuery.trim()));
-    }
+    if (activeSection !== "All Services") result = result.filter((request) => request.section === activeSection);
+    if (searchQuery.trim()) result = result.filter((request) => matchesSearch(request, searchQuery.trim()));
     return result;
   }, [activeSection, searchQuery]);
 
@@ -53,28 +49,37 @@ const Index = () => {
         ? `استعرض الطلبات المتاحة ضمن تصنيف ${activeSection}.`
         : `Browse all available requests in ${activeSection}.`;
 
+  const categoryButtonClass = (isActive: boolean) =>
+    `grid min-h-11 min-w-max grid-cols-[minmax(0,1fr)_32px] items-center gap-3 rounded-md px-3 py-2 text-sm transition lg:w-full lg:min-w-0 ${
+      isActive
+        ? "border-e-2 border-[#0c66e4] bg-[#e9f2ff] font-semibold text-[#0c66e4]"
+        : "text-[#172b4d] hover:bg-[#f1f2f4]"
+    }`;
+
   return (
     <div className="min-h-screen bg-[#f4f5f7] text-[#172b4d]">
       <Header />
 
-      <div className="mx-auto grid max-w-[1920px] grid-cols-1 lg:grid-cols-[220px_minmax(0,1fr)]">
+      <div className="mx-auto grid max-w-[1920px] grid-cols-1 lg:grid-cols-[260px_minmax(0,1fr)]">
         <aside className="border-b border-[#dfe1e6] bg-white lg:min-h-[calc(100vh-64px)] lg:border-b-0 lg:border-e">
           <div className="px-3 py-5">
-            <p className="mb-3 px-2 text-[11px] font-bold uppercase tracking-wide text-[#5e6c84]">
+            <p className="mb-3 px-3 text-[11px] font-bold uppercase tracking-wide text-[#5e6c84]">
               {isArabic ? "التصفية حسب التصنيف" : "Filter by category"}
             </p>
-            <nav className="flex gap-2 overflow-x-auto pb-1 lg:block lg:space-y-1 lg:overflow-visible" aria-label={isArabic ? "تصنيفات الخدمات" : "Service categories"}>
+
+            <nav
+              className="flex gap-2 overflow-x-auto pb-1 lg:block lg:space-y-1 lg:overflow-visible"
+              aria-label={isArabic ? "تصنيفات الخدمات" : "Service categories"}
+            >
               <button
                 type="button"
                 onClick={() => setActiveSection("All Services")}
-                className={`flex min-w-max items-center justify-between gap-4 rounded-md px-3 py-2 text-sm font-semibold transition lg:w-full ${
-                  activeSection === "All Services"
-                    ? "border-e-2 border-[#0c66e4] bg-[#e9f2ff] text-[#0c66e4]"
-                    : "text-[#172b4d] hover:bg-[#f1f2f4]"
-                }`}
+                className={categoryButtonClass(activeSection === "All Services")}
               >
-                <span>{isArabic ? "جميع الخدمات" : "All Services"}</span>
-                <span className="rounded-full bg-[#dfe1e6] px-2 py-0.5 text-[11px] text-[#44546f]">{requests.length}</span>
+                <span className="min-w-0 text-start leading-5">{isArabic ? "جميع الخدمات" : "All Services"}</span>
+                <span className="inline-flex h-7 min-w-7 items-center justify-center justify-self-end rounded-full bg-[#dfe1e6] px-1.5 text-[11px] font-semibold text-[#44546f]">
+                  {requests.length}
+                </span>
               </button>
 
               {sections.map((section) => (
@@ -82,14 +87,12 @@ const Index = () => {
                   key={section}
                   type="button"
                   onClick={() => setActiveSection(section)}
-                  className={`flex min-w-max items-center justify-between gap-4 rounded-md px-3 py-2 text-sm transition lg:w-full ${
-                    activeSection === section
-                      ? "border-e-2 border-[#0c66e4] bg-[#e9f2ff] font-semibold text-[#0c66e4]"
-                      : "text-[#172b4d] hover:bg-[#f1f2f4]"
-                  }`}
+                  className={categoryButtonClass(activeSection === section)}
                 >
-                  <span className="text-start">{section}</span>
-                  <span className="rounded-full bg-[#f1f2f4] px-2 py-0.5 text-[11px] text-[#44546f]">{sectionCounts[section]}</span>
+                  <span className="min-w-0 text-start leading-5">{section}</span>
+                  <span className="inline-flex h-7 min-w-7 items-center justify-center justify-self-end rounded-full bg-[#f1f2f4] px-1.5 text-[11px] font-semibold text-[#44546f]">
+                    {sectionCounts[section]}
+                  </span>
                 </button>
               ))}
             </nav>
