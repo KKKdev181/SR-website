@@ -22,20 +22,20 @@ function matchesSearch(request: ServiceRequest, query: string): boolean {
 }
 
 const sectionArabic: Record<string, string> = {
-  "General Help": "مساعدة عامة",
-  "Infrastructure & Hosting": "Infrastructure وHosting",
-  "Storage & Backup": "Storage وBackup",
-  "Network & Connectivity": "Network والاتصال",
+  "General Help": "المساعدة العامة",
+  "Infrastructure & Hosting": "البنية التحتية والاستضافة",
+  "Storage & Backup": "التخزين والنسخ الاحتياطي",
+  "Network & Connectivity": "الشبكات والاتصال",
   "Access & Privileges": "الصلاحيات والوصول",
-  "Platform & Cloud Services": "Platform وCloud Services",
-  "Application Lifecycle": "دورة حياة التطبيق",
-  "Application & Database": "Application وDatabase",
+  "Platform & Cloud Services": "المنصات والخدمات السحابية",
+  "Application Lifecycle": "دورة حياة التطبيقات",
+  "Application & Database": "التطبيقات وقواعد البيانات",
   "DevOps & Software Delivery": "DevOps وتسليم البرمجيات",
   "Jira & Amer": "Jira وAmer",
-  "BI, Analytics & Reporting": "BI والتحليلات والتقارير",
-  "UX, Web & Mobile": "UX وWeb وMobile",
+  "BI, Analytics & Reporting": "ذكاء الأعمال والتحليلات والتقارير",
+  "UX, Web & Mobile": "تجربة المستخدم والويب والجوال",
   "Business Operations": "عمليات الأعمال",
-  "General Services": "خدمات عامة",
+  "General Services": "الخدمات العامة",
 };
 
 const Index = () => {
@@ -61,27 +61,27 @@ const Index = () => {
   const description = activeSection === "All Services" ? copy.catalog.allDescription : copy.catalog.categoryDescription(localizedSection(activeSection));
 
   const categoryButtonClass = (isActive: boolean) =>
-    `grid min-h-11 min-w-max grid-cols-[minmax(0,1fr)_32px] items-center gap-3 rounded-md px-3 py-2 text-sm transition lg:w-full lg:min-w-0 ${
+    `flex min-h-11 min-w-max items-center justify-between gap-4 rounded-md px-3 py-2 text-sm transition lg:w-full lg:min-w-0 ${
       isActive ? "border-e-2 border-[#0c66e4] bg-[#e9f2ff] font-semibold text-[#0c66e4]" : "text-[#172b4d] hover:bg-[#f1f2f4]"
     }`;
 
   return (
     <div className="min-h-screen bg-[#f4f5f7] text-[#172b4d]">
       <Header />
-      <div className="mx-auto grid max-w-[1920px] grid-cols-1 lg:grid-cols-[260px_minmax(0,1fr)]">
+      <div className="mx-auto grid max-w-[1920px] grid-cols-1 lg:grid-cols-[290px_minmax(0,1fr)]">
         <aside className="border-b border-[#dfe1e6] bg-white lg:min-h-[calc(100vh-64px)] lg:border-b-0 lg:border-e">
           <div className="px-3 py-5">
             <p className="mb-3 px-3 text-[11px] font-bold uppercase tracking-wide text-[#5e6c84]">{copy.catalog.filterByCategory}</p>
             <nav className="flex gap-2 overflow-x-auto pb-1 lg:block lg:space-y-1 lg:overflow-visible" aria-label={copy.catalog.categoriesLabel}>
               <button type="button" onClick={() => setActiveSection("All Services")} className={categoryButtonClass(activeSection === "All Services")}>
-                <span className="min-w-0 text-start leading-5">{copy.catalog.allServices}</span>
-                <span className="inline-flex h-7 min-w-7 items-center justify-center justify-self-end rounded-full bg-[#dfe1e6] px-1.5 text-[11px] font-semibold text-[#44546f]">{requests.length}</span>
+                <span className="min-w-0 flex-1 text-start leading-5">{copy.catalog.allServices}</span>
+                <span className="inline-flex h-7 min-w-7 shrink-0 items-center justify-center rounded-full bg-[#dfe1e6] px-1.5 text-[11px] font-semibold text-[#44546f]">{requests.length}</span>
               </button>
 
               {sections.map((section) => (
                 <button key={section} type="button" onClick={() => setActiveSection(section)} className={categoryButtonClass(activeSection === section)}>
-                  <span className="min-w-0 text-start leading-5" dir="auto">{localizedSection(section)}</span>
-                  <span className="inline-flex h-7 min-w-7 items-center justify-center justify-self-end rounded-full bg-[#f1f2f4] px-1.5 text-[11px] font-semibold text-[#44546f]">{sectionCounts[section]}</span>
+                  <span className="min-w-0 flex-1 text-start leading-5">{localizedSection(section)}</span>
+                  <span className="inline-flex h-7 min-w-7 shrink-0 items-center justify-center rounded-full bg-[#f1f2f4] px-1.5 text-[11px] font-semibold text-[#44546f]">{sectionCounts[section]}</span>
                 </button>
               ))}
             </nav>
