@@ -33,7 +33,6 @@ const ToolModal = ({ tool, onClose }: ToolModalProps) => {
 
     document.addEventListener("keydown", handleEscape);
 
-    // The checklist still has a legacy collapsed launcher internally.
     const timer = window.setTimeout(() => {
       if (tool === "project-journey-checklist") {
         contentRef.current?.querySelector<HTMLElement>(".premium-tool-card")?.click();
@@ -56,7 +55,7 @@ const ToolModal = ({ tool, onClose }: ToolModalProps) => {
         ? "راجع رحلة المشروع كاملة، وافتح الطلبات والروابط المطلوبة لكل مرحلة."
         : "Review the complete project journey and open the requests and links required for each stage.",
       icon: Layers3,
-      width: "max-w-[1540px]",
+      width: "max-w-[1320px]",
     },
     "request-finder": {
       title: isArabic ? "معالج متطلبات المشروع" : "Project Requirements Wizard",
