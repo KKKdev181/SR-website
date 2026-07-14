@@ -1,0 +1,36 @@
+/* Legacy tool components store paired English and Arabic copy.
+   These rules show only the selected language without deleting any content. */
+html[lang="en"] .standalone-checklist [lang="ar"],
+html[lang="en"] .standalone-interactive-tool [lang="ar"] {
+  display: none !important;
+}
+
+html[lang="ar"] .standalone-checklist p:not([lang]):has(+ p[lang="ar"]),
+html[lang="ar"] .standalone-checklist h3:not([lang]):has(+ [lang="ar"]),
+html[lang="ar"] .standalone-checklist h4:not([lang]):has(+ [lang="ar"]),
+html[lang="ar"] .standalone-checklist h5:not([lang]):has(+ [lang="ar"]),
+html[lang="ar"] .standalone-checklist h6:not([lang]):has(+ [lang="ar"]),
+html[lang="ar"] .standalone-interactive-tool p:not([lang]):has(+ p[lang="ar"]),
+html[lang="ar"] .standalone-interactive-tool h3:not([lang]):has(+ [lang="ar"]),
+html[lang="ar"] .standalone-interactive-tool h4:not([lang]):has(+ [lang="ar"]) {
+  display: none !important;
+}
+
+html[lang="ar"] .standalone-checklist [lang="ar"],
+html[lang="ar"] .standalone-interactive-tool [lang="ar"] {
+  direction: rtl;
+  text-align: right;
+}
+
+html[lang="ar"] .standalone-checklist [dir="ltr"],
+html[lang="ar"] .standalone-interactive-tool [dir="ltr"] {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+html[lang="ar"] .standalone-checklist button,
+html[lang="ar"] .standalone-interactive-tool button,
+html[lang="ar"] .standalone-checklist a,
+html[lang="ar"] .standalone-interactive-tool a {
+  text-align: right;
+}
