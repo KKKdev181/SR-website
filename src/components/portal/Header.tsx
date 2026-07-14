@@ -1,204 +1,124 @@
-import { ExternalLink, Info, Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ExternalLink, Globe2, Search, Sparkles } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface HeaderProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
 }
 
-const arabicFont = {
-  fontFamily: "'Noto Sans Arabic', 'Segoe UI', Tahoma, sans-serif",
-};
+const copy = {
+  en: {
+    portal: "Technology Center Portal",
+    strapline: "All technology services in one place",
+    tools: "Tools",
+    requests: "My Jira Requests",
+    eyebrow: "Service request directory",
+    title: "Your guide to the right technology request",
+    subtitle:
+      "Search for a service, review its requirements, and open the correct Jira request without unnecessary back-and-forth.",
+    searchLabel: "Search the service catalog",
+    placeholder: "Search by request, keyword, category, or environment...",
+    language: "العربية",
+  },
+  ar: {
+    portal: "بوابة مركز التقنية",
+    strapline: "جميع الخدمات التقنية في مكان واحد",
+    tools: "الأدوات",
+    requests: "طلباتي في Jira",
+    eyebrow: "دليل الطلبات التقنية",
+    title: "دليلك لاختيار الطلب التقني المناسب",
+    subtitle:
+      "ابحث عن الخدمة، راجع متطلباتها، وانتقل مباشرة إلى طلب Jira الصحيح بدون خطوات غير ضرورية.",
+    searchLabel: "البحث في دليل الخدمات",
+    placeholder: "ابحث باسم الطلب أو الكلمة المفتاحية أو التصنيف أو البيئة...",
+    language: "English",
+  },
+} as const;
 
 const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
+  const { language, toggleLanguage } = useLanguage();
+  const text = copy[language];
+  const isArabic = language === "ar";
+
   return (
-    <header className="relative z-50 bg-[#10051d] text-white shadow-2xl shadow-[#160821]/25">
-      <div className="relative overflow-hidden border-b border-white/10 bg-[radial-gradient(circle_at_76%_12%,rgba(128,75,218,0.55),transparent_25rem),radial-gradient(circle_at_18%_88%,rgba(0,140,164,0.48),transparent_34rem),linear-gradient(135deg,#10031f_0%,#1b0734_45%,#093753_100%)]">
-        <div className="absolute inset-0 opacity-25 [background-image:linear-gradient(rgba(255,255,255,0.12)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] [background-size:72px_72px]" />
-        <div className="absolute left-1/2 top-24 h-72 w-[44rem] -translate-x-1/2 rounded-full bg-cyan-300/12 blur-3xl" />
-        <div className="absolute -right-24 bottom-8 h-72 w-72 rounded-full border border-white/10 bg-white/5 blur-sm" />
-        <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-cyan-300/70 to-transparent" />
+    <header className="border-b border-slate-200 bg-[#f4f7fb]">
+      <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
+        <nav
+          aria-label={isArabic ? "التنقل الرئيسي" : "Primary navigation"}
+          className="flex min-h-16 items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white px-4 shadow-[0_8px_30px_rgba(15,23,42,0.05)] sm:px-5"
+        >
+          <a href="/" className="flex min-w-0 items-center gap-3 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50">
+              <img src="/elmlogo.png" alt="Elm" className="h-8 w-8 object-contain" />
+            </span>
+            <span className="min-w-0">
+              <span className="block truncate text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-500">
+                {text.portal}
+              </span>
+              <span className="block truncate text-xs font-semibold text-slate-950">{text.strapline}</span>
+            </span>
+          </a>
 
-        <div className="relative mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:py-6">
-          <div className="flex flex-col gap-6 lg:flex-row-reverse lg:items-center lg:justify-between">
-            <div className="flex min-w-0 items-center justify-end gap-4">
-              <div className="flex h-14 w-14 shrink-0 items-center justify-center">
-                <img
-                  src="/elmlogo.png"
-                  alt="Elm Logo"
-                  className="h-12 w-12 object-contain brightness-0 invert"
-                />
-              </div>
+          <div className="flex items-center gap-2">
+            <a
+              href="https://jira.elm.sa/plugins/servlet/desk/user/requests?status=open&reporter=me"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden min-h-10 items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 text-xs font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 sm:inline-flex"
+            >
+              {text.requests}
+              <ExternalLink className="h-3.5 w-3.5" />
+            </a>
+            <button
+              type="button"
+              onClick={toggleLanguage}
+              className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-700 transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              aria-label={isArabic ? "Switch to English" : "التبديل إلى العربية"}
+            >
+              <Globe2 className="h-4 w-4" />
+              {text.language}
+            </button>
+          </div>
+        </nav>
 
-              <div className="min-w-0 text-right">
-                <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                  <h1 className="text-xl font-bold leading-tight text-white sm:text-2xl">
-                    Technology Center Portal
-                  </h1>
-                  <span className="text-white/35">|</span>
-                  <span
-                    dir="rtl"
-                    lang="ar"
-                    className="text-xl font-bold leading-tight text-white/95 sm:text-2xl"
-                    style={arabicFont}
-                  >
-                    مركز التقنية
-                  </span>
-                </div>
+        <section className="mt-4 overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-[0_18px_60px_rgba(15,23,42,0.07)]">
+          <div className="grid items-center gap-8 px-6 py-8 sm:px-8 lg:grid-cols-[1.15fr_0.85fr] lg:px-10 lg:py-11">
+            <div className="min-w-0">
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-blue-700">
+                <Sparkles className="h-3.5 w-3.5" />
+                {text.eyebrow}
               </div>
+              <h1 className="max-w-3xl text-3xl font-bold leading-[1.12] tracking-[-0.035em] text-slate-950 sm:text-4xl lg:text-5xl">
+                {text.title}
+              </h1>
+              <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">{text.subtitle}</p>
             </div>
 
-            <div className="flex flex-wrap items-center gap-2.5 lg:justify-end">
-              <a
-                href="https://jira.elm.sa/plugins/servlet/desk/user/requests?status=open&reporter=me"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Button
-                  size="sm"
-                  className="h-11 rounded-full border border-cyan-200/25 bg-white/12 px-4 text-sm font-semibold text-white shadow-xl shadow-black/20 backdrop-blur hover:bg-white/18"
-                >
-                  My Jira Requests
-                  <span className="text-cyan-100/45">|</span>
-                  <span dir="rtl" lang="ar" style={arabicFont}>
-                    طلباتي
+            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3 sm:p-4">
+              <label htmlFor="service-search" className="mb-2 block text-xs font-semibold text-slate-700">
+                {text.searchLabel}
+              </label>
+              <div className="relative">
+                <Search className={`absolute top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400 ${isArabic ? "right-4" : "left-4"}`} />
+                <Input
+                  id="service-search"
+                  value={searchQuery}
+                  onChange={(event) => onSearchChange(event.target.value)}
+                  placeholder={text.placeholder}
+                  className={`h-14 rounded-xl border-slate-200 bg-white text-sm text-slate-950 shadow-sm placeholder:text-slate-400 focus-visible:border-blue-500 focus-visible:ring-blue-500/20 ${isArabic ? "pr-12 pl-4" : "pl-12 pr-4"}`}
+                />
+              </div>
+              <div className="mt-3 flex flex-wrap gap-2 text-[11px] text-slate-500">
+                {["Infra & Network", "Application", "Security"].map((item) => (
+                  <span key={item} className="rounded-full border border-slate-200 bg-white px-2.5 py-1">
+                    {item}
                   </span>
-                  <ExternalLink className="h-3.5 w-3.5" />
-                </Button>
-              </a>
-
-              <div className="group relative">
-                <button
-                  type="button"
-                  className="inline-flex h-11 items-center justify-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3.5 text-xs font-semibold text-white/90 transition-colors hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
-                  aria-label="About Technology Center Portal"
-                >
-                  <Info className="h-3.5 w-3.5" />
-                  About
-                  <span className="text-white/40">|</span>
-                  <span dir="rtl" lang="ar" style={arabicFont}>
-                    عن الموقع
-                  </span>
-                </button>
-
-                <div className="pointer-events-none absolute right-0 top-12 z-[60] w-[min(24rem,calc(100vw-2rem))] rounded-2xl border border-cyan-200/25 bg-[#111a33] p-4 text-left opacity-0 shadow-2xl transition-opacity duration-150 group-hover:opacity-100">
-                  <p className="text-sm font-semibold text-white">
-                    About Technology Center Portal
-                  </p>
-                  <p className="mt-1 text-xs leading-relaxed text-slate-200/75">
-                    A single place for project and product teams to find technology services and
-                    open the correct Jira request with less back-and-forth.
-                  </p>
-                </div>
+                ))}
               </div>
             </div>
           </div>
-
-          <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-7 py-8 text-center lg:py-10">
-            <div
-              aria-hidden="true"
-              className="premium-hero-motion premium-hero-motion-left hidden xl:block"
-            >
-              <div className="motion-panel motion-panel-a">
-                <span className="motion-kicker" />
-                <span className="motion-line motion-line-wide" />
-                <span className="motion-line" />
-              </div>
-              <div className="motion-panel motion-panel-b">
-                <span className="motion-chip" />
-                <span className="motion-chip motion-chip-soft" />
-              </div>
-              <svg className="motion-routes" viewBox="0 0 280 220" fill="none">
-                <path
-                  className="motion-route motion-route-one"
-                  d="M16 116 C62 54 124 48 168 92 C210 134 238 112 264 68"
-                />
-                <path
-                  className="motion-route motion-route-two"
-                  d="M24 166 C72 122 120 134 150 158 C190 188 224 160 258 136"
-                />
-              </svg>
-            </div>
-
-            <div
-              aria-hidden="true"
-              className="premium-hero-motion premium-hero-motion-right hidden xl:block"
-            >
-              <div className="motion-panel motion-panel-c">
-                <span className="motion-kicker" />
-                <span className="motion-line motion-line-wide" />
-                <span className="motion-line" />
-              </div>
-              <div className="motion-panel motion-panel-d">
-                <span className="motion-chip" />
-                <span className="motion-chip motion-chip-soft" />
-              </div>
-              <svg className="motion-routes" viewBox="0 0 280 220" fill="none">
-                <path
-                  className="motion-route motion-route-one"
-                  d="M18 82 C70 126 116 130 152 92 C194 48 226 52 264 90"
-                />
-                <path
-                  className="motion-route motion-route-two"
-                  d="M26 154 C70 186 118 170 152 144 C194 112 226 118 258 152"
-                />
-              </svg>
-            </div>
-
-            <div className="relative z-10">
-              <h2 className="mx-auto max-w-4xl text-3xl font-bold leading-[1.12] text-white sm:text-4xl lg:text-[2.65rem]">
-                Your guide to the right technology request
-                <span
-                  className="mt-2 block text-[1.85rem] leading-[1.22] text-white/92 sm:text-[2.35rem] lg:text-[2.55rem]"
-                  dir="rtl"
-                  lang="ar"
-                  style={arabicFont}
-                >
-                  دليلك لاختيار الطلب التقني المناسب
-                </span>
-              </h2>
-
-              <div className="mx-auto mt-4 flex max-w-2xl flex-col items-center gap-1.5 text-center">
-                <p className="max-w-xl text-[13px] font-medium leading-6 text-white/78 sm:text-sm">
-                  Find the service request, review the requirements, and go directly to the correct Jira request.
-                </p>
-                <p
-                  dir="rtl"
-                  lang="ar"
-                  className="max-w-xl text-[13px] font-medium leading-6 text-white/72 sm:text-sm"
-                  style={arabicFont}
-                >
-                  ابحث عن الخدمة، راجع المتطلبات، وانتقل مباشرة إلى طلب Jira الصحيح.
-                </p>
-              </div>
-            </div>
-
-            <div className="relative z-10 w-full max-w-3xl">
-              <div className="absolute -inset-8 rounded-full bg-cyan-300/15 blur-3xl" />
-              <div className="relative rounded-[1.75rem] border border-cyan-200/25 bg-[#15233e]/80 p-4 text-left shadow-2xl shadow-black/25 backdrop-blur-xl">
-                <div className="rounded-[1.35rem] border border-cyan-200/20 bg-[#0f1931]/80 p-3">
-                  <div className="mb-2 flex items-center justify-between px-1 text-xs font-semibold text-white/90">
-                    <span>Search service catalog</span>
-                    <span dir="rtl" lang="ar" style={arabicFont}>
-                      ابحث في الخدمات
-                    </span>
-                  </div>
-
-                  <div className="relative min-w-0">
-                    <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-primary" />
-                    <Input
-                      value={searchQuery}
-                      onChange={(event) => onSearchChange(event.target.value)}
-                      placeholder="Search request, keyword, environment..."
-                      className="h-14 rounded-2xl border-white bg-white pl-11 pr-4 text-sm text-slate-950 shadow-xl shadow-black/20 placeholder:text-slate-400 focus-visible:border-white focus-visible:ring-2 focus-visible:ring-cyan-200"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        </section>
       </div>
     </header>
   );
