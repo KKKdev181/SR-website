@@ -9,7 +9,6 @@
   --section-warning-border: #f5b700;
 }
 
-/* Final check: compact heading followed by a balanced checklist grid. */
 .tool-modal-project-journey-checklist.journey-redesign [class*="bg-amber"] {
   display: block !important;
   padding: 22px !important;
@@ -54,39 +53,11 @@
   border-radius: 11px !important;
   background: rgba(255, 255, 255, 0.82) !important;
   color: #5d4a10 !important;
-  box-shadow: 0 1px 2px rgba(127, 95, 1, 0.05);
 }
 
-.tool-modal-project-journey-checklist.journey-redesign [class*="bg-amber"] .space-y-2 > div:hover {
-  border-color: #dba600 !important;
-  background: #ffffff !important;
-}
-
-.tool-modal-project-journey-checklist.journey-redesign [class*="bg-amber"] svg {
-  color: #e2a900 !important;
-}
-
-/* Arabic mode uses the Arabic checklist only, full width. */
-html[lang="ar"] .tool-modal-project-journey-checklist.journey-redesign [class*="bg-amber"] .grid > .space-y-2:first-child {
-  display: none !important;
-}
-
-html[lang="ar"] .tool-modal-project-journey-checklist.journey-redesign [class*="bg-amber"] .grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-}
-
+html[lang="ar"] .tool-modal-project-journey-checklist.journey-redesign [class*="bg-amber"] .grid > .space-y-2:first-child,
 html[lang="en"] .tool-modal-project-journey-checklist.journey-redesign [class*="bg-amber"] .grid > .space-y-2:last-child {
   display: none !important;
-}
-
-/* Platform / deployment guidance: card-based information hierarchy. */
-.tool-modal-project-journey-checklist.journey-redesign [data-language="ar"] {
-  direction: rtl;
-  text-align: right;
-}
-
-.tool-modal-project-journey-checklist.journey-redesign > div > div:nth-child(2) > div:last-child {
-  border-radius: 16px !important;
 }
 
 .tool-modal-project-journey-checklist.journey-redesign > div > div:nth-child(2) > div:last-child > div:nth-child(2) {
@@ -97,47 +68,6 @@ html[lang="en"] .tool-modal-project-journey-checklist.journey-redesign [class*="
   background: #f7f8fa !important;
 }
 
-.tool-modal-project-journey-checklist.journey-redesign > div > div:nth-child(2) > div:last-child > div:nth-child(2) > * {
-  min-width: 0;
-}
-
-.tool-modal-project-journey-checklist.journey-redesign > div > div:nth-child(2) > div:last-child h5 {
-  margin-bottom: 8px !important;
-  color: var(--section-ink) !important;
-  font-size: 14px !important;
-  font-weight: 750 !important;
-}
-
-.tool-modal-project-journey-checklist.journey-redesign > div > div:nth-child(2) > div:last-child ul {
-  margin: 0 !important;
-  padding-inline-start: 18px !important;
-}
-
-.tool-modal-project-journey-checklist.journey-redesign > div > div:nth-child(2) > div:last-child li {
-  margin-top: 7px;
-  color: var(--section-muted) !important;
-  line-height: 1.65 !important;
-}
-
-.tool-modal-project-journey-checklist.journey-redesign > div > div:nth-child(2) > div:last-child [class*="bg-rose"] {
-  grid-column: 1 / -1;
-  margin: 2px 0 !important;
-  padding: 16px 18px !important;
-  border: 1px solid #ffb8b0 !important;
-  border-inline-start: 4px solid #e34935 !important;
-  border-radius: 12px !important;
-  background: #fff4f2 !important;
-}
-
-.tool-modal-project-journey-checklist.journey-redesign > div > div:nth-child(2) > div:last-child [class*="bg-rose"] h5 {
-  color: #ae2a19 !important;
-}
-
-.tool-modal-project-journey-checklist.journey-redesign > div > div:nth-child(2) > div:last-child [class*="bg-rose"] p {
-  color: #6b3a33 !important;
-}
-
-/* General readability. */
 .tool-modal-project-journey-checklist.journey-redesign h3,
 .tool-modal-project-journey-checklist.journey-redesign h4,
 .tool-modal-project-journey-checklist.journey-redesign h5,
@@ -160,9 +90,122 @@ html[lang="ar"] .tool-modal-project-journey-checklist.journey-redesign h6 {
   text-align: right !important;
 }
 
+/* Elm visual standard: final override layer */
+.tool-modal-project-journey-checklist.journey-redesign {
+  --elm-blue: #0057b8;
+  --elm-blue-dark: #003f88;
+  --elm-blue-soft: #edf5ff;
+  --elm-cyan: #00a6c8;
+  --elm-ink: #102a43;
+  --elm-muted: #5f738c;
+  --elm-border: #d8e2ec;
+  background: #f4f7fa !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign > div > div:nth-child(2) > div,
+.tool-modal-project-journey-checklist.journey-redesign [id^="prep-"],
+.tool-modal-project-journey-checklist.journey-redesign [id^="devqa-"],
+.tool-modal-project-journey-checklist.journey-redesign [id^="staging-"] {
+  border-color: var(--elm-border) !important;
+  background: #fff !important;
+  box-shadow: 0 4px 14px rgba(16, 42, 67, 0.05) !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign [data-state] > div:first-child {
+  border-bottom-color: var(--elm-border) !important;
+  background: #fff !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign [data-state] > div:first-child > div::before {
+  border: 1px solid #cfe3fb;
+  background: var(--elm-blue-soft) !important;
+  color: var(--elm-blue) !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign [data-state] > div:nth-child(2) {
+  background: #f7f9fc !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign [id^="prep-"] > div > div:last-child,
+.tool-modal-project-journey-checklist.journey-redesign [id^="devqa-"] > div > div:last-child,
+.tool-modal-project-journey-checklist.journey-redesign [id^="staging-"] > div > div:last-child {
+  border-inline-start-color: var(--elm-border) !important;
+  background: #f4f8fc !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign [class*="bg-cyan-300/10"],
+.tool-modal-project-journey-checklist.journey-redesign [class*="bg-cyan-300/15"] {
+  border: 1px solid #b9d8fb !important;
+  border-inline-start: 4px solid var(--elm-blue) !important;
+  background: var(--elm-blue-soft) !important;
+  color: var(--elm-blue-dark) !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign [class*="bg-white/10"] {
+  border: 1px solid var(--elm-border) !important;
+  border-inline-start: 4px solid var(--elm-cyan) !important;
+  background: #f7fbff !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign button,
+.tool-modal-project-journey-checklist.journey-redesign a button {
+  border-color: #9cc3ef !important;
+  background: #fff !important;
+  color: var(--elm-blue) !important;
+  box-shadow: none !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign button:hover,
+.tool-modal-project-journey-checklist.journey-redesign a button:hover {
+  border-color: var(--elm-blue) !important;
+  background: var(--elm-blue-soft) !important;
+  color: var(--elm-blue-dark) !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign [class*="bg-amber"] {
+  border: 1px solid var(--elm-border) !important;
+  background: #fff !important;
+  box-shadow: 0 4px 14px rgba(16, 42, 67, 0.05) !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign [class*="bg-amber"] h5,
+.tool-modal-project-journey-checklist.journey-redesign [class*="bg-amber"] span {
+  color: var(--elm-ink) !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign [class*="bg-amber"] > p {
+  color: var(--elm-muted) !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign [class*="bg-amber"] .space-y-2 > div {
+  border: 1px solid var(--elm-border) !important;
+  border-inline-start: 4px solid var(--elm-blue) !important;
+  background: #f8fbff !important;
+  color: var(--elm-ink) !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign [class*="bg-amber"] svg {
+  color: var(--elm-blue) !important;
+}
+
+.tool-modal-project-journey-checklist.journey-redesign [class*="bg-rose"] {
+  border: 1px solid #ffc6c0 !important;
+  border-inline-start: 4px solid #d14343 !important;
+  background: #fff5f4 !important;
+}
+
+.tool-modal-shell:has(.tool-modal-project-journey-checklist) .tool-modal-header > div > span:first-child {
+  background: var(--elm-blue-soft) !important;
+  color: var(--elm-blue) !important;
+}
+
+.tool-modal-shell:has(.tool-modal-project-journey-checklist) .tool-modal-header {
+  border-bottom-color: var(--elm-border) !important;
+  background: #fff !important;
+}
+
 @media (max-width: 900px) {
   .tool-modal-project-journey-checklist.journey-redesign [class*="bg-amber"] .grid,
-  html[lang="ar"] .tool-modal-project-journey-checklist.journey-redesign [class*="bg-amber"] .grid,
   .tool-modal-project-journey-checklist.journey-redesign > div > div:nth-child(2) > div:last-child > div:nth-child(2) {
     grid-template-columns: 1fr !important;
   }
