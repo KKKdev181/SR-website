@@ -7,6 +7,7 @@ import ProjectJourneyChecklist from "@/components/portal/ProjectJourneyChecklist
 import { useLanguage } from "@/contexts/LanguageContext";
 import { localizeProjectJourney } from "@/utils/projectJourneyLocalization";
 import "@/styles/project-journey-page.css";
+import "@/styles/project-journey-language.css";
 
 const stages = [
   { id: "prep-1", en: "Preparation", ar: "التحضير", icon: ListChecks },
@@ -104,7 +105,12 @@ const ProjectJourneyPage = () => {
           </div>
         </section>
 
-        <section ref={rootRef} className="project-journey-page-content" id="project-journey-checklist">
+        <section
+          ref={rootRef}
+          data-language={language}
+          className="project-journey-page-content"
+          id="project-journey-checklist"
+        >
           <ProjectJourneyChecklist />
         </section>
       </main>
