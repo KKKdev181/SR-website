@@ -11,7 +11,6 @@
 
 .project-journey-page-content[data-language="ar"] [lang="ar"],
 .project-journey-page-content[data-language="ar"] [dir="rtl"] {
-  display: block !important;
   direction: rtl;
   text-align: right;
 }
@@ -52,4 +51,41 @@
 .project-journey-page-content[data-language="en"] h5,
 .project-journey-page-content[data-language="en"] h6 {
   text-align: left;
+}
+
+/* Legacy cards use pale text classes that become unreadable after the page theme turns them white. */
+.project-journey-page-content [class*="bg-[#0f1931]"] *,
+.project-journey-page-content [class*="bg-[#15233e]"] *,
+.project-journey-page-content [class*="bg-amber"] *,
+.project-journey-page-content [class*="bg-white/10"] * {
+  color: #334e68 !important;
+  opacity: 1 !important;
+}
+
+.project-journey-page-content [class*="bg-[#0f1931]"] h3,
+.project-journey-page-content [class*="bg-[#0f1931]"] h4,
+.project-journey-page-content [class*="bg-[#0f1931]"] h5,
+.project-journey-page-content [class*="bg-[#15233e]"] h3,
+.project-journey-page-content [class*="bg-[#15233e]"] h4,
+.project-journey-page-content [class*="bg-[#15233e]"] h5,
+.project-journey-page-content [class*="bg-amber"] h3,
+.project-journey-page-content [class*="bg-amber"] h4,
+.project-journey-page-content [class*="bg-amber"] h5 {
+  color: #102a43 !important;
+}
+
+.project-journey-page-content [class*="bg-amber"] {
+  background: #fffdf6 !important;
+  border-color: #f0c75e !important;
+}
+
+.project-journey-page-content [class*="bg-amber"] li,
+.project-journey-page-content [class*="bg-amber"] p,
+.project-journey-page-content [class*="bg-amber"] span {
+  color: #5b4a16 !important;
+}
+
+.project-journey-page-content a button,
+.project-journey-page-content button {
+  opacity: 1 !important;
 }
