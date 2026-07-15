@@ -1,5 +1,6 @@
 import { ArrowUpRight, Cloud, Database, Network, Server, ShieldCheck, Wrench } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { localizeRequest } from "@/i18n/requestLocalization";
 import type { ServiceRequest } from "@/data/requests";
 
 interface RequestCardProps {
@@ -41,19 +42,24 @@ const iconFor = (request: ServiceRequest) => {
 const RequestCard = ({ request }: RequestCardProps) => {
   const { language, copy } = useLanguage();
   const isArabic = language === "ar";
+  const localized = localizeRequest(request, isArabic);
   const hasUrl = Boolean(request.jiraUrl?.trim()) && !request.jiraUrl.includes("jira.example.com");
   const Icon = iconFor(request);
   const visual = sectionVisuals[request.section] ?? sectionVisuals["General Services"];
 
   return (
-    <article className="flex min-h-[214px] flex-col overflow-hidden rounded-xl border border-[#dfe1e6] bg-white shadow-[0_1px_2px_rgba(9,30,66,0.08)] transition hover:border-[#b3bac5] hover:shadow-[0_4px_12px_rgba(9,30,66,0.12)]">
+    <article
+      className="flex min-h-[214px] flex-col overflow-hidden rounded-xl border border-[#dfe1e6] bg-white shadow-[0_1px_2px_rgba(9,30,66,0.08)] transition hover:border-[#b3bac5] hover:shadow-[0_4px_12px_rgba(9,30,66,0.12)]"
+      dir={isArabic ? "rtl" : "ltr"}
+      lang={language}
+    >
       <div className="flex flex-1 flex-col p-4">
         <div className={`mb-3 flex h-9 w-9 items-center justify-center rounded-lg ${visual.icon}`}><Icon className="h-5 w-5" aria-hidden="true" /></div>
-        <h2 className="line-clamp-2 text-sm font-semibold leading-5 text-[#172b4d]" dir="auto">{request.title}</h2>
-        <p className="mt-2 line-clamp-2 text-xs leading-5 text-[#5e6c84]" dir="auto">{request.shortDescription}</p>
+        <h2 className="line-clamp-2 text-sm font-semibold leading-5 text-[#172b4d]">{localized.title}</h2>
+        <p className="mt-2 line-clamp-2 text-xs leading-5 text-[#5e6c84]">{localized.description}</p>
         <div className="mt-3 flex flex-wrap gap-2">
-          <span className={`rounded-full px-2.5 py-1 text-[10px] font-medium ${visual.tag}`} dir="auto">{request.section}</span>
-          {request.environment && <span className="rounded-full bg-[#f4f5f7] px-2.5 py-1 text-[10px] font-medium text-[#5e6c84]" dir="ltr">{request.environment}</span>}
+          <span className={`rounded-full px-2.5 py-1 text-[10px] font-medium ${visual.tag}`}>{localized.section}</span>
+          {localized.environment && <span className="rounded-full bg-[#f4f5f7] px-2.5 py-1 text-[10px] font-medium text-[#5e6c84]" dir="ltr">{localized.environment}</span>}
         </div>
       </div>
 
