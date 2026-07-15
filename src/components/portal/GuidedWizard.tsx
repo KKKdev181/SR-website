@@ -2,12 +2,12 @@ import { useMemo, useState } from "react";
 import { RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { requests } from "@/data/requests";
+import { matchRequests, type RequestEnvironment, type RequestIntent } from "@/lib/requestMatching";
 import RequestCard from "./RequestCard";
 import { useLanguage } from "@/contexts/LanguageContext";
-import type { ServiceRequest } from "@/data/requests";
 
 type Need = "create" | "change" | "publish" | "retire";
-type Environment = "Dev/QA" | "Staging/Production" | "DR" | "Any";
+type Environment = RequestEnvironment;
 
 const needOptions: Array<{ value: Need; en: string; ar: string }> = [
   { value: "create", en: "Create something new", ar: "إنشاء خدمة أو بيئة جديدة" },
@@ -23,44 +23,11 @@ const environmentOptions: Array<{ value: Environment; en: string; ar: string }> 
   { value: "Any", en: "Not sure / Any", ar: "غير متأكد / أي Environment" },
 ];
 
-const needTerms: Record<Need, string[]> = {
-  create: ["create", "new", "add", "provision", "setup", "register", "enable", "onboard", "creation", "environment", "server", "namespace", "domain", "account"],
-  change: ["change", "update", "modify", "scale", "increase", "reduce", "expand", "configuration", "access", "renew", "replace", "upgrade", "resize"],
-  publish: ["publish", "release", "go live", "external", "internal", "deployment", "rfc", "change request", "load balancer", "waf"],
-  retire: ["retire", "decommission", "remove", "delete", "disable", "closure", "terminate"],
-};
-
-const searchableText = (request: ServiceRequest) =>
-  [
-    request.title,
-    request.shortDescription,
-    request.section,
-    request.category,
-    request.subSection,
-    request.environment,
-    ...request.keywords,
-  ]
-    .filter(Boolean)
-    .join(" ")
-    .toLowerCase();
-
-const scoreRequest = (request: ServiceRequest, need: Need, environment: Environment): number => {
-  const text = searchableText(request);
-  let score = 0;
-
-  for (const term of needTerms[need]) {
-    if (text.includes(term)) score += term.includes(" ") ? 4 : 2;
-    if (request.title.toLowerCase().includes(term)) score += 3;
-  }
-
-  if (environment !== "Any") {
-    if (request.environment === environment) score += 8;
-    else if (text.includes(environment.toLowerCase())) score += 5;
-    else if (request.environment && request.environment !== environment) score -= 4;
-  }
-
-  if (request.popular) score += 1;
-  return score;
+const intentMap: Record<Need, RequestIntent> = {
+  create: "new",
+  change: "change",
+  publish: "publish",
+  retire: "retire",
 };
 
 const GuidedWizard = () => {
@@ -71,18 +38,11 @@ const GuidedWizard = () => {
 
   const results = useMemo(() => {
     if (!need || !environment) return [];
-
-    const ranked = requests
-      .map((request) => ({ request, score: scoreRequest(request, need, environment) }))
-      .filter(({ score }) => score > 0)
-      .sort((a, b) => b.score - a.score || a.request.title.localeCompare(b.request.title));
-
-    // Always return useful recommendations from the complete workbook.
-    if (ranked.length > 0) return ranked.slice(0, 9).map(({ request }) => request);
-
-    return requests
-      .filter((request) => environment === "Any" || !request.environment || request.environment === environment)
-      .slice(0, 9);
+    return matchRequests(requests, {
+      intent: intentMap[need],
+      environment,
+      limit: 9,
+    });
   }, [need, environment]);
 
   const reset = () => {
@@ -137,8 +97,8 @@ const GuidedWizard = () => {
               </h3>
               <p className="mt-1 text-sm text-[#5e6c84]">
                 {isArabic
-                  ? `نتائج من جميع الطلبات الحالية بناءً على اختيارك.`
-                  : "Results from the complete current request catalog based on your selections."}
+                  ? "النتائج مطابقة لنوع الطلب والـ Environment الذي اخترته."
+                  : "Results match both the selected request type and environment."}
               </p>
             </div>
             <Button variant="outline" size="sm" onClick={reset} className="gap-2">
@@ -147,9 +107,17 @@ const GuidedWizard = () => {
             </Button>
           </div>
 
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {results.map((request) => <RequestCard key={request.id} request={request} />)}
-          </div>
+          {results.length > 0 ? (
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {results.map((request) => <RequestCard key={request.id} request={request} />)}
+            </div>
+          ) : (
+            <div className="rounded-xl border border-[#dfe1e6] bg-[#f7f8f9] p-5 text-sm text-[#5e6c84]">
+              {isArabic
+                ? "لا توجد طلبات مطابقة تماماً لهذه الخيارات. جرّب اختيار Environment آخر أو اختر غير متأكد."
+                : "No requests exactly match these selections. Try another environment or choose Not sure / Any."}
+            </div>
+          )}
         </div>
       )}
     </div>
