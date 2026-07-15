@@ -1,0 +1,13 @@
+/* Final language visibility rules for the standalone Project Journey page. */
+.project-journey-page-content[data-language="en"] [lang="ar"],
+.project-journey-page-content[data-language="en"] [dir="rtl"] {
+  display: none !important;
+}
+
+.project-journey-page-content[data-language="ar"] {
+  direction: rtl;
+  text-align: right;
+}
+
+.project-journey-page-content[data-language="ar"] [lang="ar"],
+.project-journey-page
