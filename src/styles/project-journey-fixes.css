@@ -1,0 +1,157 @@
+/* Final readability and RTL fixes for the Project Journey Checklist modal. */
+.project-journey-flow {
+  --pj-ink: #102a43;
+  --pj-muted: #60758c;
+  --pj-line: #dbe5ef;
+  --pj-soft: #f7fafc;
+  --pj-blue: #0057b8;
+  --pj-blue-soft: #eef6ff;
+}
+
+/* Override remaining legacy dark surfaces. */
+.project-journey-flow [class*="bg-[#0f1931]"],
+.project-journey-flow [class*="bg-[#15233e]"],
+.project-journey-flow [class*="bg-white/5"],
+.project-journey-flow [class*="bg-white/10"],
+.project-journey-flow [class*="bg-slate"],
+.project-journey-flow [class*="bg-gray"] {
+  background: #ffffff !important;
+  color: var(--pj-ink) !important;
+}
+
+.project-journey-flow [class*="text-white"],
+.project-journey-flow [class*="text-slate"],
+.project-journey-flow [class*="text-cyan"] {
+  color: var(--pj-ink) !important;
+}
+
+.project-journey-flow [class*="border-cyan"],
+.project-journey-flow [class*="border-white"] {
+  border-color: var(--pj-line) !important;
+}
+
+/* Deployment content should stay readable and flat. */
+.project-journey-flow > div > div:nth-child(2) > div:nth-child(4) [class*="rounded-lg"] {
+  border: 1px solid var(--pj-line) !important;
+  background: var(--pj-soft) !important;
+  color: var(--pj-ink) !important;
+}
+
+.project-journey-flow > div > div:nth-child(2) > div:nth-child(4) li,
+.project-journey-flow > div > div:nth-child(2) > div:nth-child(4) p,
+.project-journey-flow > div > div:nth-child(2) > div:nth-child(4) span,
+.project-journey-flow > div > div:nth-child(2) > div:nth-child(4) h5 {
+  color: var(--pj-ink) !important;
+}
+
+/* Publishing layout and RTL alignment. */
+.project-journey-flow > div > div:nth-child(2) > div:nth-child(5) > div:nth-child(2) {
+  padding: 18px !important;
+}
+
+.project-journey-flow[data-language="ar"] > div > div:nth-child(2) > div:nth-child(5),
+.project-journey-flow[data-language="ar"] > div > div:nth-child(2) > div:nth-child(5) * {
+  text-align: right !important;
+}
+
+.project-journey-flow[data-language="ar"] > div > div:nth-child(2) > div:nth-child(5) .flex.gap-4 {
+  justify-content: flex-start !important;
+  direction: rtl !important;
+}
+
+.project-journey-flow[data-language="ar"] > div > div:nth-child(2) > div:nth-child(5) button {
+  min-width: 110px;
+}
+
+/* Remove repeated visual separators between bilingual labels. */
+.project-journey-flow[data-language="ar"] span:empty,
+.project-journey-flow[data-language="ar"] span[data-hide-for-arabic="true"] {
+  display: none !important;
+}
+
+/* Parallel Actions and Developer Access headers. */
+.project-journey-flow[data-language="ar"] > div > div:nth-child(2) > div:nth-child(6) h3,
+.project-journey-flow[data-language="ar"] > div > div:nth-child(2) > div:nth-child(6) h4,
+.project-journey-flow[data-language="ar"] > div > div:nth-child(2) > div:nth-child(7) h3,
+.project-journey-flow[data-language="ar"] > div > div:nth-child(2) > div:nth-child(7) h4 {
+  text-align: right !important;
+}
+
+.project-journey-flow > div > div:nth-child(2) > div:nth-child(7) [class*="rounded-lg"],
+.project-journey-flow > div > div:nth-child(2) > div:nth-child(7) [class*="overflow-hidden"] {
+  background: #ffffff !important;
+  color: var(--pj-ink) !important;
+  border-color: var(--pj-line) !important;
+}
+
+.project-journey-flow > div > div:nth-child(2) > div:nth-child(7) p,
+.project-journey-flow > div > div:nth-child(2) > div:nth-child(7) span,
+.project-journey-flow > div > div:nth-child(2) > div:nth-child(7) h5,
+.project-journey-flow > div > div:nth-child(2) > div:nth-child(7) h6 {
+  color: var(--pj-ink) !important;
+}
+
+.project-journey-flow > div > div:nth-child(2) > div:nth-child(7) [class*="divide-y"] > div {
+  border-color: var(--pj-line) !important;
+}
+
+/* Developer summary cards. */
+.project-journey-flow > div > div:nth-child(2) > div:nth-child(7) .grid > div {
+  background: var(--pj-soft) !important;
+  border: 1px solid var(--pj-line) !important;
+}
+
+/* Platform and deployment guidance. */
+.project-journey-flow > div > div:nth-child(2) > div:nth-child(10),
+.project-journey-flow > div > div:nth-child(2) > div:nth-child(10) * {
+  color: var(--pj-ink) !important;
+}
+
+.project-journey-flow > div > div:nth-child(2) > div:nth-child(10) [class*="bg-rose"] {
+  background: #fff4f2 !important;
+  border-inline-start: 3px solid #c9372c !important;
+}
+
+.project-journey-flow > div > div:nth-child(2) > div:nth-child(10) [class*="bg-rose"] * {
+  color: #8f211a !important;
+}
+
+/* Arabic-only alignment for all standalone sections. */
+.project-journey-flow[data-language="ar"] > div > div:nth-child(2) > div:not(:has([data-state])) {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+.project-journey-flow[data-language="ar"] > div > div:nth-child(2) > div:not(:has([data-state])) ul {
+  padding-right: 18px !important;
+  padding-left: 0 !important;
+}
+
+.project-journey-flow[data-language="ar"] > div > div:nth-child(2) > div:not(:has([data-state])) .flex {
+  direction: rtl;
+}
+
+/* Buttons remain high contrast on light surfaces. */
+.project-journey-flow button,
+.project-journey-flow a button {
+  background: #ffffff !important;
+  color: var(--pj-blue) !important;
+  border-color: #9fc1e2 !important;
+}
+
+.project-journey-flow button:hover,
+.project-journey-flow a button:hover {
+  background: var(--pj-blue-soft) !important;
+  color: #003f88 !important;
+}
+
+@media (max-width: 760px) {
+  .project-journey-flow[data-language="ar"] > div > div:nth-child(2) > div:nth-child(5) .flex.gap-4 {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .project-journey-flow[data-language="ar"] > div > div:nth-child(2) > div:nth-child(5) button {
+    width: 100% !important;
+  }
+}
