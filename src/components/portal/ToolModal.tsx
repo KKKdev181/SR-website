@@ -18,6 +18,70 @@ interface ToolModalProps {
   onClose: () => void;
 }
 
+const arabicUiTerms: Record<string, string> = {
+  "Deployment": "Deployment",
+  "Deployment Notes:": "ملاحظات Deployment:",
+  "Before going live, make sure the deployment change is opened and tracked in Jira.":
+    "قبل الإطلاق، تأكد من فتح Change Request ومتابعته في Jira.",
+  "Open a Change Request in Jira before deployment.": "افتح Change Request في Jira قبل Deployment.",
+  "Attach the MRF and required approvals if applicable.": "أرفق MRF والموافقات المطلوبة عند الحاجة.",
+  "Coordinate the deployment with APP, DB, OPM, and CM teams.":
+    "نسّق Deployment مع فرق APP وDB وOPM وCM.",
+  "Track the deployment execution and closure through Jira.": "تابع تنفيذ Deployment وإغلاقه من خلال Jira.",
+  "Open Change Request in Jira": "فتح Change Request في Jira",
+  "Publishing": "النشر",
+  "Ask the user if they want to publish internally or externally.":
+    "حدد ما إذا كان النشر داخلياً أو خارجياً.",
+  "Internal Publish": "نشر داخلي",
+  "External Publish": "نشر خارجي",
+  "Internal Publish Requirements:": "متطلبات النشر الداخلي:",
+  "External Publish Requirements:": "متطلبات النشر الخارجي:",
+  "Open publish request in Jira": "فتح طلب النشر في Jira",
+  "Open Service Design Change": "فتح Service Design Change",
+  "Parallel Actions": "الأنشطة المتوازية",
+  "Developer Access Checklist": "قائمة صلاحيات المطور",
+  "Show more": "عرض المزيد",
+  "Hide list": "إخفاء القائمة",
+  "Required": "إلزامي",
+  "Conditional": "حسب الحاجة",
+  "Optional": "اختياري",
+  "Grant Access From": "طلب الصلاحية من",
+  "Owner": "الفريق المسؤول",
+  "Comment": "ملاحظة",
+  "Supported Technologies": "التقنيات المدعومة",
+  "Operating Systems": "أنظمة التشغيل",
+  "Application Level": "تقنيات التطبيق",
+  "Database": "Database",
+  "Final Check Before Proceeding": "التحقق النهائي قبل المتابعة",
+  "Before you move forward, make sure you have completed the checklist items below.":
+    "قبل المتابعة، تأكد من إكمال جميع عناصر قائمة التحقق أدناه.",
+  "Open in Jira": "فتح الطلب في Jira",
+  "Open Link": "فتح الرابط",
+  "Open": "فتح",
+  "Service Name:": "اسم الخدمة:",
+  "Important Notes:": "ملاحظات مهمة:",
+};
+
+const localizeLegacyChecklist = (root: HTMLElement, isArabic: boolean) => {
+  root.dataset.language = isArabic ? "ar" : "en";
+  if (!isArabic) return;
+
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  let node = walker.nextNode();
+
+  while (node) {
+    const textNode = node as Text;
+    const value = textNode.nodeValue?.trim();
+    const translated = value ? arabicUiTerms[value] : undefined;
+
+    if (value && translated) {
+      textNode.nodeValue = textNode.nodeValue?.replace(value, translated) ?? translated;
+    }
+
+    node = walker.nextNode();
+  }
+};
+
 const ToolModal = ({ tool, onClose }: ToolModalProps) => {
   const { language, copy } = useLanguage();
   const isArabic = language === "ar";
@@ -47,6 +111,18 @@ const ToolModal = ({ tool, onClose }: ToolModalProps) => {
       document.body.style.overflow = previousOverflow;
     };
   }, [tool, onClose]);
+
+  useEffect(() => {
+    if (tool !== "project-journey-checklist" || !contentRef.current) return;
+
+    const root = contentRef.current;
+    const apply = () => localizeLegacyChecklist(root, isArabic);
+    apply();
+
+    const observer = new MutationObserver(apply);
+    observer.observe(root, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, [tool, isArabic]);
 
   if (!tool) return null;
 
