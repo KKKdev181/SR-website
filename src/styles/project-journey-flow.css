@@ -13,4 +13,316 @@
   scroll-behavior: smooth;
 }
 
-/* Keep only the modal header
+/* Keep only the modal header. */
+.project-journey-flow > div {
+  width: min(100%, 1120px);
+  margin-inline: auto !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.project-journey-flow > div > div:first-child {
+  display: none !important;
+}
+
+.project-journey-flow > div > div:nth-child(2) {
+  display: grid !important;
+  gap: 18px !important;
+  padding: 0 !important;
+  counter-reset: journey-stage;
+}
+
+/* One simple stage container. */
+.project-journey-flow > div > div:nth-child(2) > div {
+  position: relative;
+  overflow: hidden !important;
+  border: 1px solid var(--elm-line) !important;
+  border-radius: 12px !important;
+  background: #fff !important;
+  color: var(--elm-ink) !important;
+  box-shadow: 0 2px 8px rgba(16, 42, 67, 0.05) !important;
+}
+
+.project-journey-flow > div > div:nth-child(2) > div::before {
+  counter-increment: journey-stage;
+  content: counter(journey-stage);
+  position: absolute;
+  top: 16px;
+  inset-inline-start: 16px;
+  z-index: 3;
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--elm-blue);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+/* Stage header. */
+.project-journey-flow [data-state] {
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.project-journey-flow [data-state] > div:first-child,
+.project-journey-flow > div > div:nth-child(2) > div > div:first-child {
+  min-height: 62px;
+  padding: 16px 18px 16px 58px !important;
+  border-bottom: 1px solid var(--elm-soft-line) !important;
+  background: #fff !important;
+}
+
+html[lang="ar"] .project-journey-flow [data-state] > div:first-child,
+html[lang="ar"] .project-journey-flow > div > div:nth-child(2) > div > div:first-child {
+  padding: 16px 58px 16px 18px !important;
+}
+
+.project-journey-flow [data-state] > div:first-child span,
+.project-journey-flow > div > div:nth-child(2) > div > div:first-child h3,
+.project-journey-flow > div > div:nth-child(2) > div > div:first-child h4,
+.project-journey-flow > div > div:nth-child(2) > div > div:first-child span {
+  color: var(--elm-ink) !important;
+  font-size: 15px !important;
+  font-weight: 750 !important;
+}
+
+.project-journey-flow [data-state] > div:nth-child(2),
+.project-journey-flow > div > div:nth-child(2) > div > div:nth-child(2) {
+  padding: 0 !important;
+  background: #fff !important;
+}
+
+/* Requests become divider-based rows, not cards inside cards. */
+.project-journey-flow [id^="prep-"],
+.project-journey-flow [id^="devqa-"],
+.project-journey-flow [id^="staging-"] {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.project-journey-flow [id^="prep-"] + [id^="prep-"],
+.project-journey-flow [id^="devqa-"] + [id^="devqa-"],
+.project-journey-flow [id^="staging-"] + [id^="staging-"] {
+  border-top: 1px solid var(--elm-soft-line) !important;
+}
+
+.project-journey-flow [id^="prep-"] > div,
+.project-journey-flow [id^="devqa-"] > div,
+.project-journey-flow [id^="staging-"] > div {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px !important;
+  align-items: start !important;
+  padding: 22px !important;
+}
+
+.project-journey-flow [id^="prep-"] > div > div:last-child,
+.project-journey-flow [id^="devqa-"] > div > div:last-child,
+.project-journey-flow [id^="staging-"] > div > div:last-child {
+  display: flex !important;
+  max-width: 300px;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+
+.project-journey-flow h4 {
+  margin: 0 0 8px !important;
+  color: var(--elm-ink) !important;
+  font-size: 16px !important;
+  line-height: 1.45 !important;
+}
+
+.project-journey-flow p,
+.project-journey-flow li {
+  color: var(--elm-muted) !important;
+  font-size: 13px !important;
+  line-height: 1.7 !important;
+}
+
+.project-journey-flow strong,
+.project-journey-flow h5,
+.project-journey-flow h6 {
+  color: var(--elm-ink) !important;
+}
+
+/* Compact requirement callout. */
+.project-journey-flow [class*="bg-cyan-300/10"],
+.project-journey-flow [class*="bg-cyan-300/15"] {
+  margin: 12px 0 !important;
+  padding: 10px 12px !important;
+  border: 0 !important;
+  border-inline-start: 3px solid var(--elm-blue) !important;
+  border-radius: 6px !important;
+  background: var(--elm-blue-soft) !important;
+}
+
+/* Notes are plain grouped text, not another bordered card. */
+.project-journey-flow [class*="bg-white/10"] {
+  margin-top: 14px !important;
+  padding: 12px 14px !important;
+  border: 0 !important;
+  border-inline-start: 3px solid var(--elm-cyan) !important;
+  border-radius: 0 !important;
+  background: #f8fbfd !important;
+}
+
+.project-journey-flow [class*="bg-white/10"] ul {
+  margin-top: 6px !important;
+  padding-inline-start: 18px !important;
+}
+
+/* Compact action buttons. */
+.project-journey-flow button,
+.project-journey-flow a button {
+  min-height: 36px;
+  width: auto !important;
+  border: 1px solid #9fc1e2 !important;
+  border-radius: 8px !important;
+  background: #fff !important;
+  color: var(--elm-blue) !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  box-shadow: none !important;
+}
+
+.project-journey-flow button:hover,
+.project-journey-flow a button:hover {
+  border-color: var(--elm-blue) !important;
+  background: var(--elm-blue-soft) !important;
+  color: var(--elm-blue-dark) !important;
+}
+
+/* Flat parallel-action rows. */
+.project-journey-flow .space-y-3 > div.flex.items-center.justify-between {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px !important;
+  align-items: center !important;
+  padding: 14px 18px !important;
+  border: 0 !important;
+  border-top: 1px solid var(--elm-soft-line) !important;
+  border-radius: 0 !important;
+  background: #fff !important;
+}
+
+/* Publishing warnings remain visible but restrained. */
+.project-journey-flow [class*="bg-rose"] {
+  margin: 14px 18px 18px !important;
+  padding: 14px 16px !important;
+  border: 0 !important;
+  border-inline-start: 3px solid #c9372c !important;
+  border-radius: 6px !important;
+  background: #fff4f2 !important;
+}
+
+.project-journey-flow [class*="bg-rose"] h5,
+.project-journey-flow [class*="bg-rose"] li,
+.project-journey-flow [class*="bg-rose"] p {
+  color: #8f211a !important;
+}
+
+/* Final check as a flat responsive list. */
+.project-journey-flow [class*="bg-amber"] {
+  display: block !important;
+  padding: 18px !important;
+  border: 0 !important;
+  border-inline-start: 4px solid var(--elm-blue) !important;
+  border-radius: 0 !important;
+  background: #f8fbfe !important;
+  box-shadow: none !important;
+}
+
+.project-journey-flow [class*="bg-amber"] .grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 0 24px !important;
+}
+
+.project-journey-flow [class*="bg-amber"] .space-y-2 {
+  display: contents !important;
+}
+
+.project-journey-flow [class*="bg-amber"] .space-y-2 > div {
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 10px 0 !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--elm-soft-line) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+
+/* Language-specific display. */
+.project-journey-flow[data-language="ar"] {
+  direction: rtl;
+  text-align: right;
+}
+
+.project-journey-flow[data-language="ar"] [lang="ar"] {
+  display: block !important;
+}
+
+.project-journey-flow[data-language="ar"] [lang="ar"] + span,
+.project-journey-flow[data-language="ar"] span:not([lang="ar"]):has(+ [lang="ar"]),
+.project-journey-flow[data-language="ar"] [lang="ar"] ~ [dir="ltr"] {
+  display: none !important;
+}
+
+.project-journey-flow[data-language="en"] [lang="ar"] {
+  display: none !important;
+}
+
+@media (max-width: 900px) {
+  .project-journey-flow [id^="prep-"] > div,
+  .project-journey-flow [id^="devqa-"] > div,
+  .project-journey-flow [id^="staging-"] > div {
+    grid-template-columns: 1fr !important;
+  }
+
+  .project-journey-flow [class*="bg-amber"] .grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .project-journey-flow > div > div:nth-child(2) > div::before {
+    width: 26px;
+    height: 26px;
+    top: 17px;
+    inset-inline-start: 12px;
+  }
+
+  .project-journey-flow [data-state] > div:first-child,
+  .project-journey-flow > div > div:nth-child(2) > div > div:first-child {
+    padding: 15px 14px 15px 48px !important;
+  }
+
+  html[lang="ar"] .project-journey-flow [data-state] > div:first-child,
+  html[lang="ar"] .project-journey-flow > div > div:nth-child(2) > div > div:first-child {
+    padding: 15px 48px 15px 14px !important;
+  }
+
+  .project-journey-flow [id^="prep-"] > div,
+  .project-journey-flow [id^="devqa-"] > div,
+  .project-journey-flow [id^="staging-"] > div {
+    padding: 16px !important;
+  }
+
+  .project-journey-flow [id^="prep-"] > div > div:last-child,
+  .project-journey-flow [id^="devqa-"] > div > div:last-child,
+  .project-journey-flow [id^="staging-"] > div > div:last-child {
+    max-width: none;
+  }
+}
