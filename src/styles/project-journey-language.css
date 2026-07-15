@@ -10,4 +10,46 @@
 }
 
 .project-journey-page-content[data-language="ar"] [lang="ar"],
-.project-journey-page
+.project-journey-page-content[data-language="ar"] [dir="rtl"] {
+  display: block !important;
+  direction: rtl;
+  text-align: right;
+}
+
+.project-journey-page-content[data-language="ar"] [dir="ltr"],
+.project-journey-page-content[data-language="ar"] code,
+.project-journey-page-content[data-language="ar"] .technical-term {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+.project-journey-page-content[data-language="ar"] button,
+.project-journey-page-content[data-language="ar"] a,
+.project-journey-page-content[data-language="ar"] p,
+.project-journey-page-content[data-language="ar"] li,
+.project-journey-page-content[data-language="ar"] h1,
+.project-journey-page-content[data-language="ar"] h2,
+.project-journey-page-content[data-language="ar"] h3,
+.project-journey-page-content[data-language="ar"] h4,
+.project-journey-page-content[data-language="ar"] h5,
+.project-journey-page-content[data-language="ar"] h6 {
+  text-align: right;
+}
+
+.project-journey-page-content[data-language="en"] {
+  direction: ltr;
+  text-align: left;
+}
+
+.project-journey-page-content[data-language="en"] button,
+.project-journey-page-content[data-language="en"] a,
+.project-journey-page-content[data-language="en"] p,
+.project-journey-page-content[data-language="en"] li,
+.project-journey-page-content[data-language="en"] h1,
+.project-journey-page-content[data-language="en"] h2,
+.project-journey-page-content[data-language="en"] h3,
+.project-journey-page-content[data-language="en"] h4,
+.project-journey-page-content[data-language="en"] h5,
+.project-journey-page-content[data-language="en"] h6 {
+  text-align: left;
+}
