@@ -64,29 +64,63 @@ const arabicUiTerms: Record<string, string> = {
   "Remote / Laptop Access": "صلاحيات Remote وLaptop",
 };
 
+const originalText = new WeakMap<Text, string>();
+const originalDisplay = new WeakMap<HTMLElement, string>();
+
+const rememberElement = (element: HTMLElement): void => {
+  if (!originalDisplay.has(element)) originalDisplay.set(element, element.style.display);
+};
+
+const restoreDom = (root: HTMLElement): void => {
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  let node = walker.nextNode();
+
+  while (node) {
+    const textNode = node as Text;
+    const saved = originalText.get(textNode);
+    if (saved !== undefined) textNode.nodeValue = saved;
+    node = walker.nextNode();
+  }
+
+  root.querySelectorAll<HTMLElement>("*").forEach((element) => {
+    const display = originalDisplay.get(element);
+    if (display !== undefined) element.style.display = display;
+  });
+};
+
+const getArabicBlocks = (root: HTMLElement): HTMLElement[] =>
+  Array.from(root.querySelectorAll<HTMLElement>("[lang='ar'], [dir='rtl']"));
+
+const hideEnglishPairForArabicBlock = (arabicElement: HTMLElement): void => {
+  let sibling = arabicElement.previousElementSibling as HTMLElement | null;
+
+  while (sibling && sibling.parentElement === arabicElement.parentElement) {
+    if (sibling.matches("svg, button, a") || sibling.querySelector("button, a")) break;
+    rememberElement(sibling);
+    sibling.style.display = "none";
+    sibling = sibling.previousElementSibling as HTMLElement | null;
+  }
+};
+
 export const localizeProjectJourney = (root: HTMLElement, isArabic: boolean): void => {
+  restoreDom(root);
   root.dataset.language = isArabic ? "ar" : "en";
 
-  root.querySelectorAll<HTMLElement>("[data-hide-for-arabic]").forEach((element) => {
+  const arabicBlocks = getArabicBlocks(root);
+
+  if (!isArabic) {
+    arabicBlocks.forEach((element) => {
+      rememberElement(element);
+      element.style.display = "none";
+    });
+    return;
+  }
+
+  arabicBlocks.forEach((element) => {
+    rememberElement(element);
     element.style.display = "";
-    delete element.dataset.hideForArabic;
+    hideEnglishPairForArabicBlock(element);
   });
-
-  root.querySelectorAll<HTMLElement>("[lang='ar']").forEach((arabicElement) => {
-    arabicElement.style.display = isArabic ? "" : "none";
-
-    if (!isArabic) return;
-
-    let sibling = arabicElement.previousElementSibling as HTMLElement | null;
-    while (sibling && sibling.parentElement === arabicElement.parentElement) {
-      if (sibling.matches("svg, button, a")) break;
-      sibling.dataset.hideForArabic = "true";
-      sibling.style.display = "none";
-      sibling = sibling.previousElementSibling as HTMLElement | null;
-    }
-  });
-
-  if (!isArabic) return;
 
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
   let node = walker.nextNode();
@@ -96,9 +130,10 @@ export const localizeProjectJourney = (root: HTMLElement, isArabic: boolean): vo
     const value = textNode.nodeValue?.trim();
     const parent = textNode.parentElement;
 
-    if (value && parent?.closest("[lang='ar']") === null) {
+    if (value && parent && !parent.closest("[lang='ar'], [dir='rtl']")) {
+      if (!originalText.has(textNode)) originalText.set(textNode, textNode.nodeValue ?? "");
       const translated = arabicUiTerms[value];
-      if (translated && !parent?.querySelector("[lang='ar']")) {
+      if (translated && !parent.querySelector("[lang='ar'], [dir='rtl']")) {
         textNode.nodeValue = textNode.nodeValue?.replace(value, translated) ?? translated;
       }
     }
