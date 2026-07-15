@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Search, SlidersHorizontal } from "lucide-react";
-import { useSearchParams } from "react-router-dom";
+import { Navigate, useSearchParams } from "react-router-dom";
 import Header from "@/components/portal/Header";
 import RequestCard from "@/components/portal/RequestCard";
 import EmptyState from "@/components/portal/EmptyState";
@@ -40,11 +40,7 @@ const sectionArabic: Record<string, string> = {
   "General Services": "الخدمات العامة",
 };
 
-const validTools = new Set<PortalTool>([
-  "project-journey-checklist",
-  "request-finder",
-  "quick-request-match",
-]);
+const validTools = new Set<PortalTool>(["request-finder", "quick-request-match"]);
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -66,6 +62,10 @@ const Index = () => {
     if (searchQuery.trim()) result = result.filter((request) => matchesSearch(request, searchQuery.trim()));
     return result;
   }, [activeSection, searchQuery]);
+
+  if (toolParam === "project-journey-checklist") {
+    return <Navigate replace to="/tools/project-journey-checklist" />;
+  }
 
   const localizedSection = (section: string) => (isArabic ? sectionArabic[section] ?? section : section);
   const title = activeSection === "All Services" ? copy.catalog.allServices : localizedSection(activeSection);
