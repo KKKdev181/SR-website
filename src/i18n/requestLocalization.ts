@@ -10,7 +10,7 @@ const sectionAr: Record<string, string> = {
   "Application Lifecycle": "دورة حياة Application",
   "Application & Database": "Application وDatabase",
   "DevOps & Software Delivery": "DevOps وتسليم البرمجيات",
-  "Jira & Amer": "Jira وAmer",
+  "Jira & Amer": "Jira وHPSM",
   "BI, Analytics & Reporting": "BI والتحليلات والتقارير",
   "UX, Web & Mobile": "UX وWeb وMobile",
   "Business Operations": "عمليات الأعمال",
@@ -124,7 +124,7 @@ export const localizeRequest = (request: ServiceRequest, isArabic: boolean): Loc
     return {
       title: request.title,
       description: request.shortDescription,
-      section: request.section,
+      section: request.section === "Jira & Amer" ? "Jira & HPSM" : request.section,
       category: request.category,
       environment: request.environment,
     };
