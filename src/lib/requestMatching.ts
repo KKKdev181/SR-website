@@ -8,7 +8,6 @@ interface RequestClassification {
   intents: Set<RequestIntent>;
   environments: Set<Exclude<RequestEnvironment, "Any">>;
   areas: Set<Exclude<RequestArea, "any">>;
-  text: string;
 }
 
 export interface MatchCriteria {
@@ -55,15 +54,16 @@ const classifyRequest = (request: ServiceRequest): RequestClassification => {
   if (request.environment === "Staging/Production" || hasAny(text, ["staging/production", "staging and production", "staging or production", "production environment"])) environments.add("Staging/Production");
   if (request.environment === "DR" || /(^| )dr( |$)/.test(text) || text.includes("disaster recovery")) environments.add("DR");
 
-  // Known prerequisites that are specifically used to establish Dev/QA.
-  if (hasAny(title, ["create name space in iaas", "create namespace in iaas", "project ocp environment (dev/qa)", "corporate (dev, qa) access", "dev/qa compliance"])) {
+  if (hasAny(title, ["create name space in iaas", "create namespace in iaas", "project ocp environment", "corporate dev qa access", "dev/qa compliance"])) {
     environments.add("Dev/QA");
   }
 
-  // Production-only requests should not appear under Dev/QA.
-  if (hasAny(title, ["production access", "new staging/production", "service design change for production", "communication provisioning for staging & production"])) {
+  if (hasAny(title, ["production access", "new staging/production", "service design change for production", "communication provisioning for staging production"])) {
     environments.add("Staging/Production");
   }
+
+  // Publishing, release, and retirement happen in the controlled Staging/Production lifecycle.
+  if (intents.has("publish") || intents.has("retire")) environments.add("Staging/Production");
 
   const section = request.section;
   if (["Infrastructure & Hosting", "Storage & Backup", "Platform & Cloud Services"].includes(section)) areas.add("infra");
@@ -79,16 +79,10 @@ const classifyRequest = (request: ServiceRequest): RequestClassification => {
     if (areas.size === 0) areas.add("infra");
   }
 
-  return { intents, environments, areas, text };
+  return { intents, environments, areas };
 };
 
-const scoreMatch = (request: ServiceRequest, classification: RequestClassification, criteria: MatchCriteria): number => {
-  let score = 0;
-  if (classification.intents.has(criteria.intent)) score += 40;
-  if (criteria.environment !== "Any" && classification.environments.has(criteria.environment)) score += 35;
-  if (criteria.area && criteria.area !== "any" && classification.areas.has(criteria.area)) score += 25;
-  if (request.popular) score += 2;
-
+const scoreMatch = (request: ServiceRequest, criteria: MatchCriteria): number => {
   const title = normalize(request.title);
   const titleSignals: Record<RequestIntent, string[]> = {
     new: ["create", "new", "register", "order", "adding"],
@@ -98,31 +92,22 @@ const scoreMatch = (request: ServiceRequest, classification: RequestClassificati
     retire: ["retire", "retirement", "decommission"],
     support: ["support", "troubleshooting", "clarification", "consultation", "help"],
   };
+
+  let score = request.popular ? 2 : 0;
   if (hasAny(title, titleSignals[criteria.intent])) score += 10;
   return score;
 };
 
-export const matchRequests = (catalog: ServiceRequest[], criteria: MatchCriteria): ServiceRequest[] => {
-  const classified = catalog.map((request) => ({ request, classification: classifyRequest(request) }));
-
-  const strict = classified.filter(({ classification }) => {
-    if (!classification.intents.has(criteria.intent)) return false;
-    if (criteria.environment !== "Any" && !classification.environments.has(criteria.environment)) return false;
-    if (criteria.area && criteria.area !== "any" && !classification.areas.has(criteria.area)) return false;
-    return true;
-  });
-
-  // Relax only the area when the exact area produces no matches. Never relax a selected Environment.
-  const candidates = strict.length > 0
-    ? strict
-    : classified.filter(({ classification }) =>
-        classification.intents.has(criteria.intent) &&
-        (criteria.environment === "Any" || classification.environments.has(criteria.environment))
-      );
-
-  return candidates
-    .map(({ request, classification }) => ({ request, score: scoreMatch(request, classification, criteria) }))
+export const matchRequests = (catalog: ServiceRequest[], criteria: MatchCriteria): ServiceRequest[] =>
+  catalog
+    .map((request) => ({ request, classification: classifyRequest(request) }))
+    .filter(({ classification }) => {
+      if (!classification.intents.has(criteria.intent)) return false;
+      if (criteria.environment !== "Any" && !classification.environments.has(criteria.environment)) return false;
+      if (criteria.area && criteria.area !== "any" && !classification.areas.has(criteria.area)) return false;
+      return true;
+    })
+    .map(({ request }) => ({ request, score: scoreMatch(request, criteria) }))
     .sort((a, b) => b.score - a.score || a.request.title.localeCompare(b.request.title))
     .slice(0, criteria.limit ?? 9)
     .map(({ request }) => request);
-};
