@@ -123,39 +123,92 @@ const CatalogRequestFinder = () => {
   const { language, copy } = useLanguage();
   const isArabic = language === "ar";
   const isRetirementFlow = answers.intent === "retire";
+  const skipsEnvironment = answers.intent === "support";
+
   const currentStep =
     answers.intent === undefined
       ? 0
       : isRetirementFlow
         ? 3
-        : answers.environment === undefined
-          ? 1
-          : answers.area === undefined
+        : skipsEnvironment
+          ? answers.area === undefined
             ? 2
-            : 3;
+            : 3
+          : answers.environment === undefined
+            ? 1
+            : answers.area === undefined
+              ? 2
+              : 3;
+
   const BackIcon = isArabic ? ArrowRight : ArrowLeft;
+
+  const availableEnvironmentOptions = useMemo(() => {
+    if (!answers.intent || isRetirementFlow || skipsEnvironment) return [];
+
+    return environmentOptions.filter((option) =>
+      matchRequests(requests, {
+        intent: answers.intent!,
+        environment: option.value,
+        area: "any",
+        limit: 1,
+      }).length > 0,
+    );
+  }, [answers.intent, isRetirementFlow, skipsEnvironment]);
+
+  const availableAreaOptions = useMemo(() => {
+    if (!answers.intent || isRetirementFlow) return [];
+
+    const environment = skipsEnvironment ? "Any" : answers.environment;
+    if (!environment) return [];
+
+    const validAreas = areaOptions.filter((option) => {
+      if (option.value === "any") return true;
+
+      return (
+        matchRequests(requests, {
+          intent: answers.intent!,
+          environment,
+          area: option.value,
+          limit: 1,
+        }).length > 0
+      );
+    });
+
+    return validAreas;
+  }, [answers.intent, answers.environment, isRetirementFlow, skipsEnvironment]);
 
   const results = useMemo(() => {
     if (currentStep < 3 || !answers.intent) return [];
 
     return matchRequests(requests, {
       intent: answers.intent,
-      environment: isRetirementFlow ? "Any" : answers.environment ?? "Any",
+      environment: isRetirementFlow || skipsEnvironment ? "Any" : answers.environment ?? "Any",
       area: isRetirementFlow ? "any" : answers.area ?? "any",
       limit: isRetirementFlow ? 1 : 18,
     });
-  }, [answers, currentStep, isRetirementFlow]);
+  }, [answers, currentStep, isRetirementFlow, skipsEnvironment]);
 
   const reset = () => setAnswers({});
+
   const back = () => {
     if (isRetirementFlow) {
       setAnswers({});
       return;
     }
 
-    if (currentStep === 3) setAnswers(({ intent, environment }) => ({ intent, environment }));
-    else if (currentStep === 2) setAnswers(({ intent, environment }) => ({ intent, environment }));
-    else if (currentStep === 1) setAnswers(({ intent }) => ({ intent }));
+    if (currentStep === 3) {
+      if (skipsEnvironment) setAnswers(({ intent }) => ({ intent }));
+      else setAnswers(({ intent, environment }) => ({ intent, environment }));
+      return;
+    }
+
+    if (currentStep === 2) {
+      if (skipsEnvironment) setAnswers({});
+      else setAnswers(({ intent }) => ({ intent }));
+      return;
+    }
+
+    if (currentStep === 1) setAnswers({});
   };
 
   const question =
@@ -168,21 +221,24 @@ const CatalogRequestFinder = () => {
           ? "أي Environment يتعلق به الطلب؟"
           : "Which environment does this request affect?"
         : isArabic
-          ? "أي مجال تقني مسؤول عن الطلب؟"
-          : "Which technology area owns this request?";
+          ? "أي مجال تقني يتعلق به طلبك؟"
+          : "Which technology area matches your request?";
 
   const helper =
     currentStep === 0
       ? isArabic
-        ? "اختر الهدف الرئيسي من الطلب. ستظهر لك الخيارات المتوافقة فقط في الخطوات التالية."
-        : "Choose the main outcome you need. The next steps will narrow the catalog to relevant requests only."
+        ? "اختر الهدف الرئيسي من الطلب. ستظهر لك فقط الأسئلة والخيارات المرتبطة باختيارك."
+        : "Choose the main outcome you need. Only relevant questions and options will be shown next."
       : currentStep === 1
         ? isArabic
-          ? "اختر Environment بدقة حتى لا تظهر طلبات خاصة ببيئة مختلفة."
-          : "Select the environment carefully so requests for other environments are excluded."
+          ? "تظهر فقط البيئات التي تحتوي على طلبات متوافقة مع الإجراء الذي اخترته."
+          : "Only environments with requests that match your selected action are shown."
         : isArabic
-          ? "اختر الفريق أو المجال الأقرب لطلبك. يمكنك اختيار غير متأكد عند الحاجة."
-          : "Choose the team or domain closest to your request. Select Not sure when needed.";
+          ? "تظهر فقط المجالات التي تحتوي فعليًا على طلبات مطابقة لاختياراتك السابقة."
+          : "Only technology areas with requests that actually match your previous answers are shown.";
+
+  const totalSteps = isRetirementFlow ? 1 : skipsEnvironment ? 2 : 3;
+  const displayedStep = currentStep === 0 ? 1 : currentStep === 1 ? 2 : skipsEnvironment ? 2 : 3;
 
   if (currentStep === 3) {
     return (
@@ -202,8 +258,8 @@ const CatalogRequestFinder = () => {
                     ? "طلب إيقاف الخدمة هو الطلب الوحيد المطابق، لذلك تم عرضه مباشرة بدون أسئلة إضافية."
                     : "Service retirement has one matching request, so it is shown directly without additional questions."
                   : isArabic
-                    ? "تمت مطابقة الطلبات باستخدام نوع الإجراء والـ Environment والمجال التقني. تظهر فقط الطلبات التي تحتوي على رابط صالح."
-                    : "Requests were matched using the selected action, environment, and technology area. Only requests with a valid link are shown."}
+                    ? "تمت مطابقة الطلبات باستخدام اختياراتك فقط. لن تظهر طلبات من مجال أو Environment غير متوافق، ولن تظهر الطلبات التي لا تحتوي على رابط صالح."
+                    : "Requests were matched using only your selected answers. Requests from an unrelated area or environment, and requests without a valid link, are excluded."}
               </p>
             </div>
             <div className="flex gap-2">
@@ -239,8 +295,8 @@ const CatalogRequestFinder = () => {
             </h4>
             <p className="mx-auto mt-1 max-w-xl text-sm leading-6 text-[#5e6c84]">
               {isArabic
-                ? "ارجع وعدّل المجال أو اختر غير متأكد. لن نعرض طلبات من Environment مختلف أو طلبات بدون رابط."
-                : "Go back and change the area or select Not sure. Requests from another environment and requests without links are not shown."}
+                ? "ارجع وعدّل آخر اختيار. لن نعرض طلبات غير متوافقة فقط لزيادة عدد النتائج."
+                : "Go back and change the last answer. Unrelated requests will not be added just to increase the result count."}
             </p>
           </div>
         )}
@@ -248,23 +304,30 @@ const CatalogRequestFinder = () => {
     );
   }
 
-  const options = currentStep === 0 ? intentOptions : currentStep === 1 ? environmentOptions : areaOptions;
+  const options =
+    currentStep === 0
+      ? intentOptions
+      : currentStep === 1
+        ? availableEnvironmentOptions
+        : availableAreaOptions;
 
   return (
     <div className="catalog-request-finder" dir={isArabic ? "rtl" : "ltr"}>
       <div className="mb-6 border-b border-[#dfe1e6] pb-5">
         <div className="mb-4 flex items-center gap-2" aria-label={isArabic ? "تقدم الأسئلة" : "Question progress"}>
-          {[0, 1, 2].map((step) => (
+          {Array.from({ length: totalSteps }).map((_, index) => (
             <span
-              key={step}
-              className={`h-1.5 flex-1 rounded-full ${step <= currentStep ? "bg-[#0c66e4]" : "bg-[#dfe1e6]"}`}
+              key={index}
+              className={`h-1.5 flex-1 rounded-full ${index < displayedStep ? "bg-[#0c66e4]" : "bg-[#dfe1e6]"}`}
             />
           ))}
         </div>
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="text-xs font-bold uppercase tracking-wide text-[#0c66e4]">
-              {isArabic ? `السؤال ${currentStep + 1} من 3` : `Question ${currentStep + 1} of 3`}
+              {isArabic
+                ? `السؤال ${displayedStep} من ${totalSteps}`
+                : `Question ${displayedStep} of ${totalSteps}`}
             </p>
             <h3 className="mt-2 text-xl font-bold text-[#172b4d] sm:text-2xl">{question}</h3>
             <p className="mt-2 max-w-3xl text-sm leading-6 text-[#5e6c84]">{helper}</p>
@@ -281,11 +344,12 @@ const CatalogRequestFinder = () => {
       <div className={`grid gap-3 ${currentStep === 2 ? "sm:grid-cols-2 lg:grid-cols-3" : "sm:grid-cols-2"}`}>
         {options.map((option) => {
           const Icon = "icon" in option ? option.icon : null;
-          const description = "descriptionEn" in option
-            ? isArabic
-              ? option.descriptionAr
-              : option.descriptionEn
-            : undefined;
+          const description =
+            "descriptionEn" in option
+              ? isArabic
+                ? option.descriptionAr
+                : option.descriptionEn
+              : undefined;
 
           return (
             <button
@@ -295,7 +359,11 @@ const CatalogRequestFinder = () => {
               onClick={() => {
                 if (currentStep === 0) setAnswers({ intent: option.value as RequestIntent });
                 else if (currentStep === 1) {
-                  setAnswers((current) => ({ ...current, environment: option.value as RequestEnvironment }));
+                  setAnswers((current) => ({
+                    ...current,
+                    environment: option.value as RequestEnvironment,
+                    area: undefined,
+                  }));
                 } else {
                   setAnswers((current) => ({ ...current, area: option.value as RequestArea }));
                 }
