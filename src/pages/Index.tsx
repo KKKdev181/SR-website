@@ -154,13 +154,13 @@ const Index = () => {
     <div className="min-h-screen bg-[#f4f5f7] text-[#172b4d]">
       <Header />
       <div className="mx-auto grid max-w-[1920px] grid-cols-1 lg:grid-cols-[290px_minmax(0,1fr)]">
-        <aside className="border-b border-[#dfe1e6] bg-white lg:min-h-[calc(100vh-64px)] lg:border-b-0 lg:border-e">
-          <div className="flex h-full flex-col px-3 py-5">
-            <p className="mb-3 px-3 text-[11px] font-bold uppercase tracking-wide text-[#5e6c84]">
+        <aside className="border-b border-[#dfe1e6] bg-white lg:sticky lg:top-16 lg:h-[calc(100vh-64px)] lg:self-start lg:overflow-hidden lg:border-b-0 lg:border-e">
+          <div className="flex h-full min-h-0 flex-col px-3 py-5">
+            <p className="mb-3 shrink-0 px-3 text-[11px] font-bold uppercase tracking-wide text-[#5e6c84]">
               {copy.catalog.filterByCategory}
             </p>
             <nav
-              className="flex gap-2 overflow-x-auto pb-1 lg:block lg:space-y-1 lg:overflow-visible"
+              className="flex gap-2 overflow-x-auto pb-1 lg:min-h-0 lg:flex-1 lg:flex-col lg:gap-1 lg:overflow-x-hidden lg:overflow-y-auto lg:pe-1"
               aria-label={copy.catalog.categoriesLabel}
             >
               <button
@@ -195,7 +195,7 @@ const Index = () => {
 
             {generalRequest?.jiraUrl && (
               <section
-                className="mt-4 rounded-xl border border-[#b3d4ff] bg-[#e9f2ff] p-4 shadow-sm lg:mt-auto"
+                className="mt-4 shrink-0 rounded-xl border border-[#b3d4ff] bg-[#e9f2ff] p-4 shadow-sm"
                 dir={isArabic ? "rtl" : "ltr"}
                 aria-label={isArabic ? "تحتاج مساعدة؟" : "Need Help?"}
               >
