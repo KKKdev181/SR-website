@@ -1,4 +1,4 @@
-import { ExternalLink, Globe2, Headphones, ListChecks, Mail, Route } from "lucide-react";
+import { ClipboardCheck, ExternalLink, Globe2, Headphones, ListChecks, Mail, Route } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -82,6 +82,17 @@ const Header = () => {
           >
             {copy.navigation.myJiraRequests}
             <ExternalLink className="h-4 w-4" />
+          </a>
+
+          <a
+            href="https://jira.elm.sa/projects/SR/queues/custom/471"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden min-h-10 shrink-0 items-center gap-2 rounded-md border border-white/25 bg-white/10 px-4 text-sm font-semibold text-white transition hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white xl:inline-flex"
+          >
+            <ClipboardCheck className="h-4 w-4" aria-hidden="true" />
+            <span className="whitespace-nowrap">{copy.navigation.myPendingApprovals}</span>
+            <ExternalLink className="h-4 w-4" aria-hidden="true" />
           </a>
 
           <div ref={supportRef} className="relative shrink-0">
