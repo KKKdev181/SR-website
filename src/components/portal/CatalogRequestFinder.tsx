@@ -63,8 +63,8 @@ const intentOptions = [
     value: "retire" as const,
     en: "Retire or decommission a service",
     ar: "إيقاف أو Decommission للخدمة",
-    descriptionEn: "Retire, close, remove, or decommission an existing service or resource.",
-    descriptionAr: "إيقاف أو إغلاق أو إزالة أو Decommission لخدمة أو مورد موجود.",
+    descriptionEn: "Open the single retirement request for closing or decommissioning a service.",
+    descriptionAr: "فتح طلب الإيقاف الوحيد لإغلاق الخدمة أو تنفيذ Decommission.",
   },
   {
     value: "support" as const,
@@ -122,29 +122,37 @@ const CatalogRequestFinder = () => {
   const [answers, setAnswers] = useState<Answers>({});
   const { language, copy } = useLanguage();
   const isArabic = language === "ar";
+  const isRetirementFlow = answers.intent === "retire";
   const currentStep =
     answers.intent === undefined
       ? 0
-      : answers.environment === undefined
-        ? 1
-        : answers.area === undefined
-          ? 2
-          : 3;
+      : isRetirementFlow
+        ? 3
+        : answers.environment === undefined
+          ? 1
+          : answers.area === undefined
+            ? 2
+            : 3;
   const BackIcon = isArabic ? ArrowRight : ArrowLeft;
 
   const results = useMemo(() => {
-    if (currentStep < 3) return [];
-    const complete = answers as Required<Answers>;
+    if (currentStep < 3 || !answers.intent) return [];
+
     return matchRequests(requests, {
-      intent: complete.intent,
-      environment: complete.environment,
-      area: complete.area,
-      limit: 18,
+      intent: answers.intent,
+      environment: isRetirementFlow ? "Any" : answers.environment ?? "Any",
+      area: isRetirementFlow ? "any" : answers.area ?? "any",
+      limit: isRetirementFlow ? 1 : 18,
     });
-  }, [answers, currentStep]);
+  }, [answers, currentStep, isRetirementFlow]);
 
   const reset = () => setAnswers({});
   const back = () => {
+    if (isRetirementFlow) {
+      setAnswers({});
+      return;
+    }
+
     if (currentStep === 3) setAnswers(({ intent, environment }) => ({ intent, environment }));
     else if (currentStep === 2) setAnswers(({ intent, environment }) => ({ intent, environment }));
     else if (currentStep === 1) setAnswers(({ intent }) => ({ intent }));
@@ -189,15 +197,25 @@ const CatalogRequestFinder = () => {
                 {copy.tools.recommended} ({results.length})
               </h3>
               <p className="mt-1 max-w-3xl text-sm leading-6 text-[#44546f]">
-                {isArabic
-                  ? "تمت مطابقة الطلبات باستخدام نوع الإجراء والـ Environment والمجال التقني. تظهر فقط الطلبات التي تحتوي على رابط صالح."
-                  : "Requests were matched using the selected action, environment, and technology area. Only requests with a valid link are shown."}
+                {isRetirementFlow
+                  ? isArabic
+                    ? "طلب إيقاف الخدمة هو الطلب الوحيد المطابق، لذلك تم عرضه مباشرة بدون أسئلة إضافية."
+                    : "Service retirement has one matching request, so it is shown directly without additional questions."
+                  : isArabic
+                    ? "تمت مطابقة الطلبات باستخدام نوع الإجراء والـ Environment والمجال التقني. تظهر فقط الطلبات التي تحتوي على رابط صالح."
+                    : "Requests were matched using the selected action, environment, and technology area. Only requests with a valid link are shown."}
               </p>
             </div>
             <div className="flex gap-2">
               <Button variant="outline" onClick={back} className="gap-2 bg-white">
                 <BackIcon className="h-4 w-4" />
-                {isArabic ? "تعديل آخر اختيار" : "Change last answer"}
+                {isRetirementFlow
+                  ? isArabic
+                    ? "تغيير الإجراء"
+                    : "Change action"
+                  : isArabic
+                    ? "تعديل آخر اختيار"
+                    : "Change last answer"}
               </Button>
               <Button variant="outline" onClick={reset} className="gap-2 bg-white">
                 <RotateCcw className="h-4 w-4" />
@@ -208,7 +226,7 @@ const CatalogRequestFinder = () => {
         </div>
 
         {results.length > 0 ? (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <div className={`grid grid-cols-1 gap-4 ${isRetirementFlow ? "max-w-2xl" : "md:grid-cols-2 xl:grid-cols-3"}`}>
             {results.map((request) => (
               <RequestCard key={request.id} request={request} />
             ))}
