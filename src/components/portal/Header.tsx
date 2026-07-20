@@ -1,4 +1,4 @@
-import { ClipboardCheck, ExternalLink, Globe2, Headphones, ListChecks, Mail, Route } from "lucide-react";
+import { ClipboardCheck, ExternalLink, Globe2, Headphones, Inbox, ListChecks, Mail, Route } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -78,10 +78,11 @@ const Header = () => {
             href="https://jira.elm.sa/plugins/servlet/desk/user/requests?status=open&reporter=me"
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden min-h-10 shrink-0 items-center gap-2 rounded-md bg-white/12 px-4 text-sm font-semibold transition hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white xl:inline-flex"
+            className="hidden min-h-10 shrink-0 items-center gap-2 rounded-md border border-white/25 bg-white/10 px-4 text-sm font-semibold text-white transition hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white xl:inline-flex"
           >
-            {copy.navigation.myJiraRequests}
-            <ExternalLink className="h-4 w-4" />
+            <Inbox className="h-4 w-4" aria-hidden="true" />
+            <span className="whitespace-nowrap">{copy.navigation.myJiraRequests}</span>
+            <ExternalLink className="h-4 w-4" aria-hidden="true" />
           </a>
 
           <a
