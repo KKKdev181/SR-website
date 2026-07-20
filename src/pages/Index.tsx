@@ -13,6 +13,9 @@ import { getArabicSearchAliases } from "@/i18n/requestSearchAliases";
 import { useLanguage } from "@/contexts/LanguageContext";
 import type { ServiceRequest } from "@/data/requests";
 
+const MERGED_INFRA_SECTION = "Infrastructure, Hosting & Storage";
+const MERGED_INFRA_SOURCE_SECTIONS = ["Infrastructure & Hosting", "Storage & Backup"] as const;
+
 const normalizeSearch = (value: string): string =>
   value
     .toLowerCase()
@@ -52,6 +55,7 @@ const sectionArabic: Record<string, string> = {
   "General Help": "المساعدة العامة",
   "Infrastructure & Hosting": "البنية التحتية والاستضافة",
   "Storage & Backup": "التخزين والنسخ الاحتياطي",
+  [MERGED_INFRA_SECTION]: "البنية التحتية والاستضافة والتخزين",
   "Network & Connectivity": "الشبكات والاتصال",
   "Access & Privileges": "الصلاحيات والوصول",
   "Platform & Cloud Services": "المنصات والخدمات السحابية",
@@ -66,8 +70,22 @@ const sectionArabic: Record<string, string> = {
 };
 
 const validTools = new Set<PortalTool>(["request-finder", "quick-request-match"]);
-const sidebarSections = sections.filter((section) => section !== "General Help");
+const sidebarSections = sections.flatMap((section) => {
+  if (section === "General Help" || section === "Storage & Backup") return [];
+  if (section === "Infrastructure & Hosting") return [MERGED_INFRA_SECTION];
+  return [section];
+});
 const generalRequest = requests.find((request) => request.section === "General Help");
+
+const requestMatchesSection = (request: ServiceRequest, section: string): boolean => {
+  if (section === MERGED_INFRA_SECTION) {
+    return MERGED_INFRA_SOURCE_SECTIONS.includes(
+      request.section as (typeof MERGED_INFRA_SOURCE_SECTIONS)[number],
+    );
+  }
+
+  return request.section === section;
+};
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -84,24 +102,29 @@ const Index = () => {
   const sectionCounts = useMemo(
     () =>
       Object.fromEntries(
-        sections.map((section) => [
+        ["All Services", ...sidebarSections].map((section) => [
           section,
-          requests.filter((request) => request.section === section).length,
+          section === "All Services"
+            ? requests.length
+            : requests.filter((request) => requestMatchesSection(request, section)).length,
         ]),
       ),
     [],
   );
 
-  const subcategories = useMemo(
-    () => (activeSection === "All Services" ? [] : getSectionSubcategories(activeSection)),
-    [activeSection],
-  );
+  const subcategories = useMemo(() => {
+    if (activeSection === "All Services") return [];
+    if (activeSection === MERGED_INFRA_SECTION) {
+      return MERGED_INFRA_SOURCE_SECTIONS.flatMap((section) => getSectionSubcategories(section));
+    }
+    return getSectionSubcategories(activeSection);
+  }, [activeSection]);
 
   const filteredRequests = useMemo(() => {
     let result = requests;
 
     if (activeSection !== "All Services") {
-      result = result.filter((request) => request.section === activeSection);
+      result = result.filter((request) => requestMatchesSection(request, activeSection));
     }
 
     if (activeSubcategory !== "all") {
@@ -277,7 +300,7 @@ const Index = () => {
                 {subcategories.map((subcategory) => {
                   const count = requests.filter(
                     (request) =>
-                      request.section === activeSection && subcategory.matches(request),
+                      requestMatchesSection(request, activeSection) && subcategory.matches(request),
                   ).length;
 
                   if (count === 0) return null;
