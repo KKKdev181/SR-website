@@ -1,12 +1,35 @@
-import { ExternalLink, Globe2, ListChecks, Route } from "lucide-react";
+import { ExternalLink, Globe2, Headphones, ListChecks, Mail, Route } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const Header = () => {
   const { language, toggleLanguage, copy } = useLanguage();
+  const [isSupportOpen, setIsSupportOpen] = useState(false);
+  const supportRef = useRef<HTMLDivElement>(null);
   const isArabic = language === "ar";
 
   const requestToolLabel = isArabic ? "موجّه الطلبات" : "Request Finder";
+
+  useEffect(() => {
+    const handlePointerDown = (event: PointerEvent) => {
+      if (supportRef.current && !supportRef.current.contains(event.target as Node)) {
+        setIsSupportOpen(false);
+      }
+    };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsSupportOpen(false);
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 border-b border-blue-700 bg-[#0757b8] text-white shadow-sm">
@@ -44,7 +67,7 @@ const Header = () => {
 
             <Link
               to="/?tool=request-finder"
-              className="inline-flex min-h-10 shrink-0 items-center gap-2 rounded-lg border border-white/30 bg-white/10 px-3.5 text-sm font-semibold text-white transition hover:bg-white/18 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+              className="inline-flex min-h-10 shrink-0 items-center gap-2 rounded-lg border border-white/30 bg-white/10 px-3.5 text-sm font-semibold text-white transition hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
             >
               <Route className="h-4 w-4" aria-hidden="true" />
               <span className="whitespace-nowrap">{requestToolLabel}</span>
@@ -60,6 +83,41 @@ const Header = () => {
             {copy.navigation.myJiraRequests}
             <ExternalLink className="h-4 w-4" />
           </a>
+
+          <div ref={supportRef} className="relative shrink-0">
+            <button
+              type="button"
+              onClick={() => setIsSupportOpen((current) => !current)}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/25 bg-white/10 text-white transition hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+              aria-label={copy.navigation.support}
+              aria-expanded={isSupportOpen}
+              aria-haspopup="menu"
+            >
+              <Headphones className="h-5 w-5" aria-hidden="true" />
+            </button>
+
+            {isSupportOpen && (
+              <div
+                role="menu"
+                className={`absolute top-[calc(100%+10px)] z-50 w-56 overflow-hidden rounded-xl border border-slate-200 bg-white text-slate-900 shadow-[0_16px_40px_rgba(15,23,42,0.22)] ${
+                  isArabic ? "left-0 text-right" : "right-0 text-left"
+                }`}
+              >
+                <div className="flex items-center gap-2 border-b border-slate-100 px-4 py-3.5 text-sm font-semibold text-slate-700">
+                  <Mail className="h-4 w-4 text-slate-500" aria-hidden="true" />
+                  <span>{copy.navigation.support}</span>
+                </div>
+                <a
+                  href="mailto:TD@ELM.SA"
+                  role="menuitem"
+                  onClick={() => setIsSupportOpen(false)}
+                  className="block px-4 py-4 text-center text-sm font-semibold text-[#0757b8] transition hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500"
+                >
+                  {copy.navigation.supportEmail}
+                </a>
+              </div>
+            )}
+          </div>
         </div>
 
         <button
