@@ -1,6 +1,15 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, ArrowRight, CheckCircle2, Layers3, ListChecks, Rocket, ServerCog } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  CheckCircle2,
+  ChevronRight,
+  Layers3,
+  ListChecks,
+  Rocket,
+  ServerCog,
+} from "lucide-react";
 import Header from "@/components/portal/Header";
 import Footer from "@/components/portal/Footer";
 import ProjectJourneyChecklist from "@/components/portal/ProjectJourneyChecklist";
@@ -8,23 +17,24 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { localizeProjectJourney } from "@/utils/projectJourneyLocalization";
 import "@/styles/project-journey-page.css";
 import "@/styles/project-journey-language.css";
-import "@/styles/project-journey-revamp.css";
 
 const stages = [
-  { id: "prep-1", en: "Preparation", ar: "التحضير", icon: ListChecks },
-  { id: "devqa-1", en: "Dev/QA", ar: "Dev/QA", icon: ServerCog },
-  { id: "staging-prod-1", en: "Staging & Production", ar: "Staging وProduction", icon: Layers3 },
-  { label: "Deployment", en: "Deployment", ar: "Deployment", icon: CheckCircle2 },
-  { label: "Publishing", en: "Publishing", ar: "النشر", icon: Rocket },
-];
+  { id: "prep-1", en: "Preparation", ar: "التحضير", description: "Set up the project and confirm prerequisites.", descriptionAr: "تهيئة المشروع والتأكد من المتطلبات الأساسية.", icon: ListChecks },
+  { id: "devqa-1", en: "Dev/QA", ar: "Dev/QA", description: "Prepare development and testing environments.", descriptionAr: "تجهيز بيئات التطوير والاختبار.", icon: ServerCog },
+  { id: "staging-prod-1", en: "Staging & Production", ar: "Staging وProduction", description: "Provision environments and complete readiness actions.", descriptionAr: "توفير البيئات واستكمال متطلبات الجاهزية.", icon: Layers3 },
+  { label: "Deployment", en: "Deployment", ar: "Deployment", description: "Complete change, release, and handover activities.", descriptionAr: "استكمال أنشطة التغيير والإطلاق والتسليم.", icon: CheckCircle2 },
+  { label: "Publishing", en: "Publishing", ar: "النشر", description: "Choose the publishing path and complete approvals.", descriptionAr: "اختيار مسار النشر واستكمال الموافقات.", icon: Rocket },
+] as const;
 
-const normalizeText = (value: string): string => value.replace(/[|\s\u200e\u200f]+/g, "").toLowerCase();
+const normalizeText = (value: string): string =>
+  value.replace(/[|\s\u200e\u200f]+/g, "").toLowerCase();
 
 const ProjectJourneyPage = () => {
   const { language, copy } = useLanguage();
   const isArabic = language === "ar";
   const BackIcon = isArabic ? ArrowRight : ArrowLeft;
   const rootRef = useRef<HTMLElement>(null);
+  const [activeStage, setActiveStage] = useState(0);
 
   useEffect(() => {
     const collapsedCard = rootRef.current?.querySelector<HTMLElement>(".premium-tool-card");
@@ -39,19 +49,26 @@ const ProjectJourneyPage = () => {
       localizeProjectJourney(root, isArabic);
 
       root.querySelectorAll<HTMLElement>("span").forEach((element) => {
-        const text = normalizeText(element.textContent ?? "");
-        if (text === "" || text.includes("requiredifapplicable") || text.includes("إلزاميعندالحاجة")) {
-          if ((element.textContent ?? "").trim() === "|" || text.includes("requiredifapplicable") || text.includes("إلزاميعندالحاجة")) {
-            element.style.display = "none";
-          }
+        const rawText = (element.textContent ?? "").trim();
+        const text = normalizeText(rawText);
+        if (
+          rawText === "|" ||
+          text.includes("requiredifapplicable") ||
+          text.includes("إلزاميعندالحاجة")
+        ) {
+          element.style.display = "none";
         }
       });
 
-      const topLevelCards = Array.from(
-        root.querySelectorAll<HTMLElement>(":scope > div > div:nth-child(2) > div"),
-      );
+      const contentGrid = root.querySelector<HTMLElement>(":scope > div > div:nth-child(2)");
+      const topLevelCards = contentGrid
+        ? Array.from(contentGrid.children).filter((child): child is HTMLElement => child instanceof HTMLElement)
+        : [];
 
-      topLevelCards.forEach((card) => card.classList.add("journey-section-card"));
+      topLevelCards.forEach((card, index) => {
+        card.classList.add("journey-section-card");
+        card.dataset.sectionIndex = String(index);
+      });
 
       const stagingCard = topLevelCards.find((card) =>
         normalizeText(card.textContent ?? "").includes("stagingandproduction"),
@@ -62,9 +79,17 @@ const ProjectJourneyPage = () => {
       const developerCard = topLevelCards.find((card) =>
         normalizeText(card.textContent ?? "").includes("developeraccesschecklist"),
       );
+      const deploymentCard = topLevelCards.find((card) =>
+        normalizeText(card.textContent ?? "").startsWith("deployment"),
+      );
+      const publishingCard = topLevelCards.find((card) =>
+        normalizeText(card.textContent ?? "").startsWith("publishing"),
+      );
 
       stagingCard?.classList.add("journey-staging-card");
       developerCard?.classList.add("journey-developer-card");
+      deploymentCard?.classList.add("journey-deployment-card");
+      publishingCard?.classList.add("journey-publishing-card");
 
       const stagingItem = root.querySelector<HTMLElement>("#staging-prod-1");
       const stagingItemsContainer = stagingItem?.parentElement;
@@ -76,8 +101,8 @@ const ProjectJourneyPage = () => {
           const note = document.createElement("div");
           note.className = "journey-conditional-note";
           note.textContent = isArabic
-            ? "ملاحظة: نفّذ هذه الطلبات فقط عند الحاجة حسب متطلبات المشروع/المنتج."
-            : "Note: Complete these requests only when needed based on the project/product requirements.";
+            ? "هذه الطلبات تُنفّذ فقط عند الحاجة حسب متطلبات المشروع أو المنتج."
+            : "Complete these requests only when needed based on the project or product requirements.";
           parallelCard.insertBefore(note, parallelCard.firstChild);
         }
 
@@ -97,11 +122,13 @@ const ProjectJourneyPage = () => {
     return () => observer.disconnect();
   }, [isArabic]);
 
-  const navigateToStage = (stage: (typeof stages)[number]) => {
+  const navigateToStage = (stage: (typeof stages)[number], index: number) => {
+    setActiveStage(index);
+
     if ("id" in stage && stage.id) {
       const target = document.getElementById(stage.id);
       if (target) {
-        target.scrollIntoView({ behavior: "smooth", block: "center" });
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
         return;
       }
     }
@@ -113,6 +140,7 @@ const ProjectJourneyPage = () => {
         "h2, h3, h4, h5, [class*='font-semibold'], [class*='font-bold']",
       ),
     ).find((element) => normalizeText(element.textContent ?? "") === expected);
+
     heading?.closest<HTMLElement>("[class*='rounded'], .overflow-hidden")?.scrollIntoView({
       behavior: "smooth",
       block: "start",
@@ -120,54 +148,98 @@ const ProjectJourneyPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#f4f7fa] text-[#102a43]" dir={isArabic ? "rtl" : "ltr"}>
+    <div className="journey-shell" dir={isArabic ? "rtl" : "ltr"}>
       <Header />
-      <main className="mx-auto w-full max-w-[1500px] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
-        <Link
-          to="/"
-          className="mb-5 inline-flex min-h-10 items-center gap-2 rounded-lg px-3 text-sm font-semibold text-[#0057b8] transition hover:bg-[#eaf4ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0057b8]/30"
-        >
+
+      <main className="journey-main">
+        <Link to="/" className="journey-back-link">
           <BackIcon className="h-4 w-4" />
           {copy.common.backToServices}
         </Link>
 
-        <section className="journey-page-hero">
-          <div className="journey-page-hero-icon"><Layers3 className="h-6 w-6" /></div>
-          <div>
-            <p className="journey-page-eyebrow">{copy.common.technologyCenterTool}</p>
+        <section className="journey-hero">
+          <div className="journey-hero-copy">
+            <span className="journey-eyebrow">{copy.common.technologyCenterTool}</span>
             <h1>{copy.navigation.projectJourneyChecklist}</h1>
             <p>
               {isArabic
-                ? "رحلة مرئية وواضحة من التحضير إلى الإطلاق، مع تفاصيل كل مرحلة وطلبات Jira المرتبطة بها."
-                : "A clear visual journey from preparation to go-live, with each stage's details and related Jira requests below."}
+                ? "مسار موحّد يوضح ما يجب تنفيذه من بداية المشروع وحتى النشر، مع طلبات Jira والملاحظات المطلوبة لكل مرحلة."
+                : "A structured path from project setup to publishing, with the required Jira requests, actions, and guidance for every stage."}
             </p>
+          </div>
+          <div className="journey-hero-badge">
+            <Layers3 className="h-7 w-7" />
+            <span>{isArabic ? "5 مراحل" : "5 stages"}</span>
           </div>
         </section>
 
-        <section className="journey-page-overview" aria-label={isArabic ? "مراحل رحلة المشروع" : "Project journey stages"}>
-          <div className="journey-page-overview-copy">
-            <span>{isArabic ? "رحلة المشروع خطوة بخطوة" : "Project journey, step by step"}</span>
-            <h2>{isArabic ? "ابدأ من التحضير واتبع المسار حتى الإطلاق" : "Start with preparation and follow the path to go-live"}</h2>
-            <p>{isArabic ? "اضغط على أي مرحلة للانتقال مباشرة إلى تفاصيلها." : "Select any stage to jump directly to its detailed section."}</p>
+        <section className="journey-roadmap" aria-label={isArabic ? "مراحل رحلة المشروع" : "Project journey stages"}>
+          <div className="journey-roadmap-heading">
+            <div>
+              <span>{isArabic ? "المسار" : "Journey map"}</span>
+              <h2>{isArabic ? "اتبع المراحل بالترتيب" : "Follow the stages in order"}</h2>
+            </div>
+            <p>{isArabic ? "اضغط على المرحلة للانتقال إلى تفاصيلها." : "Select a stage to jump to its details."}</p>
           </div>
-          <div className="journey-page-stage-grid">
+
+          <div className="journey-stage-track">
             {stages.map((stage, index) => {
               const Icon = stage.icon;
+              const isActive = activeStage === index;
               return (
-                <button key={stage.en} type="button" onClick={() => navigateToStage(stage)} className="journey-page-stage-card">
-                  <span className="journey-page-stage-number">{index + 1}</span>
-                  <Icon className="h-5 w-5" />
-                  <strong>{isArabic ? stage.ar : stage.en}</strong>
+                <button
+                  key={stage.en}
+                  type="button"
+                  onClick={() => navigateToStage(stage, index)}
+                  className={`journey-stage ${isActive ? "is-active" : ""}`}
+                >
+                  <span className="journey-stage-index">{index + 1}</span>
+                  <span className="journey-stage-icon"><Icon className="h-5 w-5" /></span>
+                  <span className="journey-stage-copy">
+                    <strong>{isArabic ? stage.ar : stage.en}</strong>
+                    <small>{isArabic ? stage.descriptionAr : stage.description}</small>
+                  </span>
+                  <ChevronRight className="journey-stage-arrow h-4 w-4" />
                 </button>
               );
             })}
           </div>
         </section>
 
-        <section ref={rootRef} data-language={language} className="project-journey-page-content" id="project-journey-checklist">
-          <ProjectJourneyChecklist />
-        </section>
+        <div className="journey-layout">
+          <aside className="journey-side-nav" aria-label={isArabic ? "التنقل بين المراحل" : "Journey navigation"}>
+            <div className="journey-side-nav-card">
+              <span>{isArabic ? "التنقل السريع" : "Quick navigation"}</span>
+              <nav>
+                {stages.map((stage, index) => {
+                  const Icon = stage.icon;
+                  return (
+                    <button
+                      key={stage.en}
+                      type="button"
+                      onClick={() => navigateToStage(stage, index)}
+                      className={activeStage === index ? "is-active" : ""}
+                    >
+                      <Icon className="h-4 w-4" />
+                      <span>{isArabic ? stage.ar : stage.en}</span>
+                    </button>
+                  );
+                })}
+              </nav>
+            </div>
+          </aside>
+
+          <section
+            ref={rootRef}
+            data-language={language}
+            className="project-journey-page-content"
+            id="project-journey-checklist"
+          >
+            <ProjectJourneyChecklist />
+          </section>
+        </div>
       </main>
+
       <Footer />
     </div>
   );
