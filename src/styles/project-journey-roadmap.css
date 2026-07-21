@@ -76,29 +76,49 @@
   line-height: 1.35;
 }
 
+/* Parallel Actions are part of Staging & Production, not a separate yellow card. */
 .journey-parallel-actions {
-  margin: 18px !important;
-  border: 1px solid #f0c56a !important;
-  border-radius: 12px !important;
-  background: #fffaf0 !important;
+  margin: 0 !important;
+  padding: 22px 24px 24px !important;
+  border: 0 !important;
+  border-top: 1px solid #e2eaf2 !important;
+  border-radius: 0 !important;
+  background: #ffffff !important;
   box-shadow: none !important;
 }
 
 .journey-parallel-actions > div:first-of-type {
-  background: #fff4d8 !important;
-  border-bottom: 1px solid #f0d894 !important;
+  min-height: auto !important;
+  padding: 0 0 16px !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+
+.journey-parallel-actions > div:first-of-type span,
+.journey-parallel-actions > div:first-of-type h3,
+.journey-parallel-actions > div:first-of-type h4 {
+  color: #102a43 !important;
+}
+
+.journey-parallel-actions > div:nth-of-type(2) {
+  padding: 0 !important;
 }
 
 .journey-conditional-note {
-  margin: 16px 18px 0;
+  margin: 0 0 18px;
   padding: 11px 13px;
-  border-inline-start: 4px solid #d88b1f;
-  border-radius: 8px;
-  background: #fff7df;
-  color: #6b4b11;
+  border-inline-start: 4px solid #0057b8;
+  border-radius: 7px;
+  background: #eef6ff;
+  color: #234866;
   font-size: 13px;
   font-weight: 700;
   line-height: 1.6;
+}
+
+/* Hide the obsolete bilingual "Required if applicable" badge only. */
+.project-journey-page-content .journey-obsolete-required-badge {
+  display: none !important;
 }
 
 .project-journey-page-content [class*="rounded-full"] {
@@ -122,6 +142,10 @@
     border: 1px solid #d8e2ec !important;
     border-radius: 14px !important;
     background: #ffffff !important;
+  }
+
+  .journey-parallel-actions {
+    padding: 18px !important;
   }
 }
 
