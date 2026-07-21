@@ -8,6 +8,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { localizeProjectJourney } from "@/utils/projectJourneyLocalization";
 import "@/styles/project-journey-page.css";
 import "@/styles/project-journey-language.css";
+import "@/styles/project-journey-revamp.css";
 
 const stages = [
   { id: "prep-1", en: "Preparation", ar: "التحضير", icon: ListChecks },
@@ -37,26 +38,54 @@ const ProjectJourneyPage = () => {
     const applyEnhancements = () => {
       localizeProjectJourney(root, isArabic);
 
-      root.querySelectorAll<HTMLElement>("[class*='rounded-full']").forEach((badge) => {
-        const text = normalizeText(badge.textContent ?? "");
-        if (text.includes("requiredifapplicable") || text.includes("إلزاميعندالحاجة")) {
-          badge.style.display = "none";
+      root.querySelectorAll<HTMLElement>("span").forEach((element) => {
+        const text = normalizeText(element.textContent ?? "");
+        if (text === "|" || text.includes("requiredifapplicable") || text.includes("إلزاميعندالحاجة")) {
+          element.style.display = "none";
         }
       });
 
-      const cards = Array.from(root.querySelectorAll<HTMLElement>(":scope > div > div:nth-child(2) > div"));
-      const stagingCard = cards.find((card) => normalizeText(card.textContent ?? "").includes("stagingandproduction"));
-      const parallelCard = cards.find((card) => normalizeText(card.textContent ?? "").includes("parallelactions"));
+      const topLevelCards = Array.from(
+        root.querySelectorAll<HTMLElement>(":scope > div > div:nth-child(2) > div"),
+      );
 
-      if (stagingCard && parallelCard && !stagingCard.contains(parallelCard)) {
+      topLevelCards.forEach((card) => card.classList.add("journey-section-card"));
+
+      const stagingCard = topLevelCards.find((card) =>
+        normalizeText(card.textContent ?? "").includes("stagingandproduction"),
+      );
+      const parallelCard = topLevelCards.find((card) =>
+        normalizeText(card.textContent ?? "").includes("parallelactions"),
+      );
+      const developerCard = topLevelCards.find((card) =>
+        normalizeText(card.textContent ?? "").includes("developeraccesschecklist"),
+      );
+
+      stagingCard?.classList.add("journey-staging-card");
+      developerCard?.classList.add("journey-developer-card");
+
+      const stagingItem = root.querySelector<HTMLElement>("#staging-prod-1");
+      const stagingItemsContainer = stagingItem?.parentElement;
+
+      if (stagingItemsContainer && parallelCard && !stagingItemsContainer.contains(parallelCard)) {
         parallelCard.classList.add("journey-parallel-actions");
-        const note = document.createElement("div");
-        note.className = "journey-conditional-note";
-        note.textContent = isArabic
-          ? "ملاحظة: نفّذ هذه الطلبات فقط عند الحاجة حسب متطلبات المشروع/المنتج."
-          : "Note: Complete these requests only when needed based on the project/product requirements.";
-        parallelCard.insertBefore(note, parallelCard.firstChild);
-        stagingCard.appendChild(parallelCard);
+
+        if (!parallelCard.querySelector(".journey-conditional-note")) {
+          const note = document.createElement("div");
+          note.className = "journey-conditional-note";
+          note.textContent = isArabic
+            ? "ملاحظة: نفّذ هذه الطلبات فقط عند الحاجة حسب متطلبات المشروع/المنتج."
+            : "Note: Complete these requests only when needed based on the project/product requirements.";
+          parallelCard.insertBefore(note, parallelCard.firstChild);
+        }
+
+        stagingItemsContainer.appendChild(parallelCard);
+      }
+
+      if (developerCard) {
+        developerCard.querySelectorAll<HTMLElement>("[class*='rounded-lg']").forEach((element) => {
+          element.classList.add("journey-developer-panel");
+        });
       }
     };
 
@@ -77,9 +106,15 @@ const ProjectJourneyPage = () => {
 
     if (!("label" in stage) || !rootRef.current) return;
     const expected = normalizeText(stage.label);
-    const heading = Array.from(rootRef.current.querySelectorAll<HTMLElement>("h2, h3, h4, h5, [class*='font-semibold'], [class*='font-bold']"))
-      .find((element) => normalizeText(element.textContent ?? "") === expected);
-    heading?.closest<HTMLElement>("[class*='rounded'], .overflow-hidden")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const heading = Array.from(
+      rootRef.current.querySelectorAll<HTMLElement>(
+        "h2, h3, h4, h5, [class*='font-semibold'], [class*='font-bold']",
+      ),
+    ).find((element) => normalizeText(element.textContent ?? "") === expected);
+    heading?.closest<HTMLElement>("[class*='rounded'], .overflow-hidden")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
   };
 
   return (
