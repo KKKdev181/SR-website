@@ -31,8 +31,8 @@ export const translations = {
   en: {
     navigation: {
       primary: "Primary navigation",
-      technologyCenter: "Technology Center",
-      tools: "Technology Center Tools",
+      technologyCenter: "Requests Portal",
+      tools: "Requests Portal Tools",
       myJiraRequests: "My Jira Requests",
       myPendingApprovals: "My Pending Approvals",
       switchLanguage: "Switch to Arabic",
@@ -58,7 +58,7 @@ export const translations = {
     },
     common: {
       backToServices: "Back to all services",
-      technologyCenterTool: "Technology Center tool",
+      technologyCenterTool: "Requests Portal tool",
       guidedExperience: "Guided experience",
       liveRequestData: "Live request data",
       directJiraLinks: "Direct Jira links",
@@ -83,7 +83,7 @@ export const translations = {
     },
     footer: {
       help: "Need help choosing the right request?",
-      portal: "Technology Center Portal",
+      portal: "Requests Portal",
     },
     empty: {
       title: "No requests found",
@@ -93,8 +93,8 @@ export const translations = {
   ar: {
     navigation: {
       primary: "التنقل الرئيسي",
-      technologyCenter: "مركز التقنية",
-      tools: "أدوات مركز التقنية",
+      technologyCenter: "بوابة الطلبات",
+      tools: "أدوات بوابة الطلبات",
       myJiraRequests: "طلباتي في Jira",
       myPendingApprovals: "موافقاتي المعلقة",
       switchLanguage: "Switch to English",
@@ -120,7 +120,7 @@ export const translations = {
     },
     common: {
       backToServices: "العودة إلى جميع الخدمات",
-      technologyCenterTool: "أداة من مركز التقنية",
+      technologyCenterTool: "أداة من بوابة الطلبات",
       guidedExperience: "تجربة موجهة",
       liveRequestData: "نتائج من بيانات الطلبات",
       directJiraLinks: "روابط Jira مباشرة",
@@ -145,7 +145,7 @@ export const translations = {
     },
     footer: {
       help: "تحتاج مساعدة في اختيار الطلب المناسب؟",
-      portal: "بوابة مركز التقنية",
+      portal: "بوابة الطلبات",
     },
     empty: {
       title: "لا توجد طلبات مطابقة",
