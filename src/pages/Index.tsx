@@ -53,6 +53,10 @@ function matchesSearch(request: ServiceRequest, query: string): boolean {
   return searchableValues.some((value) => normalizeSearch(value).includes(normalizedQuery));
 }
 
+const sectionEnglish: Record<string, string> = {
+  "UX, Web & Mobile": "UX/UI, Web & Mobile",
+};
+
 const sectionArabic: Record<string, string> = {
   "General Help": "المساعدة العامة",
   "Infrastructure & Hosting": "البنية التحتية والاستضافة",
@@ -66,7 +70,7 @@ const sectionArabic: Record<string, string> = {
   "DevOps & Software Delivery": "DevOps وتسليم البرمجيات",
   "Jira & Amer": "Jira وAmer",
   "BI, Analytics & Reporting": "ذكاء الأعمال والتحليلات والتقارير",
-  "UX, Web & Mobile": "تجربة المستخدم والويب والجوال",
+  "UX, Web & Mobile": "تجربة وواجهة المستخدم والويب والجوال",
   "Business Operations": "عمليات الأعمال",
   "General Services": "الخدمات العامة",
 };
@@ -146,7 +150,7 @@ const Index = () => {
 
   const localizedSection = (section: string) => {
     if (isArabic) return sectionArabic[section] ?? section;
-    return section;
+    return sectionEnglish[section] ?? section;
   };
 
   const title =
@@ -281,7 +285,7 @@ const Index = () => {
               <p className="mb-3 text-xs font-semibold text-[#44546f]">
                 {isArabic
                   ? `تصفية ${localizedSection(activeSection)}`
-                  : `Filter ${activeSection}`}
+                  : `Filter ${localizedSection(activeSection)}`}
               </p>
               <div className="flex flex-wrap gap-2">
                 <button
