@@ -577,6 +577,18 @@ const ProjectJourneyChecklist = () => {
   const beforeProceedingNotesAr = phases.flatMap((phase) => phase.beforeNotesAr ?? []);
   const beforeProceedingLinks = phases.flatMap((phase) => phase.beforeLinks ?? []);
 
+  const requiredNotes = phases.flatMap((phase) =>
+    phase.items
+      .filter((item) => item.required && item.requirementNote)
+      .map((item) => ({
+        id: item.id,
+        title: item.title,
+        titleAr: item.titleAr,
+        note: item.requirementNote,
+        noteAr: item.requirementNoteAr,
+      })),
+  );
+
   const developerPhases = Array.from(new Set(developerOnboarding.map((tool) => tool.phase)));
   const developerSummary = {
     required: developerOnboarding.filter((tool) => tool.required === "Required").length,
@@ -690,11 +702,6 @@ const ProjectJourneyChecklist = () => {
               <p dir="rtl" lang="ar" className="text-[11px] text-slate-200/65" style={arabicFont}>دليل شامل لمديري المشاريع والفرق التقنية</p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" onClick={() => setIsOpen(false)} className="h-7 text-xs text-slate-200/75 hover:bg-white/10 hover:text-white">
-              Close | إغلاق
-            </Button>
-          </div>
         </div>
       </div>
 
@@ -723,8 +730,8 @@ const ProjectJourneyChecklist = () => {
                   <div className="space-y-4">
                     {phase.items.map((item) => (
                       <div id={item.id} key={item.id} className="border border-cyan-200/15 rounded-lg p-4 bg-[#15233e]/65 scroll-mt-28">
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="flex-1">
+                        <div className="flex items-start justify-between gap-4 item-row">
+                          <div className="flex-1 item-content">
                             <div className="flex items-center gap-2 mb-2">
                               <h4 className="text-sm font-semibold text-white">{item.title}</h4>
                               {item.titleAr && (
@@ -733,31 +740,12 @@ const ProjectJourneyChecklist = () => {
                             </div>
 
                             <div className="flex flex-wrap gap-2 mb-3">
-                              {item.required && (
-                                <Badge variant="default" className="text-xs">
-                                  <CheckCircle className="h-3 w-3 mr-1" />
-                                  Required if applicable | إلزامي عند الحاجة
-                                </Badge>
-                              )}
                               {item.parallel && (
                                 <Badge variant="secondary" className="text-xs">
                                   Parallel | بالتوازي
                                 </Badge>
                               )}
                             </div>
-
-                            {item.requirementNote && (
-                              <div className="mb-3 rounded-md border border-cyan-200/20 bg-cyan-300/10 px-3 py-2">
-                                <p className="text-xs font-medium text-cyan-100">
-                                  {item.requirementNote}
-                                </p>
-                                {item.requirementNoteAr && (
-                                  <p dir="rtl" lang="ar" className="text-xs text-cyan-100/75 mt-1" style={arabicFont}>
-                                    {item.requirementNoteAr}
-                                  </p>
-                                )}
-                              </div>
-                            )}
 
                             <p className="text-sm text-slate-200/75 mb-2">{item.instruction}</p>
                             {item.instructionAr && (
@@ -797,7 +785,7 @@ const ProjectJourneyChecklist = () => {
                             )}
                           </div>
 
-                          <div className="flex flex-col gap-2 shrink-0">
+                          <div className="flex flex-col gap-2 shrink-0 item-actions">
                             {item.jiraUrl && (
                               <a href={item.jiraUrl} target="_blank" rel="noopener noreferrer">
                                 <Button size="sm" variant="outline" className="w-full border-cyan-200/20 bg-[#0f1931]/85 text-white hover:bg-[#1b2c4d] hover:text-white">
@@ -989,6 +977,25 @@ const ProjectJourneyChecklist = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
+            {requiredNotes.length > 0 && (
+              <div className="mb-4 rounded-2xl border border-cyan-200/15 bg-[#0f1931]/80 p-4">
+                <div className="text-xs font-semibold uppercase tracking-[0.12em] text-cyan-100/80 mb-3">Requirement Notes</div>
+                <div className="space-y-3">
+                  {requiredNotes.map((note) => (
+                    <div key={note.id} className="rounded-xl border border-cyan-200/15 bg-[#15233e]/75 p-4">
+                      <div className="text-sm font-medium text-white">{note.title}</div>
+                      {note.titleAr && (
+                        <div dir="rtl" lang="ar" className="text-xs text-slate-200/70 mt-1" style={arabicFont}>{note.titleAr}</div>
+                      )}
+                      <div className="text-xs text-slate-200/80 mt-3">{note.note}</div>
+                      {note.noteAr && (
+                        <div dir="rtl" lang="ar" className="text-[11px] text-slate-200/70 mt-1" style={arabicFont}>{note.noteAr}</div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
             <div className="space-y-3">
               {parallelActions.map((action, i) => (
                 <div key={i} className="flex items-center justify-between p-3 border border-cyan-200/15 rounded-lg bg-[#0f1931]/75">
