@@ -30,7 +30,7 @@ const stages = [
   {
     targetId: "journey-section-devqa",
     en: "Dev/QA",
-    ar: "Dev/QA",
+    ar: "بيئة التطوير والاختبار",
     description: "Prepare development and testing environments.",
     descriptionAr: "تجهيز بيئات التطوير والاختبار.",
     icon: ServerCog,
@@ -38,7 +38,7 @@ const stages = [
   {
     targetId: "journey-section-staging-production",
     en: "Staging & Production",
-    ar: "Staging وProduction",
+    ar: "بيئة التجهيز والإنتاج",
     description: "Provision environments and complete readiness actions.",
     descriptionAr: "توفير البيئات واستكمال متطلبات الجاهزية.",
     icon: Layers3,
@@ -46,7 +46,7 @@ const stages = [
   {
     targetId: "journey-section-deployment",
     en: "Deployment",
-    ar: "Deployment",
+    ar: "التنفيذ",
     description: "Complete change, release, and handover activities.",
     descriptionAr: "استكمال أنشطة التغيير والإطلاق والتسليم.",
     icon: CheckCircle2,
@@ -63,6 +63,33 @@ const stages = [
 
 const normalizeText = (value: string): string =>
   value.replace(/[|\s\u200e\u200f]+/g, "").toLowerCase();
+
+const replaceArabicStageLabels = (root: HTMLElement): void => {
+  const replacements: Record<string, string> = {
+    "Dev/QA": "بيئة التطوير والاختبار",
+    "Dev/QA (VMs)": "بيئة التطوير والاختبار (VMs)",
+    "التطوير/الاختبار": "بيئة التطوير والاختبار",
+    "Staging and Production": "بيئة التجهيز والإنتاج",
+    "Staging & Production": "بيئة التجهيز والإنتاج",
+    "التجهيز والإنتاج": "بيئة التجهيز والإنتاج",
+    Deployment: "التنفيذ",
+  };
+
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  let node = walker.nextNode();
+
+  while (node) {
+    const text = node as Text;
+    const value = text.nodeValue?.trim();
+    const replacement = value ? replacements[value] : undefined;
+
+    if (value && replacement && value !== replacement) {
+      text.nodeValue = text.nodeValue?.replace(value, replacement) ?? replacement;
+    }
+
+    node = walker.nextNode();
+  }
+};
 
 const ProjectJourneyPage = () => {
   const { language, copy } = useLanguage();
@@ -82,6 +109,7 @@ const ProjectJourneyPage = () => {
 
     const applyEnhancements = () => {
       localizeProjectJourney(root, isArabic);
+      if (isArabic) replaceArabicStageLabels(root);
 
       root.querySelectorAll<HTMLElement>("span").forEach((element) => {
         const rawText = (element.textContent ?? "").trim();
