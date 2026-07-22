@@ -17,6 +17,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { localizeProjectJourney } from "@/utils/projectJourneyLocalization";
 import "@/styles/project-journey-page.css";
 import "@/styles/project-journey-language.css";
+import "@/styles/project-journey-developer-access.css";
 
 const stages = [
   {
@@ -91,6 +92,105 @@ const replaceArabicStageLabels = (root: HTMLElement): void => {
   }
 };
 
+const enhanceDeveloperAccessSection = (developerCard: HTMLElement): void => {
+  developerCard.classList.add("journey-developer-card");
+
+  const trigger = developerCard.querySelector<HTMLElement>("[data-state]");
+  const intro = trigger?.closest<HTMLElement>("div[class*='CardHeader'], [class*='cursor-pointer']");
+  intro?.classList.add("journey-developer-intro");
+
+  const description = intro?.querySelector<HTMLElement>("p");
+  description?.classList.add("journey-developer-description");
+
+  const toggle = Array.from(developerCard.querySelectorAll<HTMLElement>("button, [role='button']")).find(
+    (element) => {
+      const text = normalizeText(element.textContent ?? "");
+      return (
+        text.includes("showmore") ||
+        text.includes("hidelist") ||
+        text.includes("إظهارالمزيد") ||
+        text.includes("إخفاءالقائمة")
+      );
+    },
+  );
+  toggle?.classList.add("journey-developer-toggle");
+
+  const content = developerCard.querySelector<HTMLElement>("[data-state='open']")?.nextElementSibling;
+  const contentRoot = content instanceof HTMLElement ? content : developerCard;
+
+  const grids = Array.from(contentRoot.querySelectorAll<HTMLElement>("div.grid"));
+  const summaryGrid = grids.find((grid) => {
+    const text = normalizeText(grid.textContent ?? "");
+    return text.includes("required") && text.includes("conditional") && text.includes("optional");
+  });
+
+  summaryGrid?.classList.add("journey-developer-summary-grid");
+  Array.from(summaryGrid?.children ?? []).forEach((child) => {
+    if (!(child instanceof HTMLElement)) return;
+    child.classList.add("journey-developer-summary-card");
+    const text = normalizeText(child.textContent ?? "");
+    if (text.includes("required")) child.classList.add("is-required");
+    if (text.includes("conditional")) child.classList.add("is-conditional");
+    if (text.includes("optional")) child.classList.add("is-optional");
+  });
+
+  const guideGrid = grids.find((grid) => {
+    if (grid === summaryGrid) return false;
+    const text = normalizeText(grid.textContent ?? "");
+    return (
+      text.includes("mustbecompleted") ||
+      text.includes("neededonlyif") ||
+      text.includes("notalwaysneeded")
+    );
+  });
+
+  guideGrid?.classList.add("journey-developer-guide-grid");
+  Array.from(guideGrid?.children ?? []).forEach((child) => {
+    if (!(child instanceof HTMLElement)) return;
+    child.classList.add("journey-developer-guide-card");
+  });
+
+  developerCard.querySelectorAll<HTMLElement>("[class*='rounded-lg']").forEach((element) => {
+    element.classList.add("journey-developer-panel");
+  });
+
+  const phaseHeaders = Array.from(developerCard.querySelectorAll<HTMLElement>("h5")).filter((heading) =>
+    /^\d+\./.test((heading.textContent ?? "").trim()),
+  );
+
+  phaseHeaders.forEach((heading) => {
+    const header = heading.parentElement;
+    const group = header?.parentElement;
+    if (!header || !group) return;
+
+    header.classList.add("journey-access-group-header");
+    group.classList.add("journey-access-group");
+
+    const rowsContainer = header.nextElementSibling;
+    if (!(rowsContainer instanceof HTMLElement)) return;
+
+    Array.from(rowsContainer.children).forEach((row) => {
+      if (!(row instanceof HTMLElement)) return;
+      row.classList.add("journey-access-tool-row");
+
+      const metadataGrid = row.querySelector<HTMLElement>("div.grid");
+      metadataGrid?.classList.add("journey-access-metadata-grid");
+
+      row.querySelectorAll<HTMLElement>("a button").forEach((button) => {
+        button.classList.add("journey-access-open-link");
+      });
+    });
+  });
+
+  developerCard.querySelectorAll<HTMLElement>("[class*='Badge']").forEach((badge) => {
+    const text = normalizeText(badge.textContent ?? "");
+    badge.classList.add("journey-status-chip");
+    if (text.includes("required")) badge.classList.add("is-required");
+    if (text.includes("conditional")) badge.classList.add("is-conditional");
+    if (text.includes("optional")) badge.classList.add("is-optional");
+  });
+};
+
 const ProjectJourneyPage = () => {
   const { language, copy } = useLanguage();
   const isArabic = language === "ar";
@@ -153,7 +253,6 @@ const ProjectJourneyPage = () => {
       );
 
       stagingCard?.classList.add("journey-staging-card");
-      developerCard?.classList.add("journey-developer-card");
       deploymentCard?.classList.add("journey-deployment-card");
       publishingCard?.classList.add("journey-publishing-card");
 
@@ -190,9 +289,7 @@ const ProjectJourneyPage = () => {
       }
 
       if (developerCard) {
-        developerCard.querySelectorAll<HTMLElement>("[class*='rounded-lg']").forEach((element) => {
-          element.classList.add("journey-developer-panel");
-        });
+        enhanceDeveloperAccessSection(developerCard);
       }
     };
 
