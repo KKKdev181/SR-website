@@ -19,11 +19,46 @@ import "@/styles/project-journey-page.css";
 import "@/styles/project-journey-language.css";
 
 const stages = [
-  { id: "prep-1", en: "Preparation", ar: "التحضير", description: "Set up the project and confirm prerequisites.", descriptionAr: "تهيئة المشروع والتأكد من المتطلبات الأساسية.", icon: ListChecks },
-  { id: "devqa-1", en: "Dev/QA", ar: "Dev/QA", description: "Prepare development and testing environments.", descriptionAr: "تجهيز بيئات التطوير والاختبار.", icon: ServerCog },
-  { id: "staging-prod-1", en: "Staging & Production", ar: "Staging وProduction", description: "Provision environments and complete readiness actions.", descriptionAr: "توفير البيئات واستكمال متطلبات الجاهزية.", icon: Layers3 },
-  { label: "Deployment", en: "Deployment", ar: "Deployment", description: "Complete change, release, and handover activities.", descriptionAr: "استكمال أنشطة التغيير والإطلاق والتسليم.", icon: CheckCircle2 },
-  { label: "Publishing", en: "Publishing", ar: "النشر", description: "Choose the publishing path and complete approvals.", descriptionAr: "اختيار مسار النشر واستكمال الموافقات.", icon: Rocket },
+  {
+    targetId: "journey-section-preparation",
+    en: "Preparation",
+    ar: "التحضير",
+    description: "Set up the project and confirm prerequisites.",
+    descriptionAr: "تهيئة المشروع والتأكد من المتطلبات الأساسية.",
+    icon: ListChecks,
+  },
+  {
+    targetId: "journey-section-devqa",
+    en: "Dev/QA",
+    ar: "Dev/QA",
+    description: "Prepare development and testing environments.",
+    descriptionAr: "تجهيز بيئات التطوير والاختبار.",
+    icon: ServerCog,
+  },
+  {
+    targetId: "journey-section-staging-production",
+    en: "Staging & Production",
+    ar: "Staging وProduction",
+    description: "Provision environments and complete readiness actions.",
+    descriptionAr: "توفير البيئات واستكمال متطلبات الجاهزية.",
+    icon: Layers3,
+  },
+  {
+    targetId: "journey-section-deployment",
+    en: "Deployment",
+    ar: "Deployment",
+    description: "Complete change, release, and handover activities.",
+    descriptionAr: "استكمال أنشطة التغيير والإطلاق والتسليم.",
+    icon: CheckCircle2,
+  },
+  {
+    targetId: "journey-section-publishing",
+    en: "Publishing",
+    ar: "النشر",
+    description: "Choose the publishing path and complete approvals.",
+    descriptionAr: "اختيار مسار النشر واستكمال الموافقات.",
+    icon: Rocket,
+  },
 ] as const;
 
 const normalizeText = (value: string): string =>
@@ -62,7 +97,9 @@ const ProjectJourneyPage = () => {
 
       const contentGrid = root.querySelector<HTMLElement>(":scope > div > div:nth-child(2)");
       const topLevelCards = contentGrid
-        ? Array.from(contentGrid.children).filter((child): child is HTMLElement => child instanceof HTMLElement)
+        ? Array.from(contentGrid.children).filter(
+            (child): child is HTMLElement => child instanceof HTMLElement,
+          )
         : [];
 
       topLevelCards.forEach((card, index) => {
@@ -70,26 +107,41 @@ const ProjectJourneyPage = () => {
         card.dataset.sectionIndex = String(index);
       });
 
-      const stagingCard = topLevelCards.find((card) =>
-        normalizeText(card.textContent ?? "").includes("stagingandproduction"),
-      );
+      stages.forEach((stage, index) => {
+        const card = topLevelCards[index];
+        if (!card) return;
+        card.id = stage.targetId;
+        card.style.scrollMarginTop = "88px";
+      });
+
+      const stagingCard = topLevelCards[2];
+      const deploymentCard = topLevelCards[3];
+      const publishingCard = topLevelCards[4];
       const parallelCard = topLevelCards.find((card) =>
         normalizeText(card.textContent ?? "").includes("parallelactions"),
       );
       const developerCard = topLevelCards.find((card) =>
         normalizeText(card.textContent ?? "").includes("developeraccesschecklist"),
       );
-      const deploymentCard = topLevelCards.find((card) =>
-        normalizeText(card.textContent ?? "").startsWith("deployment"),
-      );
-      const publishingCard = topLevelCards.find((card) =>
-        normalizeText(card.textContent ?? "").startsWith("publishing"),
-      );
 
       stagingCard?.classList.add("journey-staging-card");
       developerCard?.classList.add("journey-developer-card");
       deploymentCard?.classList.add("journey-deployment-card");
       publishingCard?.classList.add("journey-publishing-card");
+
+      if (parallelCard) {
+        const requirementNotesHeading = Array.from(
+          parallelCard.querySelectorAll<HTMLElement>("div"),
+        ).find((element) => {
+          const text = normalizeText(element.textContent ?? "");
+          return text === "requirementnotes" || text === "ملاحظاتالمتطلبات";
+        });
+
+        const requirementNotesPanel = requirementNotesHeading?.parentElement;
+        if (requirementNotesPanel && requirementNotesPanel !== parallelCard) {
+          requirementNotesPanel.remove();
+        }
+      }
 
       const stagingItem = root.querySelector<HTMLElement>("#staging-prod-1");
       const stagingItemsContainer = stagingItem?.parentElement;
@@ -125,26 +177,18 @@ const ProjectJourneyPage = () => {
   const navigateToStage = (stage: (typeof stages)[number], index: number) => {
     setActiveStage(index);
 
-    if ("id" in stage && stage.id) {
-      const target = document.getElementById(stage.id);
-      if (target) {
+    const target = rootRef.current?.querySelector<HTMLElement>(`#${stage.targetId}`);
+    if (!target) return;
+
+    const closedTrigger = target.querySelector<HTMLElement>("[data-state='closed']");
+    closedTrigger?.click();
+
+    window.setTimeout(
+      () => {
         target.scrollIntoView({ behavior: "smooth", block: "start" });
-        return;
-      }
-    }
-
-    if (!("label" in stage) || !rootRef.current) return;
-    const expected = normalizeText(stage.label);
-    const heading = Array.from(
-      rootRef.current.querySelectorAll<HTMLElement>(
-        "h2, h3, h4, h5, [class*='font-semibold'], [class*='font-bold']",
-      ),
-    ).find((element) => normalizeText(element.textContent ?? "") === expected);
-
-    heading?.closest<HTMLElement>("[class*='rounded'], .overflow-hidden")?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
+      },
+      closedTrigger ? 160 : 0,
+    );
   };
 
   return (
@@ -173,13 +217,20 @@ const ProjectJourneyPage = () => {
           </div>
         </section>
 
-        <section className="journey-roadmap" aria-label={isArabic ? "مراحل رحلة المشروع" : "Project journey stages"}>
+        <section
+          className="journey-roadmap"
+          aria-label={isArabic ? "مراحل رحلة المشروع" : "Project journey stages"}
+        >
           <div className="journey-roadmap-heading">
             <div>
               <span>{isArabic ? "المسار" : "Journey map"}</span>
               <h2>{isArabic ? "اتبع المراحل بالترتيب" : "Follow the stages in order"}</h2>
             </div>
-            <p>{isArabic ? "اضغط على المرحلة للانتقال إلى تفاصيلها." : "Select a stage to jump to its details."}</p>
+            <p>
+              {isArabic
+                ? "اضغط على المرحلة للانتقال إلى تفاصيلها."
+                : "Select a stage to jump to its details."}
+            </p>
           </div>
 
           <div className="journey-stage-track">
@@ -194,7 +245,9 @@ const ProjectJourneyPage = () => {
                   className={`journey-stage ${isActive ? "is-active" : ""}`}
                 >
                   <span className="journey-stage-index">{index + 1}</span>
-                  <span className="journey-stage-icon"><Icon className="h-5 w-5" /></span>
+                  <span className="journey-stage-icon">
+                    <Icon className="h-5 w-5" />
+                  </span>
                   <span className="journey-stage-copy">
                     <strong>{isArabic ? stage.ar : stage.en}</strong>
                     <small>{isArabic ? stage.descriptionAr : stage.description}</small>
@@ -207,7 +260,10 @@ const ProjectJourneyPage = () => {
         </section>
 
         <div className="journey-layout">
-          <aside className="journey-side-nav" aria-label={isArabic ? "التنقل بين المراحل" : "Journey navigation"}>
+          <aside
+            className="journey-side-nav"
+            aria-label={isArabic ? "التنقل بين المراحل" : "Journey navigation"}
+          >
             <div className="journey-side-nav-card">
               <span>{isArabic ? "التنقل السريع" : "Quick navigation"}</span>
               <nav>
