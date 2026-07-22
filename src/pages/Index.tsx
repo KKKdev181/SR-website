@@ -15,6 +15,8 @@ import type { ServiceRequest } from "@/data/requests";
 
 const MERGED_INFRA_SECTION = "Infrastructure, Hosting & Storage";
 const MERGED_INFRA_SOURCE_SECTIONS = ["Infrastructure & Hosting", "Storage & Backup"] as const;
+const GENERAL_REQUEST_URL =
+  "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/836?returnUrl=%2Fcategory%2Fnsr";
 
 const normalizeSearch = (value: string): string =>
   value
@@ -75,7 +77,6 @@ const sidebarSections = sections.flatMap((section) => {
   if (section === "Infrastructure & Hosting") return [MERGED_INFRA_SECTION];
   return [section];
 });
-const generalRequest = requests.find((request) => request.section === "General Help");
 
 const requestMatchesSection = (request: ServiceRequest, section: string): boolean => {
   if (section === MERGED_INFRA_SECTION) {
@@ -216,38 +217,36 @@ const Index = () => {
               ))}
             </nav>
 
-            {generalRequest?.jiraUrl && (
-              <section
-                className="mt-4 shrink-0 rounded-xl border border-[#b3d4ff] bg-[#e9f2ff] p-4 shadow-sm"
-                dir={isArabic ? "rtl" : "ltr"}
-                aria-label={isArabic ? "تحتاج مساعدة؟" : "Need Help?"}
-              >
-                <div className="mb-3 flex items-start gap-3">
-                  <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white text-[#0c66e4] shadow-sm">
-                    <CircleHelp className="h-5 w-5" aria-hidden="true" />
-                  </span>
-                  <div className="min-w-0 text-start">
-                    <h2 className="text-sm font-bold text-[#172b4d]">
-                      {isArabic ? "تحتاج مساعدة؟" : "Need Help?"}
-                    </h2>
-                    <p className="mt-1 text-xs leading-5 text-[#44546f]">
-                      {isArabic
-                        ? "إذا لم تجد الخدمة المناسبة، يمكنك تقديم طلب عام."
-                        : "If you cannot find the right service, submit a general request."}
-                    </p>
-                  </div>
+            <section
+              className="mt-4 shrink-0 rounded-xl border border-[#b3d4ff] bg-[#e9f2ff] p-4 shadow-sm"
+              dir={isArabic ? "rtl" : "ltr"}
+              aria-label={isArabic ? "تحتاج مساعدة؟" : "Need Help?"}
+            >
+              <div className="mb-3 flex items-start gap-3">
+                <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white text-[#0c66e4] shadow-sm">
+                  <CircleHelp className="h-5 w-5" aria-hidden="true" />
+                </span>
+                <div className="min-w-0 text-start">
+                  <h2 className="text-sm font-bold text-[#172b4d]">
+                    {isArabic ? "تحتاج مساعدة؟" : "Need Help?"}
+                  </h2>
+                  <p className="mt-1 text-xs leading-5 text-[#44546f]">
+                    {isArabic
+                      ? "إذا لم تجد الخدمة المناسبة، يمكنك تقديم طلب عام."
+                      : "If you cannot find the right service, submit a general request."}
+                  </p>
                 </div>
-                <a
-                  href={generalRequest.jiraUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-md bg-[#0c66e4] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#0055cc] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0c66e4] focus-visible:ring-offset-2"
-                >
-                  <span>{isArabic ? "طلب عام" : "General Request"}</span>
-                  <ExternalLink className="h-4 w-4" aria-hidden="true" />
-                </a>
-              </section>
-            )}
+              </div>
+              <a
+                href={GENERAL_REQUEST_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-md bg-[#0c66e4] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#0055cc] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0c66e4] focus-visible:ring-offset-2"
+              >
+                <span>{isArabic ? "طلب عام" : "General Request"}</span>
+                <ExternalLink className="h-4 w-4" aria-hidden="true" />
+              </a>
+            </section>
           </div>
         </aside>
 
