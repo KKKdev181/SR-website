@@ -134,29 +134,34 @@
   direction: ltr !important;
 }
 
-/* Arabic cleanup: remove decorative strips and gradients that make cards look inconsistent. */
-.project-journey-page-content[data-language="ar"] .journey-staging-card > div > div:first-child,
-.project-journey-page-content[data-language="ar"] .journey-developer-card > div > div:first-child,
-.project-journey-page-content[data-language="ar"] .journey-developer-intro,
-.project-journey-page-content[data-language="ar"] .journey-conditional-note {
+/* Remove decorative accent strips and gradients from all language versions. */
+.project-journey-page-content .journey-staging-card > div > div:first-child,
+.project-journey-page-content .journey-developer-card > div > div:first-child,
+.project-journey-page-content .journey-developer-intro,
+.project-journey-page-content .journey-conditional-note {
   border-inline-start: 0 !important;
   border-inline-end: 0 !important;
   background-image: none !important;
 }
 
-.project-journey-page-content[data-language="ar"] .journey-staging-card > div > div:first-child,
-.project-journey-page-content[data-language="ar"] .journey-developer-intro {
+.project-journey-page-content .journey-staging-card > div > div:first-child,
+.project-journey-page-content .journey-developer-intro {
   background: #ffffff !important;
   border-bottom: 1px solid #dfe6ee !important;
 }
 
-.project-journey-page-content[data-language="ar"] .journey-developer-card {
+.project-journey-page-content .journey-developer-card {
   border-color: #d7e0ea !important;
 }
 
-.project-journey-page-content[data-language="ar"] .journey-developer-card [class*="CardContent"],
-.project-journey-page-content[data-language="ar"] .journey-developer-card [data-state="open"] + div,
-.project-journey-page-content[data-language="ar"] .journey-developer-card [data-state="open"] ~ div {
+/* This implementation note is not useful to end users. */
+.project-journey-page-content .journey-developer-description {
+  display: none !important;
+}
+
+.project-journey-page-content .journey-developer-card [class*="CardContent"],
+.project-journey-page-content .journey-developer-card [data-state="open"] + div,
+.project-journey-page-content .journey-developer-card [data-state="open"] ~ div {
   background: #f7f9fc !important;
 }
 
@@ -185,7 +190,7 @@
   background: #e9f2ff !important;
 }
 
-.project-journey-page-content[data-language="ar"] .journey-conditional-note {
+.project-journey-page-content .journey-conditional-note {
   margin: 16px !important;
   background: #f8fafc !important;
   border: 1px solid #dfe6ee !important;
