@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 64" role="img" aria-labelledby="title desc">
+  <title id="title">Elm</title>
+  <desc id="desc">Elm new brand logo</desc>
+  <g fill="#fff">
+    <path d="M4 7h27v8c0 10.5 8.5 19 19 19h8v23H42c-20.99 0-38-17.01-38-38V7z"/>
+    <path d="M25 21h27v8c0 10.5 8.5 19 19 19h8v9H63c-20.99 0-38-17.01-38-38V21z" opacity=".98"/>
+    <path d="M4 35h27v6c0 8.84 7.16 16 16 16h8v0H42C21.01 57 4 39.99 4 19v16z" opacity=".96"/>
+  </g>
+  <g fill="#fff" font-family="Arial, 'Noto Sans Arabic', sans-serif" font-weight="700">
+    <text x="92" y="27" font-size="23" direction="rtl" unicode-bidi="bidi-override">علم</text>
+    <text x="92" y="51" font-size="22" letter-spacing=".2">elm</text>
+  </g>
+</svg>
