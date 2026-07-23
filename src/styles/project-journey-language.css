@@ -53,7 +53,6 @@
   text-align: left;
 }
 
-/* Keep legacy dark cards readable after converting the page to the light portal theme. */
 .project-journey-page-content [class*="bg-[#0f1931]"] *,
 .project-journey-page-content [class*="bg-[#15233e]"] *,
 .project-journey-page-content [class*="bg-amber"] *,
@@ -79,7 +78,6 @@
   opacity: 1 !important;
 }
 
-/* Use one neutral enterprise style for the final checklist in both languages. */
 .project-journey-page-content [class*="bg-amber"] {
   background: #ffffff !important;
   border-color: #d7e0ea !important;
@@ -134,7 +132,6 @@
   direction: ltr !important;
 }
 
-/* Remove decorative accent strips and gradients from all language versions. */
 .project-journey-page-content .journey-staging-card > div > div:first-child,
 .project-journey-page-content .journey-developer-card > div > div:first-child,
 .project-journey-page-content .journey-developer-intro,
@@ -154,7 +151,6 @@
   border-color: #d7e0ea !important;
 }
 
-/* This implementation note is not useful to end users. */
 .project-journey-page-content .journey-developer-description {
   display: none !important;
 }
@@ -195,6 +191,46 @@
   background: #f8fafc !important;
   border: 1px solid #dfe6ee !important;
   color: #334e68 !important;
+}
+
+/* Publishing decision buttons: keep selected text readable. */
+.project-journey-page-content .journey-publish-option {
+  min-width: 96px;
+  justify-content: center;
+  text-align: center !important;
+}
+
+.project-journey-page-content .journey-publish-option[class*="bg-primary"],
+.project-journey-page-content .journey-publish-option[data-state="active"] {
+  background: #0c66e4 !important;
+  border-color: #0c66e4 !important;
+  color: #ffffff !important;
+}
+
+.project-journey-page-content .journey-publish-option[class*="bg-primary"] *,
+.project-journey-page-content .journey-publish-option[data-state="active"] * {
+  color: #ffffff !important;
+}
+
+.project-journey-page-content .journey-publish-option:not([class*="bg-primary"]):not([data-state="active"]) {
+  background: #ffffff !important;
+  border-color: #d7e0ea !important;
+  color: #334e68 !important;
+}
+
+.project-journey-page-content[data-language="ar"] .journey-publishing-card {
+  direction: rtl;
+}
+
+.project-journey-page-content[data-language="ar"] .journey-publishing-card ul {
+  padding-right: 18px;
+  padding-left: 0;
+}
+
+.project-journey-page-content[data-language="ar"] .journey-publishing-card li,
+.project-journey-page-content[data-language="ar"] .journey-publishing-card h5,
+.project-journey-page-content[data-language="ar"] .journey-publishing-card p {
+  text-align: right !important;
 }
 
 @media (max-width: 640px) {
