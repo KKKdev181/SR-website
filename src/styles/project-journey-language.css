@@ -89,3 +89,52 @@
 .project-journey-page-content button {
   opacity: 1 !important;
 }
+
+/* Keep the final checklist visually identical in English and Arabic. */
+.project-journey-page-content [class*="bg-amber"] [class*="grid-cols-2"] {
+  grid-template-columns: minmax(0, 1fr) !important;
+  width: 100% !important;
+}
+
+.project-journey-page-content [class*="bg-amber"] [class*="space-y-2"] {
+  width: 100% !important;
+  max-width: none !important;
+}
+
+.project-journey-page-content [class*="bg-amber"] [class*="space-y-2"] > div {
+  width: 100% !important;
+  min-height: 42px;
+  align-items: center !important;
+  padding: 10px 12px !important;
+  border-radius: 8px !important;
+  background: #ffffff !important;
+  border: 1px solid #f3d98a !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+}
+
+.project-journey-page-content [class*="bg-amber"] [class*="space-y-2"] > div svg {
+  color: #315f86 !important;
+  flex: 0 0 auto;
+}
+
+.project-journey-page-content [class*="bg-amber"] [class*="space-y-2"] > div span {
+  color: #6a5420 !important;
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+}
+
+.project-journey-page-content[data-language="ar"] [class*="bg-amber"] [class*="space-y-2"] > div {
+  flex-direction: row !important;
+  direction: rtl !important;
+}
+
+.project-journey-page-content[data-language="en"] [class*="bg-amber"] [class*="space-y-2"] > div {
+  flex-direction: row !important;
+  direction: ltr !important;
+}
+
+@media (max-width: 640px) {
+  .project-journey-page-content [class*="bg-amber"] [class*="space-y-2"] > div {
+    padding: 9px 10px !important;
+  }
+}
