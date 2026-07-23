@@ -44,9 +44,9 @@ const Header = () => {
             aria-label="Elm Requests Portal"
           >
             <img
-              src="/elm-new-logo.svg"
+              src="/elmlogo.png"
               alt="Elm"
-              className="h-12 w-auto shrink-0 sm:h-14"
+              className="h-12 w-auto shrink-0 brightness-0 invert sm:h-14"
             />
             <span className="hidden h-10 w-px bg-white/30 sm:block" />
             <span className="hidden whitespace-nowrap text-lg font-semibold sm:block">
