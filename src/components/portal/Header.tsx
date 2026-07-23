@@ -1,4 +1,4 @@
-import { ClipboardCheck, ExternalLink, Globe2, Headphones, Inbox, ListChecks, Mail, Route } from "lucide-react";
+import { ClipboardCheck, ExternalLink, Globe2, Headset, Inbox, ListChecks, Mail, Route } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -41,8 +41,19 @@ const Header = () => {
           <Link
             to="/"
             className="flex shrink-0 items-center gap-3 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            aria-label="Elm Requests Portal"
           >
-            <img src="/elmlogo.png" alt="Elm" className="h-9 w-auto brightness-0 invert" />
+            <span className="flex items-center gap-2" aria-label="Elm | علم">
+              <img src="/elmlogo.png" alt="" className="h-9 w-auto brightness-0 invert" />
+              <span className="hidden min-w-[34px] flex-col items-center justify-center leading-none text-white sm:flex">
+                <span lang="ar" dir="rtl" className="text-[13px] font-extrabold leading-[0.9]">
+                  علم
+                </span>
+                <span className="mt-0.5 text-[12px] font-extrabold leading-[0.9] tracking-[0.04em]">
+                  elm
+                </span>
+              </span>
+            </span>
             <span className="hidden h-8 w-px bg-white/25 sm:block" />
             <span className="hidden whitespace-nowrap text-lg font-semibold sm:block">
               {copy.navigation.technologyCenter}
@@ -100,12 +111,12 @@ const Header = () => {
             <button
               type="button"
               onClick={() => setIsSupportOpen((current) => !current)}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/25 bg-white/10 text-white transition hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-md text-white transition hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
               aria-label={copy.navigation.support}
               aria-expanded={isSupportOpen}
               aria-haspopup="menu"
             >
-              <Headphones className="h-5 w-5" aria-hidden="true" />
+              <Headset className="h-[22px] w-[22px] stroke-[1.9]" aria-hidden="true" />
             </button>
 
             {isSupportOpen && (
