@@ -53,7 +53,7 @@
   text-align: left;
 }
 
-/* Legacy cards use pale text classes that become unreadable after the page theme turns them white. */
+/* Keep legacy dark cards readable after converting the page to the light portal theme. */
 .project-journey-page-content [class*="bg-[#0f1931]"] *,
 .project-journey-page-content [class*="bg-[#15233e]"] *,
 .project-journey-page-content [class*="bg-amber"] *,
@@ -74,23 +74,24 @@
   color: #102a43 !important;
 }
 
-.project-journey-page-content [class*="bg-amber"] {
-  background: #fffdf6 !important;
-  border-color: #f0c75e !important;
-}
-
-.project-journey-page-content [class*="bg-amber"] li,
-.project-journey-page-content [class*="bg-amber"] p,
-.project-journey-page-content [class*="bg-amber"] span {
-  color: #5b4a16 !important;
-}
-
 .project-journey-page-content a button,
 .project-journey-page-content button {
   opacity: 1 !important;
 }
 
-/* Keep the final checklist visually identical in English and Arabic. */
+/* Use one neutral enterprise style for the final checklist in both languages. */
+.project-journey-page-content [class*="bg-amber"] {
+  background: #ffffff !important;
+  border-color: #d7e0ea !important;
+  box-shadow: 0 10px 28px rgba(23, 43, 77, 0.06) !important;
+}
+
+.project-journey-page-content [class*="bg-amber"] li,
+.project-journey-page-content [class*="bg-amber"] p,
+.project-journey-page-content [class*="bg-amber"] span {
+  color: #44546f !important;
+}
+
 .project-journey-page-content [class*="bg-amber"] [class*="grid-cols-2"] {
   grid-template-columns: minmax(0, 1fr) !important;
   width: 100% !important;
@@ -106,19 +107,19 @@
   min-height: 42px;
   align-items: center !important;
   padding: 10px 12px !important;
-  border-radius: 8px !important;
-  background: #ffffff !important;
-  border: 1px solid #f3d98a !important;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+  border: 1px solid #dfe6ee !important;
+  border-radius: 9px !important;
+  background: #f8fafc !important;
+  box-shadow: none !important;
 }
 
 .project-journey-page-content [class*="bg-amber"] [class*="space-y-2"] > div svg {
-  color: #315f86 !important;
+  color: #0c66e4 !important;
   flex: 0 0 auto;
 }
 
 .project-journey-page-content [class*="bg-amber"] [class*="space-y-2"] > div span {
-  color: #6a5420 !important;
+  color: #334e68 !important;
   font-size: 13px !important;
   line-height: 1.6 !important;
 }
@@ -131,6 +132,64 @@
 .project-journey-page-content[data-language="en"] [class*="bg-amber"] [class*="space-y-2"] > div {
   flex-direction: row !important;
   direction: ltr !important;
+}
+
+/* Arabic cleanup: remove decorative strips and gradients that make cards look inconsistent. */
+.project-journey-page-content[data-language="ar"] .journey-staging-card > div > div:first-child,
+.project-journey-page-content[data-language="ar"] .journey-developer-card > div > div:first-child,
+.project-journey-page-content[data-language="ar"] .journey-developer-intro,
+.project-journey-page-content[data-language="ar"] .journey-conditional-note {
+  border-inline-start: 0 !important;
+  border-inline-end: 0 !important;
+  background-image: none !important;
+}
+
+.project-journey-page-content[data-language="ar"] .journey-staging-card > div > div:first-child,
+.project-journey-page-content[data-language="ar"] .journey-developer-intro {
+  background: #ffffff !important;
+  border-bottom: 1px solid #dfe6ee !important;
+}
+
+.project-journey-page-content[data-language="ar"] .journey-developer-card {
+  border-color: #d7e0ea !important;
+}
+
+.project-journey-page-content[data-language="ar"] .journey-developer-card [class*="CardContent"],
+.project-journey-page-content[data-language="ar"] .journey-developer-card [data-state="open"] + div,
+.project-journey-page-content[data-language="ar"] .journey-developer-card [data-state="open"] ~ div {
+  background: #f7f9fc !important;
+}
+
+.project-journey-page-content[data-language="ar"] .journey-developer-intro [class*="justify-between"] {
+  align-items: stretch !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+}
+
+.project-journey-page-content[data-language="ar"] .journey-developer-toggle {
+  width: fit-content !important;
+  min-width: 118px !important;
+  align-self: flex-start !important;
+  border-color: #d7e0ea !important;
+  background: #ffffff !important;
+  color: #0c66e4 !important;
+  box-shadow: 0 2px 6px rgba(23, 43, 77, 0.06) !important;
+}
+
+.project-journey-page-content[data-language="ar"] .journey-developer-toggle * {
+  color: #0c66e4 !important;
+}
+
+.project-journey-page-content[data-language="ar"] .journey-developer-toggle:hover {
+  border-color: #b3d4ff !important;
+  background: #e9f2ff !important;
+}
+
+.project-journey-page-content[data-language="ar"] .journey-conditional-note {
+  margin: 16px !important;
+  background: #f8fafc !important;
+  border: 1px solid #dfe6ee !important;
+  color: #334e68 !important;
 }
 
 @media (max-width: 640px) {
