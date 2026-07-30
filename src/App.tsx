@@ -3,6 +3,7 @@ import { HashRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import JiraIframeModal from "@/components/portal/JiraIframeModal";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import Index from "./pages/Index.tsx";
 import ProjectJourneyPage from "./pages/ProjectJourneyPage.tsx";
@@ -24,6 +25,7 @@ const App = () => (
             <Route path="/tools/quick-request-match" element={<Navigate replace to="/?tool=quick-request-match" />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <JiraIframeModal />
         </HashRouter>
       </LanguageProvider>
     </TooltipProvider>
