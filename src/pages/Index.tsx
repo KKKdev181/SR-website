@@ -132,7 +132,7 @@ const Index = () => {
   const categoryButtonClass = (isActive: boolean) =>
     `flex min-h-11 min-w-max items-center justify-between gap-4 rounded-lg px-3 py-2 text-sm transition lg:w-full lg:min-w-0 ${
       isActive
-        ? "border border-[#c7c3ff] bg-[#eeecff] font-semibold text-[#4c00ff] shadow-sm"
+        ? "border border-[#b3d4ff] bg-[#e9f2ff] font-semibold text-[#0c66e4] shadow-sm"
         : "border border-transparent text-[#172b4d] hover:bg-[#f1f2f4]"
     }`;
 
@@ -156,7 +156,7 @@ const Index = () => {
                 className={categoryButtonClass(activeCategory === "all")}
               >
                 <span className="min-w-0 flex-1 text-start leading-5">{copy.catalog.allServices}</span>
-                <span className="inline-flex h-7 min-w-7 shrink-0 items-center justify-center rounded-full bg-[#f1f2f4] px-1.5 text-[11px] font-semibold text-[#44546f]">
+                <span className={`inline-flex h-7 min-w-7 shrink-0 items-center justify-center rounded-full px-1.5 text-[11px] font-semibold ${activeCategory === "all" ? "bg-[#d6e8ff] text-[#0c66e4]" : "bg-[#f1f2f4] text-[#44546f]"}`}>
                   {categoryCounts.all}
                 </span>
               </button>
@@ -171,45 +171,26 @@ const Index = () => {
                   <span className="min-w-0 flex-1 text-start leading-5">
                     {isArabic ? category.ar : category.en}
                   </span>
-                  <span
-                    className={`inline-flex h-7 min-w-7 shrink-0 items-center justify-center rounded-full px-1.5 text-[11px] font-semibold ${
-                      activeCategory === category.id
-                        ? "bg-[#ddd9ff] text-[#4c00ff]"
-                        : "bg-[#f1f2f4] text-[#44546f]"
-                    }`}
-                  >
+                  <span className={`inline-flex h-7 min-w-7 shrink-0 items-center justify-center rounded-full px-1.5 text-[11px] font-semibold ${activeCategory === category.id ? "bg-[#d6e8ff] text-[#0c66e4]" : "bg-[#f1f2f4] text-[#44546f]"}`}>
                     {categoryCounts[category.id]}
                   </span>
                 </button>
               ))}
             </nav>
 
-            <section
-              className="mt-4 rounded-xl border border-[#b3d4ff] bg-[#e9f2ff] p-4 shadow-sm"
-              dir={isArabic ? "rtl" : "ltr"}
-              aria-label={isArabic ? "تحتاج مساعدة؟" : "Need Help?"}
-            >
+            <section className="mt-4 rounded-xl border border-[#b3d4ff] bg-[#e9f2ff] p-4 shadow-sm" dir={isArabic ? "rtl" : "ltr"} aria-label={isArabic ? "تحتاج مساعدة؟" : "Need Help?"}>
               <div className="mb-3 flex items-start gap-3">
                 <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white text-[#0c66e4] shadow-sm">
                   <CircleHelp className="h-5 w-5" aria-hidden="true" />
                 </span>
                 <div className="min-w-0 text-start">
-                  <h2 className="text-sm font-bold text-[#172b4d]">
-                    {isArabic ? "تحتاج مساعدة؟" : "Need Help?"}
-                  </h2>
+                  <h2 className="text-sm font-bold text-[#172b4d]">{isArabic ? "تحتاج مساعدة؟" : "Need Help?"}</h2>
                   <p className="mt-1 text-xs leading-5 text-[#44546f]">
-                    {isArabic
-                      ? "إذا لم تجد الخدمة المناسبة، يمكنك تقديم طلب عام."
-                      : "If you cannot find the right service, submit a general request."}
+                    {isArabic ? "إذا لم تجد الخدمة المناسبة، يمكنك تقديم طلب عام." : "If you cannot find the right service, submit a general request."}
                   </p>
                 </div>
               </div>
-              <a
-                href={GENERAL_REQUEST_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-md bg-[#0c66e4] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#0055cc] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0c66e4] focus-visible:ring-offset-2"
-              >
+              <a href={GENERAL_REQUEST_URL} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-md bg-[#0c66e4] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#0055cc] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0c66e4] focus-visible:ring-offset-2">
                 <span>{isArabic ? "طلب عام" : "General Request"}</span>
                 <ExternalLink className="h-4 w-4" aria-hidden="true" />
               </a>
@@ -224,18 +205,12 @@ const Index = () => {
           </div>
 
           <div className="relative mb-5">
-            <Search
-              className={`absolute top-1/2 h-5 w-5 -translate-y-1/2 text-[#7a869a] ${
-                isArabic ? "right-4" : "left-4"
-              }`}
-            />
+            <Search className={`absolute top-1/2 h-5 w-5 -translate-y-1/2 text-[#7a869a] ${isArabic ? "right-4" : "left-4"}`} />
             <input
               value={searchQuery}
               onChange={(event) => setSearchQuery(event.target.value)}
               placeholder={copy.catalog.searchPlaceholder}
-              className={`h-11 w-full rounded-lg border border-[#dfe1e6] bg-white text-sm text-[#172b4d] shadow-sm outline-none transition placeholder:text-[#97a0af] focus:border-[#0c66e4] focus:ring-2 focus:ring-[#0c66e4]/15 ${
-                isArabic ? "pr-12 pl-4" : "pl-12 pr-4"
-              }`}
+              className={`h-11 w-full rounded-lg border border-[#dfe1e6] bg-white text-sm text-[#172b4d] shadow-sm outline-none transition placeholder:text-[#97a0af] focus:border-[#0c66e4] focus:ring-2 focus:ring-[#0c66e4]/15 ${isArabic ? "pr-12 pl-4" : "pl-12 pr-4"}`}
               aria-label={copy.catalog.searchLabel}
             />
           </div>
@@ -261,7 +236,7 @@ const Index = () => {
           ) : (
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
               {filteredRequests.map((request) => (
-                <RequestCard key={request.id} request={request} />
+                <RequestCard key={request.id} request={request} showJourneyStep={activeCategory === "new-product-project"} />
               ))}
             </div>
           )}
