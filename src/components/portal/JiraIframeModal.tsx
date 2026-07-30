@@ -9,38 +9,6 @@ const isJiraUrl = (value: string) => {
   }
 };
 
-const openJiraPopup = (url: string) => {
-  const screenWidth = window.screen.availWidth || window.innerWidth;
-  const screenHeight = window.screen.availHeight || window.innerHeight;
-  const width = Math.min(1400, Math.max(900, Math.round(screenWidth * 0.88)));
-  const height = Math.min(900, Math.max(650, Math.round(screenHeight * 0.88)));
-  const left = Math.max(0, Math.round((screenWidth - width) / 2));
-  const top = Math.max(0, Math.round((screenHeight - height) / 2));
-
-  const features = [
-    "popup=yes",
-    "resizable=yes",
-    "scrollbars=yes",
-    "toolbar=no",
-    "menubar=no",
-    "location=yes",
-    `width=${width}`,
-    `height=${height}`,
-    `left=${left}`,
-    `top=${top}`,
-  ].join(",");
-
-  const popup = window.open(url, "elm-jira-request", features);
-
-  if (popup) {
-    popup.opener = null;
-    popup.focus();
-    return;
-  }
-
-  window.open(url, "_blank", "noopener,noreferrer");
-};
-
 const JiraIframeModal = () => {
   useEffect(() => {
     const handleClick = (event: MouseEvent) => {
@@ -55,7 +23,7 @@ const JiraIframeModal = () => {
 
       event.preventDefault();
       event.stopPropagation();
-      openJiraPopup(anchor.href);
+      window.location.assign(anchor.href);
     };
 
     document.addEventListener("click", handleClick, true);
