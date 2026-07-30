@@ -51,6 +51,7 @@ import type { ServiceRequest } from "@/data/requests";
 
 interface RequestCardProps {
   request: ServiceRequest;
+  showJourneyStep?: boolean;
 }
 
 interface SectionVisual {
@@ -75,12 +76,10 @@ const sectionVisuals: Record<string, SectionVisual> = {
   "General Services": { icon: "bg-[#f1f2f4] text-[#44546f]", tag: "bg-[#f1f2f4] text-[#44546f]" },
 };
 
-const containsAny = (value: string, keywords: string[]) =>
-  keywords.some((keyword) => value.includes(keyword));
+const containsAny = (value: string, keywords: string[]) => keywords.some((keyword) => value.includes(keyword));
 
 const iconFor = (request: ServiceRequest): LucideIcon => {
   const value = `${request.title} ${request.shortDescription} ${request.category} ${request.section}`.toLowerCase();
-
   if (containsAny(value, ["ux", "ui design", "figma", "usability"])) return Palette;
   if (containsAny(value, ["mobile app", "android", "ios"])) return Smartphone;
   if (containsAny(value, ["frontend", "portal development", "web page"])) return PanelTop;
@@ -122,68 +121,43 @@ const iconFor = (request: ServiceRequest): LucideIcon => {
   if (containsAny(value, ["laptop", "desktop", "device"])) return Laptop;
   if (containsAny(value, ["cable", "connection"])) return Cable;
   if (containsAny(value, ["chart", "metric"])) return BarChart3;
-
   return Wrench;
 };
 
-const RequestCard = ({ request }: RequestCardProps) => {
+const RequestCard = ({ request, showJourneyStep = false }: RequestCardProps) => {
   const { language, copy } = useLanguage();
   const isArabic = language === "ar";
   const localized = localizeRequest(request, isArabic);
   const hasUrl = Boolean(request.jiraUrl?.trim()) && !request.jiraUrl.includes("jira.example.com");
-  const step = getNewProductStep(request);
+  const journeyStep = showJourneyStep ? getNewProductStep(request) : undefined;
   const portalCategory = getPortalCategory(request);
   const Icon = iconFor(request);
-  const visual = step
-    ? { icon: "bg-[#ebe9ff] text-[#4c00ff]", tag: "bg-[#ebe9ff] text-[#4c00ff]" }
+  const visual = journeyStep
+    ? { icon: "bg-[#e9f2ff] text-[#0c66e4]", tag: "bg-[#e9f2ff] text-[#0c66e4]" }
     : sectionVisuals[request.section] ?? sectionVisuals["General Services"];
   const categoryLabel = portalCategory ? (isArabic ? portalCategory.ar : portalCategory.en) : localized.section;
 
   return (
-    <article
-      className="flex min-h-[214px] flex-col overflow-hidden rounded-xl border border-[#dfe1e6] bg-white shadow-[0_1px_2px_rgba(9,30,66,0.08)] transition hover:-translate-y-0.5 hover:border-[#b3bac5] hover:shadow-[0_6px_16px_rgba(9,30,66,0.12)]"
-      dir={isArabic ? "rtl" : "ltr"}
-      lang={language}
-    >
+    <article className="flex min-h-[214px] flex-col overflow-hidden rounded-xl border border-[#dfe1e6] bg-white shadow-[0_1px_2px_rgba(9,30,66,0.08)] transition hover:-translate-y-0.5 hover:border-[#b3bac5] hover:shadow-[0_6px_16px_rgba(9,30,66,0.12)]" dir={isArabic ? "rtl" : "ltr"} lang={language}>
       <div className="flex flex-1 flex-col p-4">
-        {step ? (
-          <div className="mb-3 inline-flex h-9 min-w-9 w-fit items-center justify-center rounded-lg bg-[#e4e3ff] px-3 text-base font-bold text-[#4c00ff]">
-            {step}
-          </div>
+        {journeyStep ? (
+          <div className="mb-3 inline-flex h-9 min-w-9 w-fit items-center justify-center rounded-lg bg-[#e9f2ff] px-3 text-base font-bold text-[#0c66e4]">{journeyStep}</div>
         ) : (
-          <div className={`mb-3 flex h-9 w-9 items-center justify-center rounded-lg ${visual.icon}`}>
-            <Icon className="h-5 w-5" aria-hidden="true" />
-          </div>
+          <div className={`mb-3 flex h-9 w-9 items-center justify-center rounded-lg ${visual.icon}`}><Icon className="h-5 w-5" aria-hidden="true" /></div>
         )}
-
         <h2 className="line-clamp-2 text-sm font-semibold leading-5 text-[#172b4d]">{localized.title}</h2>
         <p className="mt-2 line-clamp-2 text-xs leading-5 text-[#5e6c84]">{localized.description}</p>
         <div className="mt-3 flex flex-wrap gap-2">
-          <span className={`rounded-full px-2.5 py-1 text-[10px] font-medium ${visual.tag}`}>
-            {categoryLabel}
-          </span>
-          {localized.environment && (
-            <span className="rounded-full bg-[#f4f5f7] px-2.5 py-1 text-[10px] font-medium text-[#5e6c84]" dir="ltr">
-              {localized.environment}
-            </span>
-          )}
+          <span className={`rounded-full px-2.5 py-1 text-[10px] font-medium ${visual.tag}`}>{categoryLabel}</span>
+          {localized.environment && <span className="rounded-full bg-[#f4f5f7] px-2.5 py-1 text-[10px] font-medium text-[#5e6c84]" dir="ltr">{localized.environment}</span>}
         </div>
       </div>
-
       <div className={`flex min-h-12 items-center border-t border-[#dfe1e6] px-4 ${isArabic ? "justify-start" : "justify-end"}`}>
         {hasUrl ? (
-          <a
-            href={request.jiraUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex min-h-9 items-center gap-1.5 rounded-md px-2 text-xs font-semibold text-[#0c66e4] transition hover:bg-[#e9f2ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0c66e4]/30"
-          >
-            {copy.catalog.submitRequest}
-            <ArrowUpRight className={`h-3.5 w-3.5 ${isArabic ? "-rotate-90" : ""}`} />
+          <a href={request.jiraUrl} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-9 items-center gap-1.5 rounded-md px-2 text-xs font-semibold text-[#0c66e4] transition hover:bg-[#e9f2ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0c66e4]/30">
+            {copy.catalog.submitRequest}<ArrowUpRight className={`h-3.5 w-3.5 ${isArabic ? "-rotate-90" : ""}`} />
           </a>
-        ) : (
-          <span className="text-xs font-medium text-[#97a0af]">{copy.catalog.linkUnavailable}</span>
-        )}
+        ) : <span className="text-xs font-medium text-[#97a0af]">{copy.catalog.linkUnavailable}</span>}
       </div>
     </article>
   );
