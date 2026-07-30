@@ -20,34 +20,46 @@ export interface PortalCategory {
 
 const normalize = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 
-const newProductJourney: Array<{ step: number; keywords: string[] }> = [
-  { step: 1, keywords: ["name adding", "add name", "service name"] },
-  { step: 2, keywords: ["create new staging production server", "staging production server", "new server"] },
-  { step: 3, keywords: ["create new project ocp environment", "ocp environment", "openshift environment", "new project product service in openshift"] },
-  { step: 4, keywords: ["register domain", "domain registration"] },
-  { step: 5, keywords: ["order ssl certificate", "ssl certificate"] },
-  { step: 6, keywords: ["google captcha", "captcha"] },
-  { step: 7, keywords: ["performance test request", "performance testing"] },
-  { step: 8, keywords: ["handover with application team", "handover", "knowledge transfer", "kt session"] },
-  { step: 9, keywords: ["new service publishing", "publish service", "service publishing"] },
+const journeySteps: Array<{ step: number; titles: string[] }> = [
+  { step: 1, titles: ["new service name adding", "name adding"] },
+  {
+    step: 2,
+    titles: [
+      "create new staging production server for project service",
+      "create new staging production server",
+    ],
+  },
+  {
+    step: 3,
+    titles: [
+      "create new project ocp environment dev qa",
+      "create new project product service in openshift",
+    ],
+  },
+  { step: 4, titles: ["register domain"] },
+  { step: 5, titles: ["order ssl certificate"] },
+  { step: 6, titles: ["google captcha"] },
+  { step: 7, titles: ["performance test request"] },
+  {
+    step: 8,
+    titles: [
+      "handover with application team and operation project manager",
+      "handover with application team and operations project manager",
+    ],
+  },
+  { step: 9, titles: ["new service publishing"] },
 ];
 
 export const getNewProductStep = (request: ServiceRequest): number | undefined => {
-  const value = normalize(`${request.title} ${request.shortDescription} ${request.category}`);
-  return newProductJourney.find(({ keywords }) => keywords.some((keyword) => value.includes(keyword)))?.step;
+  const normalizedTitle = normalize(request.title);
+  return journeySteps.find(({ titles }) => titles.includes(normalizedTitle))?.step;
 };
 
 const isNewProductProject = (request: ServiceRequest) => getNewProductStep(request) !== undefined;
-
 const sections = (...values: string[]) => (request: ServiceRequest) => values.includes(request.section);
 
 export const portalCategories: PortalCategory[] = [
-  {
-    id: "new-product-project",
-    en: "New Product/Project",
-    ar: "منتج/مشروع جديد",
-    matches: isNewProductProject,
-  },
+  { id: "new-product-project", en: "New Product/Project", ar: "منتج/مشروع جديد", matches: isNewProductProject },
   {
     id: "infrastructure",
     en: "Infrastructure",
