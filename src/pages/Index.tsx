@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { CircleHelp, ExternalLink, Search } from "lucide-react";
+import { ArrowUpRight, CircleHelp, ExternalLink, Search } from "lucide-react";
 import { Navigate, useSearchParams } from "react-router-dom";
 import Header from "@/components/portal/Header";
 import RequestCard from "@/components/portal/RequestCard";
@@ -9,6 +9,7 @@ import ToolModal, { type PortalTool } from "@/components/portal/ToolModal";
 import { requests } from "@/data/requests";
 import {
   getNewProductStep,
+  getPortalCategory,
   portalCategories,
   type PortalCategoryId,
 } from "@/data/portalCategories";
@@ -59,6 +60,7 @@ const validTools = new Set<PortalTool>(["request-finder", "quick-request-match"]
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchFocused, setSearchFocused] = useState(false);
   const [activeCategory, setActiveCategory] = useState<PortalCategoryId>("all");
   const [searchParams, setSearchParams] = useSearchParams();
   const { language, copy } = useLanguage();
@@ -82,13 +84,36 @@ const Index = () => {
 
   const selectedCategory = portalCategories.find((category) => category.id === activeCategory);
 
-  const filteredRequests = useMemo(() => {
-    let result = [...requests];
+  const categoryRequests = useMemo(() => {
+    if (activeCategory === "all") return [...requests];
+    const category = portalCategories.find((item) => item.id === activeCategory);
+    return category ? requests.filter(category.matches) : [...requests];
+  }, [activeCategory]);
 
-    if (activeCategory !== "all") {
-      const category = portalCategories.find((item) => item.id === activeCategory);
-      if (category) result = result.filter(category.matches);
-    }
+  const searchSuggestions = useMemo(() => {
+    const query = normalizeSearch(searchQuery);
+    if (query.length < 2) return [];
+
+    return categoryRequests
+      .filter((request) => matchesSearch(request, query))
+      .map((request) => {
+        const localized = localizeRequest(request, isArabic);
+        const title = normalizeSearch(localized.title);
+        const englishTitle = normalizeSearch(request.title);
+        let score = 3;
+
+        if (title.startsWith(query) || englishTitle.startsWith(query)) score = 0;
+        else if (title.includes(query) || englishTitle.includes(query)) score = 1;
+        else if (normalizeSearch(request.keywords.join(" ")).includes(query)) score = 2;
+
+        return { request, localized, score };
+      })
+      .sort((a, b) => a.score - b.score || a.localized.title.localeCompare(b.localized.title))
+      .slice(0, 7);
+  }, [searchQuery, categoryRequests, isArabic]);
+
+  const filteredRequests = useMemo(() => {
+    let result = [...categoryRequests];
 
     if (searchQuery.trim()) {
       result = result.filter((request) => matchesSearch(request, searchQuery.trim()));
@@ -99,7 +124,7 @@ const Index = () => {
     }
 
     return result;
-  }, [activeCategory, searchQuery]);
+  }, [activeCategory, categoryRequests, searchQuery]);
 
   if (toolParam === "project-journey-checklist") {
     return <Navigate replace to="/tools/project-journey-checklist" />;
@@ -127,6 +152,12 @@ const Index = () => {
     const nextParams = new URLSearchParams(searchParams);
     nextParams.delete("tool");
     setSearchParams(nextParams, { replace: true });
+  };
+
+  const chooseSuggestion = (request: ServiceRequest) => {
+    const localized = localizeRequest(request, isArabic);
+    setSearchQuery(localized.title);
+    setSearchFocused(false);
   };
 
   const categoryButtonClass = (isActive: boolean) =>
@@ -204,15 +235,69 @@ const Index = () => {
             <p className="mt-1 text-sm leading-6 text-[#5e6c84]">{description}</p>
           </div>
 
-          <div className="relative mb-5">
-            <Search className={`absolute top-1/2 h-5 w-5 -translate-y-1/2 text-[#7a869a] ${isArabic ? "right-4" : "left-4"}`} />
+          <div className="relative z-30 mb-5">
+            <Search className={`pointer-events-none absolute top-[22px] z-10 h-5 w-5 -translate-y-1/2 text-[#7a869a] ${isArabic ? "right-4" : "left-4"}`} />
             <input
               value={searchQuery}
               onChange={(event) => setSearchQuery(event.target.value)}
+              onFocus={() => setSearchFocused(true)}
+              onBlur={() => window.setTimeout(() => setSearchFocused(false), 120)}
               placeholder={copy.catalog.searchPlaceholder}
+              autoComplete="off"
+              aria-autocomplete="list"
+              aria-expanded={searchFocused && searchQuery.trim().length >= 2}
+              aria-controls="request-search-suggestions"
               className={`h-11 w-full rounded-lg border border-[#dfe1e6] bg-white text-sm text-[#172b4d] shadow-sm outline-none transition placeholder:text-[#97a0af] focus:border-[#0c66e4] focus:ring-2 focus:ring-[#0c66e4]/15 ${isArabic ? "pr-12 pl-4" : "pl-12 pr-4"}`}
               aria-label={copy.catalog.searchLabel}
             />
+
+            {searchFocused && searchQuery.trim().length >= 2 && (
+              <div
+                id="request-search-suggestions"
+                role="listbox"
+                className="absolute inset-x-0 top-[calc(100%+6px)] overflow-hidden rounded-xl border border-[#dfe1e6] bg-white shadow-[0_12px_32px_rgba(9,30,66,0.16)]"
+                dir={isArabic ? "rtl" : "ltr"}
+              >
+                <div className="border-b border-[#f1f2f4] px-4 py-2.5 text-[11px] font-bold uppercase tracking-wide text-[#6b778c]">
+                  {searchSuggestions.length > 0
+                    ? isArabic
+                      ? "طلبات مقترحة"
+                      : "Suggested requests"
+                    : isArabic
+                      ? "لا توجد اقتراحات مطابقة"
+                      : "No matching suggestions"}
+                </div>
+
+                {searchSuggestions.map(({ request, localized }) => {
+                  const category = getPortalCategory(request);
+                  const categoryLabel = category ? (isArabic ? category.ar : category.en) : localized.section;
+
+                  return (
+                    <button
+                      key={request.id}
+                      type="button"
+                      role="option"
+                      onMouseDown={(event) => event.preventDefault()}
+                      onClick={() => chooseSuggestion(request)}
+                      className="group flex w-full items-center justify-between gap-4 border-b border-[#f1f2f4] px-4 py-3 text-start transition last:border-b-0 hover:bg-[#f7f9fc] focus:bg-[#f7f9fc] focus:outline-none"
+                    >
+                      <div className="min-w-0 flex-1">
+                        <div className="truncate text-sm font-semibold text-[#172b4d] group-hover:text-[#0c66e4]">
+                          {localized.title}
+                        </div>
+                        <div className="mt-1 flex min-w-0 items-center gap-2">
+                          <span className="shrink-0 rounded-full bg-[#e9f2ff] px-2 py-0.5 text-[10px] font-medium text-[#0c66e4]">
+                            {categoryLabel}
+                          </span>
+                          <span className="truncate text-xs text-[#7a869a]">{localized.description}</span>
+                        </div>
+                      </div>
+                      <ArrowUpRight className={`h-4 w-4 shrink-0 text-[#97a0af] transition group-hover:text-[#0c66e4] ${isArabic ? "-rotate-90" : ""}`} aria-hidden="true" />
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
           {activeCategory === "new-product-project" && (
