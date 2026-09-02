@@ -5,5 +5,6 @@ import "./styles/project-journey-roadmap.css";
 import "./styles/project-journey-overrides.css";
 import "./i18n/legacyToolLocalization";
 import "./utils/projectJourneyScrollSpy";
+import "./utils/countlyTracking";
 
 createRoot(document.getElementById("root")!).render(<App />);
