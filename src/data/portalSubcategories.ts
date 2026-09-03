@@ -1,6 +1,5 @@
-import { getNewProductStep, type PortalCategoryId } from "@/data/portalCategories";
+import type { PortalCategoryId } from "@/data/portalCategories";
 import { getSectionSubcategories, type RequestSubcategory } from "@/data/requestSubcategories";
-import type { ServiceRequest } from "@/data/requests";
 
 const prefixed = (section: string, item: RequestSubcategory): RequestSubcategory => ({
   ...item,
@@ -9,22 +8,6 @@ const prefixed = (section: string, item: RequestSubcategory): RequestSubcategory
 
 const fromSections = (sections: string[]): RequestSubcategory[] =>
   sections.flatMap((section) => getSectionSubcategories(section).map((item) => prefixed(section, item)));
-
-const journeyRange = (
-  id: string,
-  en: string,
-  ar: string,
-  min: number,
-  max: number,
-): RequestSubcategory => ({
-  id,
-  en,
-  ar,
-  matches: (request: ServiceRequest) => {
-    const step = getNewProductStep(request);
-    return step !== undefined && step >= min && step <= max;
-  },
-});
 
 const businessCatchAll: RequestSubcategory[] = [
   {
@@ -44,12 +27,7 @@ const businessCatchAll: RequestSubcategory[] = [
 export const getPortalSubcategories = (category: PortalCategoryId): RequestSubcategory[] => {
   switch (category) {
     case "new-product-project":
-      return [
-        journeyRange("journey-setup", "Setup & Environments", "الإعداد والبيئات", 1, 3),
-        journeyRange("journey-domain-security", "Domain & Security", "النطاق والأمان", 4, 6),
-        journeyRange("journey-readiness", "Testing & Readiness", "الاختبار والجاهزية", 7, 8),
-        journeyRange("journey-publishing", "Publishing", "النشر", 9, 9),
-      ];
+      return [];
     case "infrastructure":
       return fromSections([
         "Infrastructure & Hosting",
