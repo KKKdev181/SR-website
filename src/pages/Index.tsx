@@ -13,6 +13,7 @@ import {
   portalCategories,
   type PortalCategoryId,
 } from "@/data/portalCategories";
+import { getPortalSubcategories } from "@/data/portalSubcategories";
 import { localizeRequest } from "@/i18n/requestLocalization";
 import { getArabicSearchAliases } from "@/i18n/requestSearchAliases";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -62,6 +63,7 @@ const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchFocused, setSearchFocused] = useState(false);
   const [activeCategory, setActiveCategory] = useState<PortalCategoryId>("all");
+  const [activeSubcategory, setActiveSubcategory] = useState("all");
   const [searchParams, setSearchParams] = useSearchParams();
   const { language, copy } = useLanguage();
   const isArabic = language === "ar";
@@ -83,6 +85,7 @@ const Index = () => {
   );
 
   const selectedCategory = portalCategories.find((category) => category.id === activeCategory);
+  const subcategories = useMemo(() => getPortalSubcategories(activeCategory), [activeCategory]);
 
   const categoryRequests = useMemo(() => {
     if (activeCategory === "all") return [...requests];
@@ -90,11 +93,28 @@ const Index = () => {
     return category ? requests.filter(category.matches) : [...requests];
   }, [activeCategory]);
 
+  const visibleSubcategories = useMemo(
+    () =>
+      subcategories
+        .map((subcategory) => ({
+          ...subcategory,
+          count: categoryRequests.filter(subcategory.matches).length,
+        }))
+        .filter((subcategory) => subcategory.count > 0),
+    [subcategories, categoryRequests],
+  );
+
+  const subcategoryRequests = useMemo(() => {
+    if (activeCategory === "all" || activeSubcategory === "all") return categoryRequests;
+    const selected = subcategories.find((subcategory) => subcategory.id === activeSubcategory);
+    return selected ? categoryRequests.filter(selected.matches) : categoryRequests;
+  }, [activeCategory, activeSubcategory, categoryRequests, subcategories]);
+
   const searchSuggestions = useMemo(() => {
     const query = normalizeSearch(searchQuery);
     if (query.length < 2) return [];
 
-    return categoryRequests
+    return subcategoryRequests
       .filter((request) => matchesSearch(request, query))
       .map((request) => {
         const localized = localizeRequest(request, isArabic);
@@ -110,10 +130,10 @@ const Index = () => {
       })
       .sort((a, b) => a.score - b.score || a.localized.title.localeCompare(b.localized.title))
       .slice(0, 7);
-  }, [searchQuery, categoryRequests, isArabic]);
+  }, [searchQuery, subcategoryRequests, isArabic]);
 
   const filteredRequests = useMemo(() => {
-    let result = [...categoryRequests];
+    let result = [...subcategoryRequests];
 
     if (searchQuery.trim()) {
       result = result.filter((request) => matchesSearch(request, searchQuery.trim()));
@@ -124,7 +144,7 @@ const Index = () => {
     }
 
     return result;
-  }, [activeCategory, categoryRequests, searchQuery]);
+  }, [activeCategory, subcategoryRequests, searchQuery]);
 
   if (toolParam === "project-journey-checklist") {
     return <Navigate replace to="/tools/project-journey-checklist" />;
@@ -160,6 +180,11 @@ const Index = () => {
     setSearchFocused(false);
   };
 
+  const selectCategory = (category: PortalCategoryId) => {
+    setActiveCategory(category);
+    setActiveSubcategory("all");
+  };
+
   const categoryButtonClass = (isActive: boolean) =>
     `flex min-h-11 min-w-max items-center justify-between gap-4 rounded-lg px-3 py-2 text-sm transition lg:w-full lg:min-w-0 ${
       isActive
@@ -183,7 +208,7 @@ const Index = () => {
             >
               <button
                 type="button"
-                onClick={() => setActiveCategory("all")}
+                onClick={() => selectCategory("all")}
                 className={categoryButtonClass(activeCategory === "all")}
               >
                 <span className="min-w-0 flex-1 text-start leading-5">{copy.catalog.allServices}</span>
@@ -196,7 +221,7 @@ const Index = () => {
                 <button
                   key={category.id}
                   type="button"
-                  onClick={() => setActiveCategory(category.id)}
+                  onClick={() => selectCategory(category.id)}
                   className={categoryButtonClass(activeCategory === category.id)}
                 >
                   <span className="min-w-0 flex-1 text-start leading-5">
@@ -299,6 +324,53 @@ const Index = () => {
               </div>
             )}
           </div>
+
+          {activeCategory !== "all" && visibleSubcategories.length > 0 && (
+            <section className="mb-5" aria-label={isArabic ? "تصفية داخل التصنيف" : "Filter within category"}>
+              <div className="mb-2 flex items-center justify-between gap-3">
+                <span className="text-[11px] font-bold uppercase tracking-wide text-[#5e6c84]">
+                  {isArabic ? "تصفية داخل التصنيف" : "Filter within category"}
+                </span>
+                {activeSubcategory !== "all" && (
+                  <button
+                    type="button"
+                    onClick={() => setActiveSubcategory("all")}
+                    className="text-xs font-semibold text-[#0c66e4] hover:underline"
+                  >
+                    {isArabic ? "مسح التصفية" : "Clear filter"}
+                  </button>
+                )}
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => setActiveSubcategory("all")}
+                  className={`rounded-full border px-3 py-2 text-xs font-semibold transition ${
+                    activeSubcategory === "all"
+                      ? "border-[#0c66e4] bg-[#e9f2ff] text-[#0c66e4]"
+                      : "border-[#dfe1e6] bg-white text-[#44546f] hover:bg-[#f7f8f9]"
+                  }`}
+                >
+                  {isArabic ? "الكل" : "All"} ({categoryRequests.length})
+                </button>
+
+                {visibleSubcategories.map((subcategory) => (
+                  <button
+                    key={subcategory.id}
+                    type="button"
+                    onClick={() => setActiveSubcategory(subcategory.id)}
+                    className={`rounded-full border px-3 py-2 text-xs font-semibold transition ${
+                      activeSubcategory === subcategory.id
+                        ? "border-[#0c66e4] bg-[#e9f2ff] text-[#0c66e4]"
+                        : "border-[#dfe1e6] bg-white text-[#44546f] hover:bg-[#f7f8f9]"
+                    }`}
+                  >
+                    {isArabic ? subcategory.ar : subcategory.en} ({subcategory.count})
+                  </button>
+                ))}
+              </div>
+            </section>
+          )}
 
           {activeCategory === "new-product-project" && (
             <div className="mb-5 flex flex-wrap items-center gap-2">
