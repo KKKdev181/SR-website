@@ -21,6 +21,11 @@ export interface ServiceRequest {
 type SourceRow = readonly [string, string, string, string, string];
 const sourceRows: SourceRow[] = [...rows1, ...rows2, ...rows3, ...rows4];
 
+const BUSINESS_HIDDEN_CATEGORIES = new Set(["Internal Technology Requests"]);
+const businessVisibleRows = sourceRows.filter(
+  ([, , , category]) => !BUSINESS_HIDDEN_CATEGORIES.has(category),
+);
+
 export const sourceWorkbookRowCount = sourceRows.length;
 
 export const SERVICE_SECTIONS = [
@@ -41,7 +46,6 @@ export const SERVICE_SECTIONS = [
 ] as const;
 
 export const SERVICE_CATEGORIES = [
-  "Internal Technology Requests",
   "Products and Projects Requests",
   "General IT Operations Services",
   "Platform services (Jira, HPSM, Cloud NativeServices)",
@@ -76,7 +80,7 @@ const getEnvironment = (text: string): string | undefined => {
 const getId = (title: string, index: number) =>
   `${title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 45) || "request"}-${index + 1}`;
 
-export const requests: ServiceRequest[] = sourceRows.map(
+export const requests: ServiceRequest[] = businessVisibleRows.map(
   ([group, title, description, category, jiraUrl], index) => ({
     id: getId(title, index),
     title,
