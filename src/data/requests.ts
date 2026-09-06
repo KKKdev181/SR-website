@@ -22,8 +22,11 @@ type SourceRow = readonly [string, string, string, string, string];
 const sourceRows: SourceRow[] = [...rows1, ...rows2, ...rows3, ...rows4];
 
 const BUSINESS_HIDDEN_CATEGORIES = new Set(["Internal Technology Requests"]);
+const BUSINESS_HIDDEN_REQUESTS = new Set(["SR4SR", "SLA Request"]);
+
 const businessVisibleRows = sourceRows.filter(
-  ([, , , category]) => !BUSINESS_HIDDEN_CATEGORIES.has(category),
+  ([, title, , category]) =>
+    !BUSINESS_HIDDEN_CATEGORIES.has(category) && !BUSINESS_HIDDEN_REQUESTS.has(title),
 );
 
 export const sourceWorkbookRowCount = sourceRows.length;
