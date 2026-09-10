@@ -22,7 +22,11 @@ type SourceRow = readonly [string, string, string, string, string];
 const sourceRows: SourceRow[] = [...rows1, ...rows2, ...rows3, ...rows4];
 
 const BUSINESS_HIDDEN_CATEGORIES = new Set(["Internal Technology Requests"]);
-const BUSINESS_HIDDEN_REQUESTS = new Set(["SR4SR", "SLA Request"]);
+const BUSINESS_HIDDEN_REQUESTS = new Set([
+  "SR4SR",
+  "SLA Request",
+  "Solution Operation Support",
+]);
 
 const businessVisibleRows = sourceRows.filter(
   ([, title, , category]) =>
