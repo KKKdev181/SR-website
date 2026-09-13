@@ -124,6 +124,28 @@ const iconFor = (request: ServiceRequest): LucideIcon => {
   return Wrench;
 };
 
+const trackRequestOpen = (request: ServiceRequest, language: string) => {
+  const event = {
+    key: "requestOpen",
+    count: 1,
+    segmentation: {
+      request_name: request.title,
+      portal_category: request.section,
+      source_category: request.category,
+      language,
+    },
+  };
+
+  const countly = (window as any).Countly;
+  if (countly?.add_event) {
+    countly.add_event(event);
+  } else {
+    const fallback = ((window as any).Countly = countly || {});
+    fallback.q = fallback.q || [];
+    fallback.q.push(["add_event", event]);
+  }
+};
+
 const RequestCard = ({ request, showJourneyStep = false }: RequestCardProps) => {
   const { language, copy } = useLanguage();
   const isArabic = language === "ar";
@@ -154,7 +176,13 @@ const RequestCard = ({ request, showJourneyStep = false }: RequestCardProps) => 
       </div>
       <div className={`flex min-h-12 items-center border-t border-[#dfe1e6] px-4 ${isArabic ? "justify-start" : "justify-end"}`}>
         {hasUrl ? (
-          <a href={request.jiraUrl} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-9 items-center gap-1.5 rounded-md px-2 text-xs font-semibold text-[#0c66e4] transition hover:bg-[#e9f2ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0c66e4]/30">
+          <a
+            href={request.jiraUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => trackRequestOpen(request, language)}
+            className="inline-flex min-h-9 items-center gap-1.5 rounded-md px-2 text-xs font-semibold text-[#0c66e4] transition hover:bg-[#e9f2ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0c66e4]/30"
+          >
             {copy.catalog.submitRequest}<ArrowUpRight className={`h-3.5 w-3.5 ${isArabic ? "-rotate-90" : ""}`} />
           </a>
         ) : <span className="text-xs font-medium text-[#97a0af]">{copy.catalog.linkUnavailable}</span>}
