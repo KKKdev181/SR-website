@@ -26,12 +26,17 @@ const BUSINESS_HIDDEN_REQUESTS = new Set([
   "SR4SR",
   "SLA Request",
   "Solution Operation Support",
+  "Jira Troubleshooting Request",
+]);
+const BUSINESS_VISIBLE_INTERNAL_REQUESTS = new Set([
+  "Installation Database Management System",
 ]);
 
-const businessVisibleRows = sourceRows.filter(
-  ([, title, , category]) =>
-    !BUSINESS_HIDDEN_CATEGORIES.has(category) && !BUSINESS_HIDDEN_REQUESTS.has(title),
-);
+const businessVisibleRows = sourceRows.filter(([, title, , category]) => {
+  if (BUSINESS_HIDDEN_REQUESTS.has(title)) return false;
+  if (BUSINESS_VISIBLE_INTERNAL_REQUESTS.has(title)) return true;
+  return !BUSINESS_HIDDEN_CATEGORIES.has(category);
+});
 
 export const sourceWorkbookRowCount = sourceRows.length;
 
