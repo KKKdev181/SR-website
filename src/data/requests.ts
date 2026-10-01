@@ -28,6 +28,8 @@ const BUSINESS_HIDDEN_REQUESTS = new Set([
   "Solution Operation Support",
   "Jira Troubleshooting Request",
   "Service Design Change for Production & Staging",
+  "Manage Users",
+  "BI Report (For DB Team)",
 ]);
 const BUSINESS_VISIBLE_INTERNAL_REQUESTS = new Set([
   "Installation Database Management System",
