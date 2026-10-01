@@ -30,6 +30,8 @@ const BUSINESS_HIDDEN_REQUESTS = new Set([
   "Service Design Change for Production & Staging",
   "Manage Users",
   "BI Report (For DB Team)",
+  "Business Request",
+  "Technical Request",
 ]);
 const BUSINESS_VISIBLE_INTERNAL_REQUESTS = new Set([
   "Installation Database Management System",
