@@ -26,6 +26,7 @@ export interface ChecklistItem {
 }
 
 export interface Phase {
+  phaseId?: string;
   name: string;
   nameAr: string;
   items: ChecklistItem[];
@@ -572,6 +573,7 @@ const ProjectJourneyChecklist = () => {
   const journey = useJourney();
   const phases: Phase[] = journeyDefaultPhases.map((phase) => ({
     ...phase,
+    phaseId: phase.name,
     ...journey.phases?.[phase.name],
     items: phase.items.map((item) => ({ ...item, ...journey.items?.[item.id] })).filter(item => !item.hidden),
   }));
@@ -715,8 +717,8 @@ const ProjectJourneyChecklist = () => {
 
       <div className="p-6 space-y-6">
         {phases.map((phase) => (
-          <Card key={phase.name} className="border-cyan-200/15 bg-[#0f1931]/75 text-white">
-            <Collapsible open={expandedPhases.has(phase.name)} onOpenChange={() => togglePhase(phase.name)}>
+          <Card key={phase.phaseId} className="border-cyan-200/15 bg-[#0f1931]/75 text-white">
+            <Collapsible open={expandedPhases.has(phase.phaseId!)} onOpenChange={() => togglePhase(phase.phaseId!)}>
               <CollapsibleTrigger asChild>
                 <CardHeader className="cursor-pointer hover:bg-white/10 transition-colors">
                   <CardTitle className="flex items-center justify-between text-base">
