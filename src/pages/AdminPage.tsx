@@ -110,7 +110,7 @@ export default function AdminPage() {
             <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={!!selected.hidden} onChange={e => change(selected.id, { hidden: e.target.checked })}/> Hide card</label>
           </div> : <div className="py-12 text-center text-slate-500"><p className="font-semibold">Select a card to edit</p><p className="mt-2 text-sm">You can change its title, description, section, category and link.</p></div>}
         </aside>
-      </div>
+      </div>}
     </div>
   </main>;
 }
