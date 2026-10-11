@@ -91,7 +91,7 @@ const Index = () => {
     [requests, sidebarSettings],
   );
 
-  const selectedCategory = portalCategories.find((category) => category.id === activeCategory);
+  const selectedCategory = sidebarSettings.find((category) => category.id === activeCategory);
   const subcategories = useMemo(() => getPortalSubcategories(activeCategory), [activeCategory]);
 
   const categoryRequests = useMemo(() => {
