@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useJourney } from "@/lib/developmentJourney";
 import { CheckCircle, ExternalLink, Info, Layers, ChevronDown, ChevronUp, Compass } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,7 +8,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 
 const arabicFont = { fontFamily: "'Noto Sans Arabic', sans-serif" };
 
-interface ChecklistItem {
+export interface ChecklistItem {
   id: string;
   title: string;
   titleAr?: string;
@@ -24,7 +25,7 @@ interface ChecklistItem {
   notesAr?: string[];
 }
 
-interface Phase {
+export interface Phase {
   name: string;
   nameAr: string;
   items: ChecklistItem[];
@@ -33,7 +34,7 @@ interface Phase {
   beforeLinks?: { label: string; labelAr?: string; url: string }[];
 }
 
-const phases: Phase[] = [
+export const journeyDefaultPhases: Phase[] = [
   {
     name: "Preparation",
     nameAr: "التحضير",
@@ -233,7 +234,7 @@ instruction:
   }
 ];
 
-const parallelActions = [
+export const journeyDefaultActions = [
   {
     title: "Register Domain",
     titleAr: "تسجيل النطاق",
@@ -568,6 +569,13 @@ const importantNotes = [
 ];
 
 const ProjectJourneyChecklist = () => {
+  const journey = useJourney();
+  const phases: Phase[] = journeyDefaultPhases.map((phase) => ({
+    ...phase,
+    ...journey.phases?.[phase.name],
+    items: phase.items.map((item) => ({ ...item, ...journey.items?.[item.id] })).filter(item => !item.hidden),
+  }));
+  const parallelActions = journeyDefaultActions.map((action, index) => ({...action, ...journey.actions?.[String(index)]})).filter(action => !action.hidden);
   const [isOpen, setIsOpen] = useState(false);
   const [expandedPhases, setExpandedPhases] = useState<Set<string>>(new Set(phases.map(p => p.name)));
   const [publishType, setPublishType] = useState<'internal' | 'external' | null>(null);
