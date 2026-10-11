@@ -16,6 +16,7 @@ export interface ServiceRequest {
   jiraUrl: string;
   popular?: boolean;
   icon?: string;
+  journeyStep?: number;
 }
 
 type SourceRow = readonly [string, string, string, string, string];
