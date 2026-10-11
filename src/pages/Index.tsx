@@ -6,7 +6,7 @@ import RequestCard from "@/components/portal/RequestCard";
 import EmptyState from "@/components/portal/EmptyState";
 import Footer from "@/components/portal/Footer";
 import ToolModal, { type PortalTool } from "@/components/portal/ToolModal";
-import { requests } from "@/data/requests";
+import { useDevelopmentCatalog } from "@/lib/developmentCatalog";
 import {
   getNewProductStep,
   getPortalCategory,
@@ -72,6 +72,7 @@ const applicationRequestPriority: Record<string, number> = {
 };
 
 const Index = () => {
+  const requests = useDevelopmentCatalog();
   const [searchQuery, setSearchQuery] = useState("");
   const [searchFocused, setSearchFocused] = useState(false);
   const [activeCategory, setActiveCategory] = useState<PortalCategoryId>("all");
@@ -93,7 +94,7 @@ const Index = () => {
           requests.filter(category.matches).length,
         ]),
       ]) as Record<PortalCategoryId, number>,
-    [],
+    [requests],
   );
 
   const selectedCategory = portalCategories.find((category) => category.id === activeCategory);
@@ -103,7 +104,7 @@ const Index = () => {
     if (activeCategory === "all") return [...requests];
     const category = portalCategories.find((item) => item.id === activeCategory);
     return category ? requests.filter(category.matches) : [...requests];
-  }, [activeCategory]);
+  }, [activeCategory, requests]);
 
   const visibleSubcategories = useMemo(
     () =>
