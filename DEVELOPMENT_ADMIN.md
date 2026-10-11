@@ -33,3 +33,7 @@ There is deliberately **no visible navigation button** for this page.
 
 ## Before team rollout
 Build a secure API and shared catalog database or managed list; integrate company SSO and admin/editor RBAC; track authors, history, drafts, preview and approval; keep production and development storage separate; implement localization editing and validation. Only then enable shared publishing.
+
+## New Product/Project Guide editor
+
+The Admin **New Product/Project** tab now edits the actual guide page in the development app, including five journey stages (English/Arabic titles and descriptions), intro and journey heading, core phase titles and prerequisite notes, checklist items (bilingual instructions/notes, Jira links, visibility and requirement status), and parallel action items. Save Guide is separate from Save Draft and uses browser-local storage. Open `/#/tools/project-journey-checklist` to preview. The detailed developer access subsection and custom deployment/publishing flows remain defined in code and are not yet editable through this form. Deployment to production is not supported.
