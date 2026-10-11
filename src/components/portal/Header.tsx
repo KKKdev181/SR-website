@@ -1,4 +1,4 @@
-import { ClipboardCheck, ExternalLink, Globe2, Headset, Inbox, ListChecks, Mail, Route } from "lucide-react";
+import { ClipboardCheck, ExternalLink, Globe2, Headset, Inbox, ListChecks, Mail, Route, Settings2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -97,6 +97,16 @@ const Header = () => {
             <ClipboardCheck className="h-4 w-4" aria-hidden="true" />
             <span className="whitespace-nowrap">{copy.navigation.myPendingApprovals}</span>
             <ExternalLink className="h-4 w-4" aria-hidden="true" />
+          </a>
+
+          <a
+            href="/admin"
+            className="inline-flex min-h-10 shrink-0 items-center gap-2 rounded-lg border border-amber-300 bg-amber-100 px-3 text-sm font-bold text-amber-950 transition hover:bg-amber-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            title="Development admin — temporary test link"
+          >
+            <Settings2 className="h-4 w-4" aria-hidden="true" />
+            <span>Admin</span>
+            <span className="hidden rounded bg-amber-200 px-1.5 py-0.5 text-[10px] uppercase sm:inline">Test</span>
           </a>
 
           <div ref={supportRef} className="relative shrink-0">
