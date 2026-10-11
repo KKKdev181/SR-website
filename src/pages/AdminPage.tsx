@@ -1,7 +1,9 @@
+import SidebarAdmin from "@/components/admin/SidebarAdmin";
 import { useMemo, useState } from "react";
 import { ArrowDown, ArrowUp, Download, Eye, EyeOff, Plus, RotateCcw, Save, Search, Trash2, Upload } from "lucide-react";
 import { getOriginalCatalog, readDevelopmentCatalog, resetDevelopmentCatalog, saveDevelopmentCatalog, type ManagedRequest } from "@/lib/developmentCatalog";
 
+const iconOptions = ["Auto","Server","Database","Cloud","Network","ShieldCheck","KeyRound","Globe2","HardDrive","Boxes","Workflow","GitBranch","Rocket","Users","Settings","FileText","AppWindow","Code2","Palette","Smartphone","Bot","Gauge","Plug","Mail","LifeBuoy","Package","Wrench","SearchCheck","LayoutDashboard","FileChartColumn","LockKeyhole","UserCog","Fingerprint","TestTube2","BarChart3","RefreshCw","Activity","Cable","Laptop","PanelTop","FileKey2","CheckCircle2","ChartNoAxesCombined"];
 const blank = (): ManagedRequest => ({
   id: "custom-" + crypto.randomUUID(), title: "", section: "Application & Database",
   category: "General IT Operations Services", shortDescription: "", jiraUrl: "",
@@ -10,6 +12,7 @@ const blank = (): ManagedRequest => ({
 
 export default function AdminPage() {
   const [items, setItems] = useState<ManagedRequest[]>(readDevelopmentCatalog);
+  const [tab,setTab] = useState<"cards"|"sidebar"|"journey">("cards");
   const [search, setSearch] = useState("");
   const [editing, setEditing] = useState<string | null>(null);
   const [notice, setNotice] = useState("");
@@ -78,7 +81,8 @@ export default function AdminPage() {
           <button className="inline-flex items-center gap-2 rounded-lg border bg-white px-3 py-2 text-sm" onClick={() => { if (confirm("Reset all local changes to the original catalog?")) { resetDevelopmentCatalog(); setItems(getOriginalCatalog()); setEditing(null); setDirty(false); } }}><RotateCcw size={16}/> Reset</button>
         </div>
       </div>
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_370px]">
+      <div className="mb-5 flex flex-wrap gap-2">{(["cards","sidebar","journey"] as const).map(name => <button key={name} onClick={()=>setTab(name)} className={`rounded-lg px-4 py-2 text-sm font-semibold ${tab===name?"bg-blue-700 text-white":"border bg-white"}`}>{name==="cards"?"Cards":name==="sidebar"?"Sidebar":"New Product/Project"}</button>)}</div>
+      {tab==="sidebar" ? <SidebarAdmin/> : tab==="journey" ? <section className="rounded-xl border bg-white p-5"><h2 className="text-lg font-bold">New Product/Project</h2><p className="my-3 text-sm text-slate-500">Select a card to edit its journey step and icon. Step 0 excludes it from the journey.</p><div className="grid gap-2 sm:grid-cols-2">{items.filter(item => (item.journeyStep && item.journeyStep>0) || /service name adding|new staging.*server|project ocp environment|register domain|ssl certificate|google captcha|performance test|handover with application|new service publishing/i.test(item.title)).map(item=><button key={item.id} className="rounded-lg border p-3 text-left text-sm hover:bg-blue-50" onClick={()=>{setEditing(item.id);setSearch("");setTab("cards");}}>{item.title}</button>)}</div></section> : <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_370px]">
         <section className="min-w-0 rounded-xl border bg-white p-4 shadow-sm">
           <div className="mb-4 flex flex-wrap items-center gap-3"><div className="relative min-w-[220px] flex-1"><Search size={16} className="absolute left-3 top-3 text-slate-400"/><input className="w-full rounded-lg border py-2 pl-9 pr-3 text-sm" placeholder="Search cards or categories" value={search} onChange={e => setSearch(e.target.value)}/></div><label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={onlyHidden} onChange={e => setOnlyHidden(e.target.checked)}/> Hidden only</label></div>
           <p className="mb-3 text-xs text-slate-500">Use arrows to reorder cards. Clear your search to see the full list. Saved order is applied to the development catalog.</p>
@@ -93,7 +97,15 @@ export default function AdminPage() {
         </section>
         <aside className="h-fit rounded-xl border bg-white p-5 shadow-sm">
           {selected ? <div className="space-y-4"><div className="flex items-center justify-between"><h2 className="text-lg font-bold">Edit card</h2><button title="Delete card" className="rounded-lg border border-red-200 p-2 text-red-700" onClick={() => { if (confirm("Delete this card from your development draft?")) { setItems(old => old.filter(i => i.id !== selected.id)); setEditing(null); setDirty(true); } }}><Trash2 size={17}/></button></div>
-            {field("Title", "title")}{field("Description", "shortDescription", true)}{field("Section", "section")}{field("Category", "category")}{field("Jira request URL", "jiraUrl")}{field("Environment", "environment")}
+            {field("Title", "title")}{field("Description", "shortDescription", true)}
+            <label className="block text-sm font-medium text-slate-700">Card Icon
+              <select className="mt-1 w-full rounded-lg border p-3" value={selected.icon || "Auto"} onChange={e=>change(selected.id,{icon:e.target.value==="Auto"?undefined:e.target.value})}>
+                {iconOptions.map(icon=><option key={icon} value={icon}>{icon}</option>)}
+              </select>
+            </label>
+            <label className="block text-sm font-medium text-slate-700">New Product/Project step (0 to exclude)
+              <input type="number" min="0" max="99" className="mt-1 w-full rounded-lg border p-3" placeholder="Automatic" value={selected.journeyStep??""} onChange={e=>change(selected.id,{journeyStep:e.target.value===""?undefined:Number(e.target.value)})}/>
+            </label>{field("Section", "section")}{field("Category", "category")}{field("Jira request URL", "jiraUrl")}{field("Environment", "environment")}
             <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={!!selected.popular} onChange={e => change(selected.id, { popular: e.target.checked })}/> Popular request</label>
             <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={!!selected.hidden} onChange={e => change(selected.id, { hidden: e.target.checked })}/> Hide card</label>
           </div> : <div className="py-12 text-center text-slate-500"><p className="font-semibold">Select a card to edit</p><p className="mt-2 text-sm">You can change its title, description, section, category and link.</p></div>}
