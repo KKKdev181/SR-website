@@ -51,6 +51,7 @@ const journeySteps: Array<{ step: number; titles: string[] }> = [
 ];
 
 export const getNewProductStep = (request: ServiceRequest): number | undefined => {
+  if (typeof request.journeyStep === "number") return request.journeyStep > 0 ? request.journeyStep : undefined;
   const normalizedTitle = normalize(request.title);
   return journeySteps.find(({ titles }) => titles.includes(normalizedTitle))?.step;
 };
