@@ -78,7 +78,10 @@ const sectionVisuals: Record<string, SectionVisual> = {
 
 const containsAny = (value: string, keywords: string[]) => keywords.some((keyword) => value.includes(keyword));
 
+const editableIcons: Record<string, LucideIcon> = { Server, Database, Cloud, Network, ShieldCheck, KeyRound, Globe2, HardDrive, Boxes, Workflow, GitBranch, Rocket, Users, Settings, FileText, AppWindow, Code2, Palette, Smartphone, Bot, Gauge, Plug, Mail, LifeBuoy, Package, Wrench, SearchCheck, LayoutDashboard, FileChartColumn, LockKeyhole, UserCog, Fingerprint, TestTube2, BarChart3, RefreshCw, Activity, Cable, Laptop, PanelTop, FileKey2, CheckCircle2, ChartNoAxesCombined };
+
 const iconFor = (request: ServiceRequest): LucideIcon => {
+  if (request.icon && editableIcons[request.icon]) return editableIcons[request.icon];
   const value = `${request.title} ${request.shortDescription} ${request.category} ${request.section}`.toLowerCase();
   if (containsAny(value, ["ux", "ui design", "figma", "usability"])) return Palette;
   if (containsAny(value, ["mobile app", "android", "ios"])) return Smartphone;
