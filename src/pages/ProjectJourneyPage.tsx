@@ -11,6 +11,8 @@ import {
   ServerCog,
 } from "lucide-react";
 import Header from "@/components/portal/Header";
+import { useJourney } from "@/lib/developmentJourney";
+import { useHeaderSettings } from "@/lib/developmentHeader";
 import Footer from "@/components/portal/Footer";
 import ProjectJourneyChecklist from "@/components/portal/ProjectJourneyChecklist";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -19,7 +21,7 @@ import "@/styles/project-journey-page.css";
 import "@/styles/project-journey-language.css";
 import "@/styles/project-journey-developer-access.css";
 
-const stages = [
+export const defaultStages = [
   {
     targetId: "journey-section-preparation",
     en: "Preparation",
@@ -193,6 +195,9 @@ const enhanceDeveloperAccessSection = (developerCard: HTMLElement): void => {
 
 const ProjectJourneyPage = () => {
   const { language, copy } = useLanguage();
+  const journey = useJourney();
+  const headerSettings = useHeaderSettings();
+  const stages = defaultStages.map(stage => ({ ...stage, ...journey.stages?.[stage.targetId] }));
   const isArabic = language === "ar";
   const BackIcon = isArabic ? ArrowRight : ArrowLeft;
   const rootRef = useRef<HTMLElement>(null);
@@ -299,7 +304,7 @@ const ProjectJourneyPage = () => {
     return () => observer.disconnect();
   }, [isArabic]);
 
-  const navigateToStage = (stage: (typeof stages)[number], index: number) => {
+  const navigateToStage = (stage: (typeof defaultStages)[number], index: number) => {
     setActiveStage(index);
 
     const target = rootRef.current?.querySelector<HTMLElement>(`#${stage.targetId}`);
@@ -329,11 +334,11 @@ const ProjectJourneyPage = () => {
         <section className="journey-hero">
           <div className="journey-hero-copy">
             <span className="journey-eyebrow">{copy.common.technologyCenterTool}</span>
-            <h1>{copy.navigation.projectJourneyChecklist}</h1>
+            <h1>{headerSettings.guide[language]}</h1>
             <p>
               {isArabic
-                ? "مسار موحّد يوضح ما يجب تنفيذه من بداية المشروع وحتى النشر، مع طلبات Jira والملاحظات المطلوبة لكل مرحلة."
-                : "A structured path from project setup to publishing, with the required Jira requests, actions, and guidance for every stage."}
+                ? (journey.heroAr ?? "مسار موحّد يوضح ما يجب تنفيذه من بداية المشروع وحتى النشر، مع طلبات Jira والملاحظات المطلوبة لكل مرحلة.")
+                : (journey.heroEn ?? "A structured path from project setup to publishing, with the required Jira requests, actions, and guidance for every stage.")}
             </p>
           </div>
           <div className="journey-hero-badge">
@@ -349,7 +354,7 @@ const ProjectJourneyPage = () => {
           <div className="journey-roadmap-heading">
             <div>
               <span>{isArabic ? "المسار" : "Journey map"}</span>
-              <h2>{isArabic ? "اتبع المراحل بالترتيب" : "Follow the stages in order"}</h2>
+              <h2>{isArabic ? (journey.headingAr ?? "اتبع المراحل بالترتيب") : (journey.headingEn ?? "Follow the stages in order")}</h2>
             </div>
             <p>
               {isArabic
