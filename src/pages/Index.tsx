@@ -7,8 +7,10 @@ import EmptyState from "@/components/portal/EmptyState";
 import Footer from "@/components/portal/Footer";
 import ToolModal, { type PortalTool } from "@/components/portal/ToolModal";
 import { useDevelopmentCatalog } from "@/lib/developmentCatalog";
+import { useSidebar } from "@/lib/developmentSidebar";
 import {
   getPortalCategory,
+  getNewProductStep,
   portalCategories,
   type PortalCategoryId,
 } from "@/data/portalCategories";
@@ -61,6 +63,7 @@ const validTools = new Set<PortalTool>(["request-finder", "quick-request-match"]
 
 const Index = () => {
   const requests = useDevelopmentCatalog();
+  const sidebarSettings = useSidebar();
   const [searchQuery, setSearchQuery] = useState("");
   const [searchFocused, setSearchFocused] = useState(false);
   const [activeCategory, setActiveCategory] = useState<PortalCategoryId>("all");
@@ -77,12 +80,15 @@ const Index = () => {
     () =>
       Object.fromEntries([
         ["all", requests.length],
-        ...portalCategories.map((category) => [
+        ...sidebarSettings.filter(row => !row.hidden).map((row) => {
+          const category = portalCategories.find(c => c.id === row.id)!;
+          return [
           category.id,
           requests.filter(category.matches).length,
-        ]),
+          ];
+        }),
       ]) as Record<PortalCategoryId, number>,
-    [requests],
+    [requests, sidebarSettings],
   );
 
   const selectedCategory = portalCategories.find((category) => category.id === activeCategory);
@@ -141,6 +147,9 @@ const Index = () => {
     }
 
 
+    if (activeCategory === "new-product-project") {
+      result.sort((left, right) => (getNewProductStep(left) ?? 999) - (getNewProductStep(right) ?? 999));
+    }
     return result;
   }, [activeCategory, subcategoryRequests, searchQuery]);
 
@@ -215,7 +224,9 @@ const Index = () => {
                 </span>
               </button>
 
-              {portalCategories.map((category) => (
+              {sidebarSettings.filter(row => !row.hidden).map((row) => {
+                const category = portalCategories.find(c => c.id === row.id)!;
+                return (
                 <button
                   key={category.id}
                   type="button"
@@ -223,13 +234,14 @@ const Index = () => {
                   className={categoryButtonClass(activeCategory === category.id)}
                 >
                   <span className="min-w-0 flex-1 text-start leading-5">
-                    {isArabic ? category.ar : category.en}
+                    {isArabic ? row.ar : row.en}
                   </span>
                   <span className={`inline-flex h-7 min-w-7 shrink-0 items-center justify-center rounded-full px-1.5 text-[11px] font-semibold ${activeCategory === category.id ? "bg-[#d6e8ff] text-[#0c66e4]" : "bg-[#f1f2f4] text-[#44546f]"}`}>
                     {categoryCounts[category.id]}
                   </span>
                 </button>
-              ))}
+              );
+              })}
             </nav>
 
             <section className="mt-4 rounded-xl border border-[#b3d4ff] bg-[#e9f2ff] p-4 shadow-sm" dir={isArabic ? "rtl" : "ltr"} aria-label={isArabic ? "تحتاج مساعدة؟" : "Need Help?"}>
