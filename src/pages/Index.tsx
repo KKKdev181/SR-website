@@ -8,7 +8,6 @@ import Footer from "@/components/portal/Footer";
 import ToolModal, { type PortalTool } from "@/components/portal/ToolModal";
 import { useDevelopmentCatalog } from "@/lib/developmentCatalog";
 import {
-  getNewProductStep,
   getPortalCategory,
   portalCategories,
   type PortalCategoryId,
@@ -59,17 +58,6 @@ function matchesSearch(request: ServiceRequest, query: string): boolean {
 
 const validTools = new Set<PortalTool>(["request-finder", "quick-request-match"]);
 
-const applicationRequestPriority: Record<string, number> = {
-  "Application Service Requests": 1,
-  "Database Service Requests": 2,
-  "Integration Support": 3,
-  "Installation Database Management System": 4,
-  "Google Map": 5,
-  "Enable Minor Change": 6,
-  "Service Renaming": 7,
-  "Release Support": 8,
-  "Service Retirement": 99,
-};
 
 const Index = () => {
   const requests = useDevelopmentCatalog();
@@ -152,17 +140,6 @@ const Index = () => {
       result = result.filter((request) => matchesSearch(request, searchQuery.trim()));
     }
 
-    if (activeCategory === "new-product-project") {
-      result.sort((left, right) => (getNewProductStep(left) ?? 999) - (getNewProductStep(right) ?? 999));
-    }
-
-    if (activeCategory === "applications") {
-      result.sort((left, right) => {
-        const leftPriority = applicationRequestPriority[left.title] ?? 50;
-        const rightPriority = applicationRequestPriority[right.title] ?? 50;
-        return leftPriority - rightPriority;
-      });
-    }
 
     return result;
   }, [activeCategory, subcategoryRequests, searchQuery]);
