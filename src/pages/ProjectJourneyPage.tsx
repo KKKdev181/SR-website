@@ -304,7 +304,7 @@ const ProjectJourneyPage = () => {
     return () => observer.disconnect();
   }, [isArabic]);
 
-  const navigateToStage = (stage: (typeof defaultStages)[number], index: number) => {
+  const navigateToStage = (stage: { targetId: string }, index: number) => {
     setActiveStage(index);
 
     const target = rootRef.current?.querySelector<HTMLElement>(`#${stage.targetId}`);
