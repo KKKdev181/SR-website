@@ -2,7 +2,8 @@ import JourneyPageAdmin from "@/components/admin/JourneyPageAdmin";
 import ChangeHistoryAdmin from "@/components/admin/ChangeHistoryAdmin";
 import HeaderAdmin from "@/components/admin/HeaderAdmin";
 import SidebarAdmin from "@/components/admin/SidebarAdmin";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { watchContent } from "@/lib/sharedContent";
 import { ArrowDown, ArrowUp, Download, Eye, EyeOff, Plus, RotateCcw, Save, Search, Trash2, Upload } from "lucide-react";
 import { getOriginalCatalog, readDevelopmentCatalog, resetDevelopmentCatalog, saveDevelopmentCatalog, type ManagedRequest } from "@/lib/developmentCatalog";
 
@@ -21,6 +22,7 @@ export default function AdminPage() {
   const [notice, setNotice] = useState("");
   const [dirty, setDirty] = useState(false);
   const [onlyHidden, setOnlyHidden] = useState(false);
+  useEffect(()=>watchContent(()=>{if(!dirty)setItems(readDevelopmentCatalog());}),[dirty]);
   const selected = items.find(item => item.id === editing);
   const filtered = useMemo(() => items.filter(item =>
     (!onlyHidden || item.hidden) &&
