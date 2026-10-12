@@ -12,7 +12,7 @@ const Header = () => {
   const accountRef = useRef<HTMLDivElement>(null);
   const [accountOpen,setAccountOpen] = useState(false);
   const [accountError,setAccountError] = useState("");
-  const {user,configured,signIn,signOut} = usePortalAuth();
+  const {user,signOut} = usePortalAuth();
   const isArabic = language === "ar";
   const headerSettings = useHeaderSettings();
   const label = (key: HeaderKey) => headerSettings[key][isArabic ? "ar" : "en"];
@@ -182,8 +182,7 @@ const Header = () => {
               {user.isEditor && <a role="menuitem" href="/admin" className="mt-1 flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-slate-100"><Settings2 size={16}/>Admin Panel</a>}
               <button role="menuitem" onClick={()=>{setAccountError("");void signOut().catch(e=>setAccountError(String(e)));}} className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm hover:bg-slate-100"><LogOut size={16}/>{isArabic?"تسجيل الخروج":"Sign out"}</button>
             </> : <><p className="px-3 py-2 text-xs text-slate-500">{isArabic?"تسجيل دخول أعضاء الفريق":"Team member access"}</p>
-              <button role="menuitem" disabled={!configured} onClick={()=>{setAccountError("");void signIn().then(()=>setAccountOpen(false)).catch(e=>setAccountError(String(e)));}} className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm hover:bg-slate-100 disabled:opacity-50"><LogIn size={16}/>{isArabic?"الدخول بحساب الشركة":"Sign in with Microsoft"}</button>
-              {!configured && <p className="px-3 py-2 text-xs text-amber-700">Company SSO setup required</p>}
+              <a role="menuitem" href="/admin" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm hover:bg-slate-100"><LogIn size={16}/>{isArabic?"تسجيل الدخول":"Sign in"}</a>
             </>}
             {accountError && <p role="alert" className="px-3 py-2 text-xs text-red-700">{accountError}</p>}
           </div>}
