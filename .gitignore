@@ -6,3 +6,6 @@ node_modules
 !.env.example
 # Build artifacts
 dist
+
+# Private local portal account and session storage
+private-data/
