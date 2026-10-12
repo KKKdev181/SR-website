@@ -61,6 +61,16 @@ export default function AdminPage() {
       setItems(parsed); setDirty(true); setNotice("Imported changes. Click Publish Cards to save centrally.");
     } catch { setNotice("Could not import this file. Please select a valid catalog JSON file."); }
   };
+  const importPreviousLocalDraft = () => {
+    try {
+      const raw=localStorage.getItem("sr-development-catalog-v1");
+      if(!raw) {setNotice("No previous browser-only card draft found.");return;}
+      const parsed:unknown=JSON.parse(raw);
+      if(!Array.isArray(parsed)||parsed.some(row=>!row||typeof row.id!=="string"||typeof row.title!=="string"||typeof row.section!=="string"||typeof row.category!=="string"||typeof row.shortDescription!=="string"||typeof row.jiraUrl!=="string")||new Set(parsed.map(row=>row.id)).size!==parsed.length)throw Error("Invalid local draft");
+      if(!confirm("Load the old browser-only draft into the editor? Review it, then click Publish Cards to make it shared."))return;
+      setItems(parsed);setDirty(true);setNotice("Previous browser draft loaded for review. It is NOT published until you click Publish Cards.");
+    }catch{setNotice("Could not read the previous local draft.");}
+  };
   const field = (label: string, key: keyof ManagedRequest, multiline = false) =>
     <label className="block text-sm font-medium text-slate-700">{label}
       {multiline ?
@@ -79,6 +89,7 @@ export default function AdminPage() {
         <div className="flex flex-wrap gap-3 text-sm"><span className="rounded-lg bg-white px-4 py-3 shadow-sm"><b>{items.length}</b> total cards</span><span className="rounded-lg bg-white px-4 py-3 shadow-sm"><b>{items.filter(i => !i.hidden).length}</b> visible</span><span className="rounded-lg bg-white px-4 py-3 shadow-sm"><b>{items.filter(i => i.hidden).length}</b> hidden</span></div>
         <div className="flex flex-wrap gap-2">
           <button className="inline-flex items-center gap-2 rounded-lg border bg-white px-3 py-2 text-sm" onClick={() => { const item = blank(); setItems(old => [item, ...old]); setEditing(item.id); setDirty(true); }}><Plus size={16}/> Add card</button>
+          <button className="inline-flex items-center gap-2 rounded-lg border bg-white px-3 py-2 text-sm" onClick={importPreviousLocalDraft}>Import old browser draft</button>
           <button className="inline-flex items-center gap-2 rounded-lg border bg-white px-3 py-2 text-sm" onClick={exportJson}><Download size={16}/> Export JSON</button>
           <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border bg-white px-3 py-2 text-sm"><Upload size={16}/> Import JSON<input type="file" accept=".json,application/json" className="hidden" onChange={e => { void importJson(e.target.files?.[0]); e.target.value = ""; }}/></label>
           <button className="inline-flex items-center gap-2 rounded-lg border bg-white px-3 py-2 text-sm" onClick={() => { if (confirm("Publish original catalog and replace all shared card edits?")) { void resetDevelopmentCatalog().then(()=>{setItems(getOriginalCatalog());setEditing(null);setDirty(false);setNotice("Original cards published.");}).catch(e=>setNotice(String(e.message||e))); } }}><RotateCcw size={16}/> Reset</button>
