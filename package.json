@@ -10,7 +10,9 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "auth:server": "node server/authServer.mjs",
+    "auth:create-user": "node server/createUser.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -62,8 +64,7 @@
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.9.9",
-    "zod": "^3.25.76",
-    "@azure/msal-browser": "^4.25.1"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",
