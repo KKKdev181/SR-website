@@ -36,7 +36,7 @@ function checkOrigin(req) {
     // The backend sees an internal Host. Only accept that mismatch for verified
     // same-origin browser requests on the Codespaces dev domain, never in production.
     if(!secure && req.headers["sec-fetch-site"]==="same-origin" &&
-       url.protocol==="https:" && /^[a-z0-9-]+-8080\\.app\\.github\\.dev$/.test(url.hostname)) return true;
+       url.protocol==="https:" && /^[a-z0-9-]+-8080\.app\.github\.dev$/.test(url.hostname)) return true;
     return false;
   } catch { return false; }
 }
