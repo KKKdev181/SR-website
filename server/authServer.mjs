@@ -63,14 +63,15 @@ export const handler=async (req,res)=>{
     attempts.set(ip,recent);
     let body;
     try {body=await parseBody(req);}catch{return respond(res,400,{error:"Invalid request"});}
-    const username=typeof body?.username==="string" ? body.username.trim().toLowerCase() : "";
     const password=typeof body?.password==="string" ? body.password : "";
     const users=await loadUsers();
-    const user=users.find(x=>x.username.toLowerCase()===username && x.enabled!==false);
+    // Shared-password access is limited to the pre-created portaladmin account.
+    // Never trust a supplied username/role from the browser.
+    const user=users.find(x=>x.username.toLowerCase()==="portaladmin" && x.role==="admin" && x.enabled!==false);
     // Compute a comparable hash even for an unknown account to reduce username enumeration timing signals.
     const fallback="scrypt:16384:8:1:00000000000000000000000000000000:"+("00".repeat(64));
     const valid=await verifyPassword(password,user?.passwordHash || fallback);
-    if(!user||!valid){recent.push(Date.now());attempts.set(ip,recent);return respond(res,401,{error:"Invalid username or password"});}
+    if(!user||!valid){recent.push(Date.now());attempts.set(ip,recent);return respond(res,401,{error:"Invalid password"});}
     attempts.delete(ip);
     const token=randomBytes(32).toString("hex");
     sessions.set(tokenDigest(token),{username:user.username,expires:Date.now()+ttl});
