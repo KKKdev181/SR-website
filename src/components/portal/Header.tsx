@@ -118,7 +118,7 @@ const Header = () => {
           </a>
           )}
 
-          {visible("admin") && (
+          {visible("admin") && user?.isEditor && (
           <a
             href="/admin"
             className="inline-flex min-h-10 shrink-0 items-center gap-2 rounded-lg border border-amber-300 bg-amber-100 px-3 text-sm font-bold text-amber-950 transition hover:bg-amber-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
@@ -126,7 +126,7 @@ const Header = () => {
           >
             <Settings2 className="h-4 w-4" aria-hidden="true" />
             <span>{label("admin")}</span>
-            <span className="hidden rounded bg-amber-200 px-1.5 py-0.5 text-[10px] uppercase sm:inline">Test</span>
+
           </a>
           )}
 
