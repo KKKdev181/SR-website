@@ -61,9 +61,9 @@ function checkOrigin(req) {
     return false;
   }
 }
-async function parseBody(req) {
+async function parseBody(req, maxBytes=8192) {
   const parts=[];let size=0;
-  for await (const chunk of req) { size+=chunk.length; if(size>8192) throw new Error("Body too large"); parts.push(chunk); }
+  for await (const chunk of req) { size+=chunk.length; if(size>maxBytes) throw new Error("Body too large"); parts.push(chunk); }
   return JSON.parse(Buffer.concat(parts).toString("utf8"));
 }
 export const handler=async (req,res)=>{
@@ -81,7 +81,7 @@ export const handler=async (req,res)=>{
     const actor=users.find(x=>x.username===session.username && x.enabled!==false && ["admin","editor"].includes(x.role));
     if(!actor)return respond(res,403,{error:"Editor permission required"});
     let body;
-    try{body=await parseBody(req);}catch{return respond(res,400,{error:"Invalid JSON body"});}
+    try{body=await parseBody(req, 2_500_000);}catch{return respond(res,400,{error:"Invalid JSON body"});}
     const result=await updateContent(body.section,body.value,body.version,actor);
     if(result.error)return respond(res,result.status,result);
     return respond(res,200,result);
