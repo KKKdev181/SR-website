@@ -12,7 +12,7 @@ export default function SidebarAdmin() {
   const move=(index:number,delta:number) => {
     const next=index+delta;if(next<0||next>=rows.length)return;
     setRows(old=>{const copy=[...old];[copy[index],copy[next]]=[copy[next],copy[index]];return copy;});
-    setSaved(false);
+    setDirty(true);
   };
   return <section className="rounded-xl border bg-white p-5 shadow-sm">
     <h2 className="text-xl font-bold">Sidebar Management</h2>
