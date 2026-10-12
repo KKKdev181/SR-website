@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
+    "test:content": "node --test server/contentStore.test.mjs",
     "test:watch": "vitest",
     "auth:server": "node server/authServer.mjs",
     "auth:create-user": "node server/createUser.mjs"
