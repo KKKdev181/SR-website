@@ -6,9 +6,9 @@ const port = Number(process.env.PORTAL_AUTH_PORT || 8787);
 const sessions = new Map();
 const attempts = new Map();
 const ttl = 8 * 60 * 60 * 1000;
-const cookieName = "sr_portal_session";
+const cookieName = "sr_portal_session_v2";
 const secure = process.env.NODE_ENV === "production";
-const cookieOpts = `HttpOnly; SameSite=Strict; Path=/api/auth; ${secure ? "Secure; " : ""}`;
+const cookieOpts = `HttpOnly; SameSite=Strict; Path=/api; ${secure ? "Secure; " : ""}`;
 function respond(res, status, json, headers={}) {
   res.writeHead(status, { "Content-Type":"application/json; charset=utf-8", "Cache-Control":"no-store", "X-Content-Type-Options":"nosniff", ...headers });
   res.end(JSON.stringify(json));
