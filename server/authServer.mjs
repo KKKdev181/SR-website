@@ -1,6 +1,7 @@
 import { createServer } from "node:http";
 import { randomBytes } from "node:crypto";
 import { loadUsers, verifyPassword, tokenDigest } from "./userStore.mjs";
+import { getContent, getHistory, updateContent } from "./contentStore.mjs";
 const port = Number(process.env.PORTAL_AUTH_PORT || 8787);
 const sessions = new Map();
 const attempts = new Map();
@@ -66,6 +67,25 @@ async function parseBody(req) {
   return JSON.parse(Buffer.concat(parts).toString("utf8"));
 }
 export const handler=async (req,res)=>{
+  if (req.url === "/api/content" && req.method === "GET") return respond(res,200,await getContent());
+  if (req.url === "/api/content/history" && req.method === "GET") {
+    const session=sessionFrom(req);
+    if(!session)return respond(res,401,{error:"Authentication required"});
+    return respond(res,200,{history:await getHistory()});
+  }
+  if (req.url === "/api/content" && req.method === "PUT") {
+    if(!checkOrigin(req))return respond(res,403,{error:"Request origin rejected"});
+    const session=sessionFrom(req);
+    if(!session)return respond(res,401,{error:"Authentication required"});
+    const users=await loadUsers();
+    const actor=users.find(x=>x.username===session.username && x.enabled!==false && ["admin","editor"].includes(x.role));
+    if(!actor)return respond(res,403,{error:"Editor permission required"});
+    let body;
+    try{body=await parseBody(req);}catch{return respond(res,400,{error:"Invalid JSON body"});}
+    const result=await updateContent(body.section,body.value,body.version,actor);
+    if(result.error)return respond(res,result.status,result);
+    return respond(res,200,result);
+  }
   if (!req.url?.startsWith("/api/auth/")) return respond(res,404,{error:"Not found"});
   if (req.method==="GET" && req.url==="/api/auth/session") {
     const session=sessionFrom(req);
@@ -94,15 +114,14 @@ export const handler=async (req,res)=>{
     attempts.set(ip,recent);
     let body;
     try {body=await parseBody(req);}catch{return respond(res,400,{error:"Invalid request"});}
+    const username=typeof body?.username==="string" ? body.username.trim().toLowerCase() : "";
     const password=typeof body?.password==="string" ? body.password : "";
     const users=await loadUsers();
-    // Shared-password access is limited to the pre-created portaladmin account.
-    // Never trust a supplied username/role from the browser.
-    const user=users.find(x=>x.username.toLowerCase()==="portaladmin" && x.role==="admin" && x.enabled!==false);
+    const user=users.find(x=>x.username.toLowerCase()===username && x.enabled!==false && ["admin","editor"].includes(x.role));
     // Compute a comparable hash even for an unknown account to reduce username enumeration timing signals.
     const fallback="scrypt:16384:8:1:00000000000000000000000000000000:"+("00".repeat(64));
     const valid=await verifyPassword(password,user?.passwordHash || fallback);
-    if(!user||!valid){recent.push(Date.now());attempts.set(ip,recent);return respond(res,401,{error:"Invalid password"});}
+    if(!user||!valid){recent.push(Date.now());attempts.set(ip,recent);return respond(res,401,{error:"Invalid username or password"});}
     attempts.delete(ip);
     const token=randomBytes(32).toString("hex");
     sessions.set(tokenDigest(token),{username:user.username,expires:Date.now()+ttl});
