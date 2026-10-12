@@ -1,13 +1,18 @@
-import { ClipboardCheck, ExternalLink, Globe2, Headset, Inbox, ListChecks, Mail, Route, Settings2 } from "lucide-react";
+import { ClipboardCheck, ExternalLink, Globe2, Headset, Inbox, ListChecks, Mail, Route, Settings2, UserRound, LogOut, LogIn, ChevronDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useHeaderSettings, type HeaderKey } from "@/lib/developmentHeader";
+import { usePortalAuth } from "@/lib/portalAuth";
 
 const Header = () => {
   const { language, toggleLanguage, copy } = useLanguage();
   const [isSupportOpen, setIsSupportOpen] = useState(false);
   const supportRef = useRef<HTMLDivElement>(null);
+  const accountRef = useRef<HTMLDivElement>(null);
+  const [accountOpen,setAccountOpen] = useState(false);
+  const [accountError,setAccountError] = useState("");
+  const {user,configured,signIn,signOut} = usePortalAuth();
   const isArabic = language === "ar";
   const headerSettings = useHeaderSettings();
   const label = (key: HeaderKey) => headerSettings[key][isArabic ? "ar" : "en"];
@@ -19,10 +24,11 @@ const Header = () => {
       if (supportRef.current && !supportRef.current.contains(event.target as Node)) {
         setIsSupportOpen(false);
       }
+      if (accountRef.current && !accountRef.current.contains(event.target as Node)) setAccountOpen(false);
     };
 
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setIsSupportOpen(false);
+      if (event.key === "Escape") { setIsSupportOpen(false);setAccountOpen(false); }
     };
 
     document.addEventListener("pointerdown", handlePointerDown);
@@ -160,6 +166,27 @@ const Header = () => {
             )}
           </div>
           )}
+        </div>
+
+        <div className="relative shrink-0" ref={accountRef}>
+          <button type="button" aria-label={isArabic ? "حساب المستخدم" : "User account"} aria-expanded={accountOpen} aria-haspopup="menu"
+            onClick={()=>setAccountOpen(open=>!open)}
+            className="flex min-h-10 items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-3 text-white hover:bg-white/20">
+            <UserRound size={20}/>
+            {user && <span className="hidden max-w-28 truncate text-xs font-semibold lg:inline">{user.name}</span>}
+            <ChevronDown size={14}/>
+          </button>
+          {accountOpen && <div role="menu" className="absolute right-0 top-full z-[100] mt-2 w-64 overflow-hidden rounded-xl border border-slate-200 bg-white p-2 text-slate-800 shadow-xl">
+            {user ? <>
+              <div className="border-b px-3 py-3"><p className="truncate text-sm font-bold">{user.name}</p><p className="truncate text-xs text-slate-500">{user.username}</p><p className="mt-1 text-xs text-slate-500">{user.isEditor?"Portal editor":"Standard user"}</p></div>
+              {user.isEditor && <a role="menuitem" href="/admin" className="mt-1 flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-slate-100"><Settings2 size={16}/>Admin Panel</a>}
+              <button role="menuitem" onClick={()=>{setAccountError("");void signOut().catch(e=>setAccountError(String(e)));}} className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm hover:bg-slate-100"><LogOut size={16}/>{isArabic?"تسجيل الخروج":"Sign out"}</button>
+            </> : <><p className="px-3 py-2 text-xs text-slate-500">{isArabic?"تسجيل دخول أعضاء الفريق":"Team member access"}</p>
+              <button role="menuitem" disabled={!configured} onClick={()=>{setAccountError("");void signIn().then(()=>setAccountOpen(false)).catch(e=>setAccountError(String(e)));}} className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm hover:bg-slate-100 disabled:opacity-50"><LogIn size={16}/>{isArabic?"الدخول بحساب الشركة":"Sign in with Microsoft"}</button>
+              {!configured && <p className="px-3 py-2 text-xs text-amber-700">Company SSO setup required</p>}
+            </>}
+            {accountError && <p role="alert" className="px-3 py-2 text-xs text-red-700">{accountError}</p>}
+          </div>}
         </div>
 
         <button
