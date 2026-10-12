@@ -8,8 +8,8 @@ async function request(url:string, init?:RequestInit){
   if(!res.ok) throw new Error(data.error || "Authentication service unavailable");
   return data;
 }
-export async function signIn(username:string,password:string):Promise<void> {
-  await request("/api/auth/login",{method:"POST",body:JSON.stringify({username,password})});
+export async function signIn(password:string):Promise<void> {
+  await request("/api/auth/login",{method:"POST",body:JSON.stringify({password})});
   window.dispatchEvent(new Event(EVENT));
 }
 export async function signOut():Promise<void> {
