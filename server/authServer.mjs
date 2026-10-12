@@ -71,6 +71,9 @@ export const handler=async (req,res)=>{
   if (req.url === "/api/content/history" && req.method === "GET") {
     const session=sessionFrom(req);
     if(!session)return respond(res,401,{error:"Authentication required"});
+    const users=await loadUsers();
+    const actor=users.find(x=>x.username===session.username && x.enabled!==false && ["admin","editor"].includes(x.role));
+    if(!actor)return respond(res,403,{error:"Editor permission required"});
     return respond(res,200,{history:await getHistory()});
   }
   if (req.url === "/api/content" && req.method === "PUT") {
