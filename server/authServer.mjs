@@ -29,7 +29,15 @@ function checkOrigin(req) {
     const url=new URL(origin);
     const forwardedHost=req.headers["x-forwarded-host"];
     const expected=forwardedHost || req.headers.host;
-    return url.host === expected && (url.protocol==="https:" || (!secure && url.protocol==="http:"));
+    const expectedOrigin=process.env.PORTAL_PUBLIC_ORIGIN;
+    if(expectedOrigin) return origin===expectedOrigin;
+    if(url.host===expected && (url.protocol==="https:" || (!secure && url.protocol==="http:"))) return true;
+    // GitHub Codespaces terminates TLS before forwarding to Vite and the local API.
+    // The backend sees an internal Host. Only accept that mismatch for verified
+    // same-origin browser requests on the Codespaces dev domain, never in production.
+    if(!secure && req.headers["sec-fetch-site"]==="same-origin" &&
+       url.protocol==="https:" && /^[a-z0-9-]+-8080\\.app\\.github\\.dev$/.test(url.hostname)) return true;
+    return false;
   } catch { return false; }
 }
 async function parseBody(req) {
