@@ -23,22 +23,31 @@ function sessionFrom(req) {
   return { ...session, digest };
 }
 function checkOrigin(req) {
-  const origin=req.headers.origin;
-  if (!origin) return false;
+  const origin = req.headers.origin;
+  const expectedOrigin = process.env.PORTAL_PUBLIC_ORIGIN;
+  const forwardedHost = req.headers["x-forwarded-host"];
+  const expectedHost = forwardedHost || req.headers.host;
   try {
-    const url=new URL(origin);
-    const forwardedHost=req.headers["x-forwarded-host"];
-    const expected=forwardedHost || req.headers.host;
-    const expectedOrigin=process.env.PORTAL_PUBLIC_ORIGIN;
-    if(expectedOrigin) return origin===expectedOrigin;
-    if(url.host===expected && (url.protocol==="https:" || (!secure && url.protocol==="http:"))) return true;
-    // GitHub Codespaces terminates TLS before forwarding to Vite and the local API.
-    // The backend sees an internal Host. Only accept that mismatch for verified
-    // same-origin browser requests on the Codespaces dev domain, never in production.
-    if(!secure && req.headers["sec-fetch-site"]==="same-origin" &&
-       url.protocol==="https:" && /^[a-z0-9-]+-8080\.app\.github\.dev$/.test(url.hostname)) return true;
+    if (!origin) return false;
+    const originUrl = new URL(origin);
+    if (expectedOrigin) return origin === expectedOrigin;
+    if (originUrl.host === expectedHost &&
+        (originUrl.protocol === "https:" || (!secure && originUrl.protocol === "http:"))) return true;
+
+    // Codespaces TLS terminates upstream. The backend only listens on loopback,
+    // while the browser sees a *.app.github.dev HTTPS origin.
+    // Require both browser Origin and Referer to match exactly to avoid
+    // accepting cross-site browser requests forwarded through a dev proxy.
+    const isLocalProxy = ["127.0.0.1", "::1", "::ffff:127.0.0.1"].includes(req.socket.remoteAddress);
+    const isCodespaces = originUrl.protocol === "https:" &&
+      /^[a-z0-9-]+-8080\.app\.github\.dev$/.test(originUrl.hostname);
+    const refererUrl = req.headers.referer ? new URL(req.headers.referer) : null;
+    if (!secure && isLocalProxy && isCodespaces &&
+        refererUrl?.origin === originUrl.origin) return true;
     return false;
-  } catch { return false; }
+  } catch {
+    return false;
+  }
 }
 async function parseBody(req) {
   const parts=[];let size=0;
@@ -55,7 +64,18 @@ export const handler=async (req,res)=>{
     if(!user){sessions.delete(session.digest);return respond(res,200,{user:null});}
     return respond(res,200,{user:{name:user.name,username:user.username,role:user.role,isEditor:["admin","editor"].includes(user.role)}});
   }
-  if (req.method!=="POST" || !checkOrigin(req)) return respond(res,403,{error:"Forbidden"});
+  if (req.method !== "POST") return respond(res,405,{error:"Method not allowed"});
+  if (!checkOrigin(req)) {
+    console.warn("[auth] Rejected request origin:", {
+      origin: req.headers.origin || "(absent)",
+      referer: req.headers.referer || "(absent)",
+      host: req.headers.host,
+      forwardedHost: req.headers["x-forwarded-host"] || "(absent)",
+      fetchSite: req.headers["sec-fetch-site"] || "(absent)",
+      remoteAddress: req.socket.remoteAddress
+    });
+    return respond(res,403,{error:"Request origin rejected. Restart npm run dev, then retry."});
+  }
   if (req.url==="/api/auth/login") {
     const ip=(req.socket.remoteAddress || "unknown");
     const recent=(attempts.get(ip)||[]).filter(ts=>Date.now()-ts<15*60*1000);
