@@ -36,14 +36,14 @@ export default function JourneyPageAdmin() {
   const actionInfo = selected?.kind==="action" ? journeyDefaultActions[Number(selected.id)] : undefined;
   const currentItem = itemInfo ? {...itemInfo,...config.items?.[itemInfo.id]} : undefined;
   const currentAction = actionInfo && selected ? {...actionInfo,...config.actions?.[selected.id]} : undefined;
-  const save = () => {saveJourney(config);setDirty(false);setNotice("Journey changes saved in this browser. Open the guide to preview.");};
+  const save = () => {void saveJourney(config).then(()=>{setDirty(false);setNotice("Guide published for all visitors.");}).catch(e=>setNotice(String(e.message||e)));};
   return <section className="space-y-5">
     <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border bg-white p-5">
       <div><h2 className="text-xl font-bold">New Product / Project Guide Editor</h2><p className="mt-1 text-sm text-slate-500">Edit content of the actual guide page, not just request catalog cards.</p></div>
       <div className="flex flex-wrap gap-2">
         <a href="/#/tools/project-journey-checklist" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm"><ExternalLink size={16}/>Preview guide</a>
         <button onClick={save} className="inline-flex items-center gap-2 rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white"><Save size={16}/>Save Guide {dirty?"•":""}</button>
-        <button className="inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm" onClick={()=>{if(confirm("Reset all guide content changes?")){resetJourney();setConfig({});setDirty(false);setNotice("Guide restored to defaults.");}}}><RotateCcw size={16}/>Reset Guide</button>
+        <button className="inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm" onClick={()=>{if(confirm("Reset all guide content changes?")){void resetJourney().then(()=>{setConfig({});setDirty(false);setNotice("Guide defaults published.");}).catch(e=>setNotice(String(e.message||e)));}}}><RotateCcw size={16}/>Reset Guide</button>
       </div>
     </div>
     {notice && <p role="status" className="rounded-lg border bg-white px-4 py-3 text-sm">{notice}</p>}
@@ -133,6 +133,6 @@ export default function JourneyPageAdmin() {
         </div> : <div className="py-8 text-center text-sm text-slate-500">Select a checklist item or parallel action to edit its English/Arabic texts, notes and Jira link.</div>}
       </aside>
     </div>
-    <p className="text-sm text-slate-500">This editor covers the hero, navigation stages, core phase checklists, and parallel actions. Other custom sections such as detailed developer access, deployment and publishing workflows remain code-defined in this iteration. Changes are browser-local drafts and never affect main/Production.</p>
+    <p className="text-sm text-slate-500">This editor covers the hero, navigation stages, core phase checklists, and parallel actions. Other custom sections such as detailed developer access, deployment and publishing workflows remain code-defined in this iteration. Changes publish immediately to the development portal after Save. Production/main remains unchanged.</p>
   </section>;
 }
