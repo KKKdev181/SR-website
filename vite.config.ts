@@ -8,7 +8,21 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
-    proxy: { "/api/auth": { target: "http://127.0.0.1:8787" } },
+    proxy: {
+      "/api/auth": {
+        target: "http://127.0.0.1:8787",
+        configure(proxy) {
+          proxy.on("proxyReq", (proxyReq, req) => {
+            // Retain the public host through the Codespaces -> Vite -> API proxy.
+            // The API uses this value to reject cross-origin login/logout requests.
+            const browserHost = req.headers["x-forwarded-host"] || req.headers.host;
+            if (browserHost && typeof browserHost === "string") {
+              proxyReq.setHeader("x-forwarded-host", browserHost);
+            }
+          });
+        },
+      },
+    },
     hmr: {
       overlay: false,
     },
