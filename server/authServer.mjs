@@ -44,6 +44,17 @@ function checkOrigin(req) {
     const refererUrl = req.headers.referer ? new URL(req.headers.referer) : null;
     if (!secure && isLocalProxy && isCodespaces &&
         refererUrl?.origin === originUrl.origin) return true;
+
+    // Codespaces forwards HTTPS traffic to Vite over HTTP on localhost:8080.
+    // Vite may rewrite the Origin header to http://localhost:8080 while
+    // preserving the browser's actual HTTPS Referer and forwarded host.
+    // Only trust this exact development-only combination, from loopback.
+    const proxyHost = typeof forwardedHost === "string" ? forwardedHost : "";
+    const codespacesForwardedHost = /^[a-z0-9-]+-8080\.app\.github\.dev$/.test(proxyHost);
+    const localViteOrigin = ["http://localhost:8080", "http://127.0.0.1:8080"].includes(originUrl.origin);
+    if (!secure && isLocalProxy && localViteOrigin && codespacesForwardedHost &&
+        refererUrl?.protocol === "https:" && refererUrl.host === proxyHost &&
+        req.headers["sec-fetch-site"] === "same-origin") return true;
     return false;
   } catch {
     return false;
