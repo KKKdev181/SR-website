@@ -1,4 +1,5 @@
 import JourneyPageAdmin from "@/components/admin/JourneyPageAdmin";
+import ChangeHistoryAdmin from "@/components/admin/ChangeHistoryAdmin";
 import HeaderAdmin from "@/components/admin/HeaderAdmin";
 import SidebarAdmin from "@/components/admin/SidebarAdmin";
 import { useMemo, useState } from "react";
@@ -14,7 +15,7 @@ const blank = (): ManagedRequest => ({
 
 export default function AdminPage() {
   const [items, setItems] = useState<ManagedRequest[]>(readDevelopmentCatalog);
-  const [tab,setTab] = useState<"cards"|"sidebar"|"journey"|"header">("cards");
+  const [tab,setTab] = useState<"cards"|"sidebar"|"journey"|"header"|"history">("cards");
   const [search, setSearch] = useState("");
   const [editing, setEditing] = useState<string | null>(null);
   const [notice, setNotice] = useState("");
@@ -43,9 +44,7 @@ export default function AdminPage() {
     if (items.some(item => !item.title.trim() || !item.section.trim() || !item.category.trim())) {
       setNotice("Every card requires a title, section and category."); return;
     }
-    saveDevelopmentCatalog(items);
-    setDirty(false);
-    setNotice("Draft saved in this browser only. It is not shared with teammates.");
+    void saveDevelopmentCatalog(items).then(()=>{setDirty(false);setNotice("Published successfully to all development portal visitors.");}).catch(e=>setNotice(String(e.message||e)));
   };
   const exportJson = () => {
     const url = URL.createObjectURL(new Blob([JSON.stringify(items, null, 2)], { type: "application/json" }));
@@ -57,7 +56,7 @@ export default function AdminPage() {
     try {
       const parsed = JSON.parse(await file.text());
       if (!Array.isArray(parsed) || parsed.some(row => !row || typeof row.id !== "string" || typeof row.title !== "string" || typeof row.section !== "string" || typeof row.category !== "string" || typeof row.shortDescription !== "string" || typeof row.jiraUrl !== "string") || new Set(parsed.map(row => row.id)).size !== parsed.length) throw Error("Invalid catalog format");
-      setItems(parsed); setDirty(true); setNotice("Imported draft. Click Save Draft to store it locally.");
+      setItems(parsed); setDirty(true); setNotice("Imported changes. Click Publish Cards to save centrally.");
     } catch { setNotice("Could not import this file. Please select a valid catalog JSON file."); }
   };
   const field = (label: string, key: keyof ManagedRequest, multiline = false) =>
@@ -68,11 +67,11 @@ export default function AdminPage() {
     </label>;
   return <main className="min-h-screen bg-slate-50 text-slate-800">
     <header className="border-b bg-white"><div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-6 py-5">
-      <div><p className="text-xs font-bold uppercase tracking-widest text-blue-600">Development only</p><h1 className="text-2xl font-bold">Requests Portal · Admin</h1><p className="text-sm text-slate-500">Manage request cards and their order — local draft mode</p></div>
-      <div className="flex flex-wrap gap-2"><a href="/" className="rounded-lg border px-4 py-2 text-sm">View portal</a><button onClick={save} className="inline-flex items-center gap-2 rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white"><Save size={16}/>Save Draft {dirty ? "•" : ""}</button></div>
+      <div><p className="text-xs font-bold uppercase tracking-widest text-blue-600">Development only</p><h1 className="text-2xl font-bold">Requests Portal · Admin</h1><p className="text-sm text-slate-500">Edit the shared development portal with immediate publishing</p></div>
+      <div className="flex flex-wrap gap-2"><a href="/" className="rounded-lg border px-4 py-2 text-sm">View portal</a><button onClick={save} className="inline-flex items-center gap-2 rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white"><Save size={16}/>Publish Cards {dirty ? "•" : ""}</button></div>
     </div></header>
     <div className="mx-auto max-w-7xl px-6 py-7">
-      <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900"><b>Testing environment:</b> Changes are saved only in this browser (localStorage). Other team members cannot see them automatically. This is not a secured login or shared publishing system. Do not deploy this admin route to production before adding server-side authentication and role permissions.</div>
+      <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900"><b>Testing environment:</b> Save publishes changes immediately to the development portal for everyone using the same running backend. Changes are recorded in Change History. This development instance and its local JSON file are not production infrastructure; do not deploy this branch to main without a permanent shared storage and security review.</div>
       {notice && <p role="status" className="mb-4 rounded-lg border bg-white px-4 py-3 text-sm">{notice}</p>}
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap gap-3 text-sm"><span className="rounded-lg bg-white px-4 py-3 shadow-sm"><b>{items.length}</b> total cards</span><span className="rounded-lg bg-white px-4 py-3 shadow-sm"><b>{items.filter(i => !i.hidden).length}</b> visible</span><span className="rounded-lg bg-white px-4 py-3 shadow-sm"><b>{items.filter(i => i.hidden).length}</b> hidden</span></div>
@@ -80,11 +79,11 @@ export default function AdminPage() {
           <button className="inline-flex items-center gap-2 rounded-lg border bg-white px-3 py-2 text-sm" onClick={() => { const item = blank(); setItems(old => [item, ...old]); setEditing(item.id); setDirty(true); }}><Plus size={16}/> Add card</button>
           <button className="inline-flex items-center gap-2 rounded-lg border bg-white px-3 py-2 text-sm" onClick={exportJson}><Download size={16}/> Export JSON</button>
           <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border bg-white px-3 py-2 text-sm"><Upload size={16}/> Import JSON<input type="file" accept=".json,application/json" className="hidden" onChange={e => { void importJson(e.target.files?.[0]); e.target.value = ""; }}/></label>
-          <button className="inline-flex items-center gap-2 rounded-lg border bg-white px-3 py-2 text-sm" onClick={() => { if (confirm("Reset all local changes to the original catalog?")) { resetDevelopmentCatalog(); setItems(getOriginalCatalog()); setEditing(null); setDirty(false); } }}><RotateCcw size={16}/> Reset</button>
+          <button className="inline-flex items-center gap-2 rounded-lg border bg-white px-3 py-2 text-sm" onClick={() => { if (confirm("Publish original catalog and replace all shared card edits?")) { void resetDevelopmentCatalog().then(()=>{setItems(getOriginalCatalog());setEditing(null);setDirty(false);setNotice("Original cards published.");}).catch(e=>setNotice(String(e.message||e))); } }}><RotateCcw size={16}/> Reset</button>
         </div>
       </div>
-      <div className="mb-5 flex flex-wrap gap-2">{(["cards","sidebar","journey","header"] as const).map(name => <button key={name} onClick={()=>setTab(name)} className={`rounded-lg px-4 py-2 text-sm font-semibold ${tab===name?"bg-blue-700 text-white":"border bg-white"}`}>{name==="cards"?"Cards":name==="sidebar"?"Sidebar":name==="journey"?"New Product/Project":"Top Bar / Header"}</button>)}</div>
-      {tab==="sidebar" ? <SidebarAdmin/> : tab==="header" ? <HeaderAdmin/> : tab==="journey" ? <JourneyPageAdmin/> : <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_370px]">
+      <div className="mb-5 flex flex-wrap gap-2">{(["cards","sidebar","journey","header","history"] as const).map(name => <button key={name} onClick={()=>setTab(name)} className={`rounded-lg px-4 py-2 text-sm font-semibold ${tab===name?"bg-blue-700 text-white":"border bg-white"}`}>{name==="cards"?"Cards":name==="sidebar"?"Sidebar":name==="journey"?"New Product/Project":name==="history"?"Change History":"Top Bar / Header"}</button>)}</div>
+      {tab==="sidebar" ? <SidebarAdmin/> : tab==="header" ? <HeaderAdmin/> : tab==="journey" ? <JourneyPageAdmin/> : tab==="history" ? <ChangeHistoryAdmin/> : <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_370px]">
         <section className="min-w-0 rounded-xl border bg-white p-4 shadow-sm">
           <div className="mb-4 flex flex-wrap items-center gap-3"><div className="relative min-w-[220px] flex-1"><Search size={16} className="absolute left-3 top-3 text-slate-400"/><input className="w-full rounded-lg border py-2 pl-9 pr-3 text-sm" placeholder="Search cards or categories" value={search} onChange={e => setSearch(e.target.value)}/></div><label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={onlyHidden} onChange={e => setOnlyHidden(e.target.checked)}/> Hidden only</label></div>
           <p className="mb-3 text-xs text-slate-500">Use arrows to reorder cards. Clear your search to see the full list. Saved order is applied to the development catalog.</p>
