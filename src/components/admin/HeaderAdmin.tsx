@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { watchContent } from "@/lib/sharedContent";
 import { Save, RotateCcw } from "lucide-react";
 import {
   headerKeys, headerDefaults, readHeaderSettings, saveHeaderSettings, resetHeaderSettings,
@@ -14,9 +15,11 @@ const names: Record<HeaderKey,string> = {
 export default function HeaderAdmin() {
   const [settings,setSettings] = useState<HeaderSettings>(readHeaderSettings);
   const [notice,setNotice] = useState("");
+  const [dirty,setDirty] = useState(false);
+  useEffect(()=>watchContent(()=>{if(!dirty)setSettings(readHeaderSettings());}),[dirty]);
   const change=(id:HeaderKey,field:"en"|"ar"|"visible",value:string|boolean) => {
     setSettings(old => ({...old,[id]:{...old[id],[field]:value}}));
-    setNotice("");
+    setNotice("");setDirty(true);
   };
   return <section className="rounded-xl border bg-white p-5 shadow-sm">
     <h2 className="text-xl font-bold">Top Bar / Header</h2>
@@ -35,11 +38,11 @@ export default function HeaderAdmin() {
     <div className="mt-5 flex flex-wrap items-center gap-3">
       <button className="inline-flex items-center gap-2 rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white" onClick={()=>{
         if(headerKeys.some(k=>!settings[k].en.trim()||!settings[k].ar.trim())) {setNotice("All English and Arabic labels are required.");return;}
-        void saveHeaderSettings(settings).then(()=>setNotice("Header published to all users.")).catch(e=>setNotice(String(e.message||e)));
+        void saveHeaderSettings(settings).then(()=>{setDirty(false);setNotice("Header published to all users.");}).catch(e=>setNotice(String(e.message||e)));
       }}><Save size={16}/>Save header</button>
       <button className="inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm" onClick={()=>{
         if(!confirm("Restore default header labels and visibility?"))return;
-        void resetHeaderSettings().then(()=>{setSettings(structuredClone(headerDefaults));setNotice("Header defaults published.");}).catch(e=>setNotice(String(e.message||e)));
+        void resetHeaderSettings().then(()=>{setSettings(structuredClone(headerDefaults));setDirty(false);setNotice("Header defaults published.");}).catch(e=>setNotice(String(e.message||e)));
       }}><RotateCcw size={16}/>Reset header</button>
       {notice && <span role="status" className="text-sm text-slate-600">{notice}</span>}
     </div>
