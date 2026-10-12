@@ -1,5 +1,6 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { watchContent } from "@/lib/sharedContent";
 import { Save, RotateCcw, ExternalLink } from "lucide-react";
 import { readJourney, saveJourney, resetJourney, type JourneyConfig, type ItemEdit, type ActionEdit } from "@/lib/developmentJourney";
 import { defaultStages } from "@/pages/ProjectJourneyPage";
@@ -14,6 +15,7 @@ export default function JourneyPageAdmin() {
   const [selected, setSelected] = useState<Selected>(null);
   const [notice, setNotice] = useState("");
   const [dirty, setDirty] = useState(false);
+  useEffect(()=>watchContent(()=>{if(!dirty)setConfig(readJourney());}),[dirty]);
   const update = (patch: Partial<JourneyConfig>) => { setConfig(old => ({...old,...patch}));setDirty(true);setNotice(""); };
   const setStage = (id: string, key: "en" | "ar" | "description" | "descriptionAr", value: string) => {
     const base = defaultStages.find(stage => stage.targetId === id)!;
