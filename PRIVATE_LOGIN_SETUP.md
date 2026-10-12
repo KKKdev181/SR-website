@@ -1,50 +1,43 @@
-# Private Requests Portal login — development setup
+# Password-only admin access (Development)
 
-The Requests Portal now has its **own** account system. It does **not** use Microsoft Entra or company SSO.
+The Requests Portal now supports one shared access password for `/admin`. No user registration, email, or username field is required.
 
-## Codespaces quick start
+## Setup
 
-Use the `development` branch and pull latest changes. Open **three terminals**.
+The password belongs to the existing, pre-created `portaladmin` record in the protected `private-data/users.json` file. If you already created this account, **use its existing password**. Do not recreate it.
 
-**Terminal 1 — Create first admin** (one time; enter a strong unique password when prompted):
+Run these in separate Codespaces terminals:
+
 ```bash
+# First, update the development branch
+git pull origin development
 npm install
-npm run auth:create-user -- "Portal Administrator" portaladmin admin
 ```
-The user details are stored in `private-data/users.json`, outside Git. **Do not upload this file or share passwords.** The bootstrap CLI hides password entry and asks for confirmation. Never disclose or commit the password.
 
-**Terminal 2 — Authentication service:**
 ```bash
+# Terminal 1 — backend
 npm run auth:server
 ```
 
-**Terminal 3 — Frontend:**
 ```bash
+# Terminal 2 — website
 npm run dev -- --host 0.0.0.0
 ```
 
-Open the forwarded port **8080**, then visit `/admin`. Enter `portaladmin` and the password created in Terminal 1.
+Open the forwarded port 8080 URL with `/admin` at the end. Enter only the shared password created for the original `portaladmin` account. No username or registration is needed. Keep port 8787 private; only use the 8080 website URL.
 
-Additional team members (run in Terminal 1, repeat for each person):
+If no `portaladmin` record exists yet, provision it **once** from an interactive terminal:
+
 ```bash
-npm run auth:create-user -- "Team Member" teammember editor
+npm run auth:create-user -- "Portal Administrator" portaladmin admin
 ```
-An `admin` or `editor` may access the current editor. You must distribute passwords securely. Do not register accounts publicly.
 
-## Security properties in development
-- Only server-side hashed passwords (scrypt with random salts), never plaintext in frontend code.
-- Session ID stored in an HttpOnly SameSite=Strict cookie; sessions expire after 8 hours and are lost when the backend restarts.
-- Login attempt limiting, same-origin check on mutating auth endpoints.
-- Anonymous users can browse the public portal but cannot mount `/admin` in the normal app UI.
-- The top bar shows the account icon; logged-in editors can access the Admin page and log out.
+It will prompt privately for a unique 12+ character password. Do not post the password in chat, GitHub, or screenshots. Store it in your team's approved password manager.
 
-## Production blockers (IMPORTANT)
-**Do not deploy this implementation directly to `td.elm.sa`.** It is a development proof of concept. The private auth service must run on a trusted managed host and be exposed behind HTTPS and a properly configured IIS reverse proxy for `/api/auth`. The React route guard is not an authorization boundary. Before release:
+## Security and production limitations
 
-1. Put all editing/publishing behind server-side authenticated APIs and role authorization. Existing edits still use browser localStorage, meaning edits are **not shared** among team members and can be modified without a backend.
-2. Implement durable user/session storage, hardened multi-process rate limiting, account provisioning/revocation and password resets, audit logging, regular backups, HTTPS + secure cookies, and security testing.
-3. Harden access controls and validate every edit server-side; add draft/approve/publish workflow and rollback. Keep dev/production databases isolated.
-4. Configure IIS rewrite for `/admin` and proxy for `/api/auth`; verify host forwarding, SameSite/cookie security, reverse proxy origin checks and token/session expiration.
-5. Test abuse scenarios, privilege escalation, unauthorized API writes, password changes, concurrent edits, logout and recovery.
-
-`main` and the live production deployment remain untouched.
+- Sharing one password means **anyone possessing it can edit**, and individual edits cannot be reliably attributed to a teammate.
+- Rotating or revoking access requires changing the shared password and invalidating existing sessions. An account compromise affects the whole team.
+- The HTTP-only browser cookie and server-side password hash are preferable to storing a password in the frontend, but **this is not production ready**. The login route is guarded in React; actual edit data is still stored in localStorage and cannot be securely enforced or shared without a backend.
+- Before publishing to `td.elm.sa`, implement server-side authorization on every mutation, shared database storage, audit log, HTTPS, persistent secure session storage, account/password rotation, protection against CSRF, and deployment/rollback controls. Do not expose port 8787 publicly.
+- The live `main` branch has not been changed.
