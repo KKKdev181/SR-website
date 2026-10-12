@@ -5,6 +5,7 @@ import { readSidebar, saveSidebar, type SidebarSetting } from "@/lib/development
 export default function SidebarAdmin() {
   const [rows,setRows] = useState<SidebarSetting[]>(readSidebar);
   const [saved,setSaved] = useState(false);
+  const [notice,setNotice]=useState("");
   const change=(id:string,patch:Partial<SidebarSetting>) => {setRows(v=>v.map(x=>x.id===id?{...x,...patch}:x));setSaved(false);};
   const move=(index:number,delta:number) => {
     const next=index+delta;if(next<0||next>=rows.length)return;
@@ -19,7 +20,7 @@ export default function SidebarAdmin() {
       <label className="text-xs font-medium">Arabic<input dir="rtl" className="mt-1 w-full rounded border p-2 text-sm" value={row.ar} onChange={e=>change(row.id,{ar:e.target.value})}/></label>
       <div className="flex items-center gap-2"><button aria-label="Move category up" className="rounded border p-2" onClick={()=>move(i,-1)}><ArrowUp size={16}/></button><button aria-label="Move category down" className="rounded border p-2" onClick={()=>move(i,1)}><ArrowDown size={16}/></button><label className="flex items-center gap-1 text-xs"><input type="checkbox" checked={row.hidden} onChange={e=>change(row.id,{hidden:e.target.checked})}/> Hide</label></div>
     </div>)}</div>
-    <button className="mt-5 inline-flex items-center gap-2 rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white" onClick={()=>{saveSidebar(rows);setSaved(true);}}><Save size={16}/> Save sidebar</button>
-    {saved&&<span role="status" className="ml-3 text-sm text-green-700">Sidebar saved locally in this browser.</span>}
+    <button className="mt-5 inline-flex items-center gap-2 rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white" onClick={()=>{void saveSidebar(rows).then(()=>{setSaved(true);setNotice("Sidebar published for all users.");}).catch(e=>setNotice(String(e.message||e)));}}><Save size={16}/> Save sidebar</button>
+    {notice&&<span role="status" className="ml-3 text-sm text-slate-700">{notice}</span>}
   </section>;
 }
