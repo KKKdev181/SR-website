@@ -5,14 +5,14 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import Index from "./pages/Index.tsx";
-import AdminPage from "./pages/AdminPage.tsx";
+import AdminGate from "./pages/AdminGate.tsx";
 import ProjectJourneyPage from "./pages/ProjectJourneyPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
 
 const App = () => (
-  window.location.pathname.replace(/\/$/, "") === "/admin" ? <AdminPage /> : (
+  window.location.pathname.replace(/\/$/, "") === "/admin" ? <AdminGate /> : (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <LanguageProvider>
