@@ -11,7 +11,7 @@ Use the `development` branch and pull latest changes. Open **three terminals**.
 npm install
 npm run auth:create-user -- "Portal Administrator" portaladmin admin
 ```
-The user details are stored in `private-data/users.json`, outside Git. **Do not upload this file or share passwords.** The bootstrap CLI currently accepts a password from the terminal; ensure nobody can see the screen or terminal history.
+The user details are stored in `private-data/users.json`, outside Git. **Do not upload this file or share passwords.** The bootstrap CLI hides password entry and asks for confirmation. Never disclose or commit the password.
 
 **Terminal 2 — Authentication service:**
 ```bash
