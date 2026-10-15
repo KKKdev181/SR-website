@@ -1,11 +1,19 @@
 import { useMemo, useState } from "react";
-import { Building2, Mail, Search, UserRound, UsersRound } from "lucide-react";
+import { BriefcaseBusiness, Mail, Search, UsersRound } from "lucide-react";
 import Header from "@/components/portal/Header";
 import Footer from "@/components/portal/Footer";
 import { departmentAssignments, tpmContacts } from "@/data/departmentAssignments";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const normalize = (value: string) => value.toLowerCase().trim();
+
+const getInitials = (name: string) =>
+  name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join("");
 
 const TeamsIcon = ({ className = "h-4 w-4" }: { className?: string }) => (
   <svg
@@ -149,8 +157,8 @@ const TpmDirectoryPage = () => {
                   >
                     <div className="p-5">
                       <div className="flex items-start justify-between gap-4">
-                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#e9f2ff] text-[#0c66e4]">
-                          <Building2 className="h-5 w-5" aria-hidden="true" />
+                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#d9e4f2] bg-[#f7f9fc] text-[#315f86] shadow-sm">
+                          <BriefcaseBusiness className="h-[19px] w-[19px] stroke-[1.8]" aria-hidden="true" />
                         </span>
                         {item.tpms.length > 1 && (
                           <span className="rounded-full bg-[#fff0b3] px-2.5 py-1 text-[10px] font-bold text-[#7f5f01]">
@@ -173,8 +181,11 @@ const TpmDirectoryPage = () => {
 
                             return (
                               <div key={tpm} className="flex items-center gap-2.5">
-                                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#f1f2f4] text-[#44546f]">
-                                  <UserRound className="h-4 w-4" aria-hidden="true" />
+                                <span
+                                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#d9e4f2] bg-[#f4f8fc] text-[11px] font-bold tracking-wide text-[#315f86]"
+                                  aria-hidden="true"
+                                >
+                                  {getInitials(tpm)}
                                 </span>
 
                                 <div className="min-w-0 flex-1">
