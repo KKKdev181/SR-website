@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { BriefcaseBusiness, Mail, Search, UsersRound } from "lucide-react";
+import { Building2, Mail, Search, UsersRound } from "lucide-react";
 import Header from "@/components/portal/Header";
 import Footer from "@/components/portal/Footer";
 import { departmentAssignments, tpmContacts } from "@/data/departmentAssignments";
@@ -157,8 +157,8 @@ const TpmDirectoryPage = () => {
                   >
                     <div className="p-5">
                       <div className="flex items-start justify-between gap-4">
-                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#d9e4f2] bg-[#f7f9fc] text-[#315f86] shadow-sm">
-                          <BriefcaseBusiness className="h-[19px] w-[19px] stroke-[1.8]" aria-hidden="true" />
+                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#dfe6ee] bg-[#f8fafc] text-[#0c66e4]">
+                          <Building2 className="h-5 w-5 stroke-[1.8]" aria-hidden="true" />
                         </span>
                         {item.tpms.length > 1 && (
                           <span className="rounded-full bg-[#fff0b3] px-2.5 py-1 text-[10px] font-bold text-[#7f5f01]">
