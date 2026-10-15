@@ -83,6 +83,6 @@ export const departmentAssignments: DepartmentAssignment[] = [
   { department: "Specifications & Standards", tpms: ["Khaled Othman Abaalkhail"], serviceCount: 2 },
   { department: "System Design & BI", tpms: ["Maryam A. Aljasham"], serviceCount: 2 },
   { department: "Vehicles", tpms: ["Mohammad A. Alsamari"], serviceCount: 11 },
-  { department: "corporate communication", tpms: ["Maryam A. Aljasham"], serviceCount: 1 },
-  { department: "product intgration", tpms: ["Mohammad A. Alsamari"], serviceCount: 1 },
+  { department: "Corporate Communication", tpms: ["Maryam A. Aljasham"], serviceCount: 1 },
+  { department: "Product Integration", tpms: ["Mohammad A. Alsamari"], serviceCount: 1 },
 ];
