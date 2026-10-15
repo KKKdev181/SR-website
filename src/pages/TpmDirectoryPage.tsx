@@ -182,25 +182,27 @@ const TpmDirectoryPage = () => {
                                 </div>
 
                                 {contact && (
-                                  <div className="flex shrink-0 items-center gap-1.5">
+                                  <div className="flex shrink-0 items-center gap-2">
                                     <a
                                       href={`mailto:${contact.email}`}
-                                      className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#d9d7f7] bg-[#f7f6ff] text-[#5b5fc7] transition hover:border-[#a9a7e8] hover:bg-[#ecebff] hover:text-[#464775] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5b5fc7]"
+                                      className="inline-flex min-h-9 items-center justify-center gap-1.5 rounded-lg border border-[#d9d7f7] bg-[#f7f6ff] px-3 text-xs font-semibold text-[#5b5fc7] transition hover:border-[#a9a7e8] hover:bg-[#ecebff] hover:text-[#464775] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5b5fc7]"
                                       aria-label={`${isArabic ? "إرسال بريد إلى" : "Email"} ${tpm}`}
                                       title={isArabic ? "إرسال بريد" : "Email"}
                                     >
                                       <Mail className="h-4 w-4" aria-hidden="true" />
+                                      <span>{isArabic ? "البريد" : "Email"}</span>
                                     </a>
 
                                     <a
                                       href={contact.teamsUrl}
                                       target="_blank"
                                       rel="noopener noreferrer"
-                                      className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#dfe1e6] bg-white text-[#44546f] transition hover:border-[#b3d4ff] hover:bg-[#f4f8ff] hover:text-[#0c66e4] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0c66e4]"
+                                      className="inline-flex min-h-9 items-center justify-center gap-1.5 rounded-lg border border-[#d8d7ef] bg-[#f6f6ff] px-3 text-xs font-semibold text-[#5b5fc7] transition hover:border-[#a9a7e8] hover:bg-[#ecebff] hover:text-[#464775] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5b5fc7]"
                                       aria-label={`${isArabic ? "فتح محادثة Teams مع" : "Open Teams chat with"} ${tpm}`}
                                       title={isArabic ? "محادثة Teams" : "Teams chat"}
                                     >
                                       <TeamsIcon className="h-[18px] w-[18px]" />
+                                      <span>Teams</span>
                                     </a>
                                   </div>
                                 )}
