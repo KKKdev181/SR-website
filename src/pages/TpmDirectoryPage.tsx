@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
-import { Building2, Search, UserRound, UsersRound } from "lucide-react";
+import { Building2, Mail, MessageCircle, Search, UserRound, UsersRound } from "lucide-react";
 import Header from "@/components/portal/Header";
 import Footer from "@/components/portal/Footer";
-import { departmentAssignments } from "@/data/departmentAssignments";
+import { departmentAssignments, tpmContacts } from "@/data/departmentAssignments";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const normalize = (value: string) => value.toLowerCase().trim();
@@ -152,14 +152,45 @@ const TpmDirectoryPage = () => {
                           {isArabic ? "مدير المشروع التقني" : "Technical Project Manager"}
                         </div>
                         <div className="space-y-2">
-                          {item.tpms.map((tpm) => (
-                            <div key={tpm} className="flex items-center gap-2.5">
-                              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#f1f2f4] text-[#44546f]">
-                                <UserRound className="h-4 w-4" aria-hidden="true" />
-                              </span>
-                              <span className="text-sm font-semibold text-[#172b4d]">{tpm}</span>
-                            </div>
-                          ))}
+                          {item.tpms.map((tpm) => {
+                            const contact = tpmContacts[tpm];
+
+                            return (
+                              <div key={tpm} className="flex items-center gap-2.5">
+                                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#f1f2f4] text-[#44546f]">
+                                  <UserRound className="h-4 w-4" aria-hidden="true" />
+                                </span>
+
+                                <div className="min-w-0 flex-1">
+                                  <span className="block truncate text-sm font-semibold text-[#172b4d]">{tpm}</span>
+                                </div>
+
+                                {contact && (
+                                  <div className="flex shrink-0 items-center gap-1.5">
+                                    <a
+                                      href={`mailto:${contact.email}`}
+                                      className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#dfe1e6] bg-white text-[#44546f] transition hover:border-[#b3d4ff] hover:bg-[#f4f8ff] hover:text-[#0c66e4] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0c66e4]"
+                                      aria-label={`${isArabic ? "إرسال بريد إلى" : "Email"} ${tpm}`}
+                                      title={isArabic ? "إرسال بريد" : "Email"}
+                                    >
+                                      <Mail className="h-4 w-4" aria-hidden="true" />
+                                    </a>
+
+                                    <a
+                                      href={contact.teamsUrl}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#dfe1e6] bg-white text-[#44546f] transition hover:border-[#b3d4ff] hover:bg-[#f4f8ff] hover:text-[#0c66e4] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0c66e4]"
+                                      aria-label={`${isArabic ? "فتح محادثة Teams مع" : "Open Teams chat with"} ${tpm}`}
+                                      title={isArabic ? "محادثة Teams" : "Teams chat"}
+                                    >
+                                      <MessageCircle className="h-4 w-4" aria-hidden="true" />
+                                    </a>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
                         </div>
                       </div>
                     </div>
