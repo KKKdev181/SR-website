@@ -1,3 +1,27 @@
+export interface TpmContact {
+  email: string;
+  teamsUrl: string;
+}
+
+export const tpmContacts: Record<string, TpmContact> = {
+  "Khaled Othman Abaalkhail": {
+    email: "kabaalkhail@elm.sa",
+    teamsUrl: "https://teams.microsoft.com/l/chat/0/0?users=kabaalkhail@elm.sa",
+  },
+  "Maryam A. Aljasham": {
+    email: "maljasham@elm.sa",
+    teamsUrl: "https://teams.microsoft.com/l/chat/0/0?users=maljasham@elm.sa",
+  },
+  "Mohammad A. Alsamari": {
+    email: "moalsamari@elm.sa",
+    teamsUrl: "https://teams.microsoft.com/l/chat/0/0?users=moalsamari@elm.sa",
+  },
+  "Mohammed S. Abu Thunayn": {
+    email: "moabuthunayn@elm.sa",
+    teamsUrl: "https://teams.microsoft.com/l/chat/0/0?users=moabuthunayn@elm.sa",
+  },
+};
+
 export interface DepartmentAssignment {
   department: string;
   tpms: string[];
