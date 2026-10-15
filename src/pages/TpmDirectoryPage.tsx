@@ -193,16 +193,14 @@ const TpmDirectoryPage = () => {
                                 </div>
 
                                 {contact && (
-                                  <div className="flex shrink-0 items-center gap-2">
+                                  <div className="flex shrink-0 items-center gap-1.5">
                                     <a
                                       href={`mailto:${contact.email}`}
-                                      className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-[#c7d4e3] bg-white px-3.5 text-xs font-semibold text-[#253858] shadow-sm transition hover:border-[#0c66e4] hover:bg-[#f7fbff] hover:text-[#0c66e4] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0c66e4]/30"
+                                      className="inline-flex h-8 items-center justify-center gap-1.5 rounded-md border border-[#d7e0ea] bg-white px-2.5 text-[11px] font-semibold text-[#44546f] transition hover:border-[#0c66e4] hover:bg-[#f7fbff] hover:text-[#0c66e4] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0c66e4]/25"
                                       aria-label={`${isArabic ? "إرسال بريد إلى" : "Email"} ${tpm}`}
                                       title={isArabic ? "إرسال بريد" : "Email"}
                                     >
-                                      <span className="flex h-6 w-6 items-center justify-center rounded-md bg-[#e9f2ff] text-[#0c66e4]">
-                                        <Mail className="h-4 w-4 stroke-[2]" aria-hidden="true" />
-                                      </span>
+                                      <Mail className="h-3.5 w-3.5" aria-hidden="true" />
                                       <span>{isArabic ? "البريد" : "Email"}</span>
                                     </a>
 
@@ -210,11 +208,11 @@ const TpmDirectoryPage = () => {
                                       href={contact.teamsUrl}
                                       target="_blank"
                                       rel="noopener noreferrer"
-                                      className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-[#5b5fc7] bg-[#5b5fc7] px-3.5 text-xs font-semibold text-white shadow-sm transition hover:border-[#4b4fa8] hover:bg-[#4b4fa8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5b5fc7]/35"
+                                      className="inline-flex h-8 items-center justify-center gap-1.5 rounded-md border border-[#d8d7ef] bg-[#f7f6ff] px-2.5 text-[11px] font-semibold text-[#5b5fc7] transition hover:border-[#a9a7e8] hover:bg-[#ecebff] hover:text-[#464775] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5b5fc7]/25"
                                       aria-label={`${isArabic ? "فتح محادثة Teams مع" : "Open Teams chat with"} ${tpm}`}
                                       title={isArabic ? "محادثة Teams" : "Teams chat"}
                                     >
-                                      <TeamsIcon className="h-[19px] w-[19px] text-white" />
+                                      <TeamsIcon className="h-3.5 w-3.5" />
                                       <span>Teams</span>
                                     </a>
                                   </div>
