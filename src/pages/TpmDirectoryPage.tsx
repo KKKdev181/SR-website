@@ -14,11 +14,12 @@ const TeamsIcon = ({ className = "h-4 w-4" }: { className?: string }) => (
     aria-hidden="true"
     focusable="false"
   >
-    <rect x="8.2" y="6.2" width="9.4" height="11.2" rx="2.1" fill="currentColor" opacity="0.95" />
-    <rect x="3.2" y="8.1" width="7.8" height="8.1" rx="1.7" fill="currentColor" />
-    <circle cx="17.9" cy="6.1" r="2.1" fill="currentColor" opacity="0.78" />
-    <circle cx="20.1" cy="9.6" r="1.6" fill="currentColor" opacity="0.6" />
-    <path d="M5.1 10.25h4.1v1.35H7.85v3.95H6.45V11.6H5.1z" fill="white" />
+    <circle cx="16.8" cy="5.6" r="2.2" fill="#7B83EB" />
+    <circle cx="20" cy="7.5" r="1.6" fill="#7B83EB" />
+    <path d="M14.1 8h4.9a2 2 0 0 1 2 2v4.2a3.8 3.8 0 0 1-3.8 3.8h-3.1V8Z" fill="#6264A7" />
+    <rect x="4" y="6.2" width="11.6" height="12.1" rx="2.2" fill="#5B5FC7" />
+    <rect x="2.1" y="8" width="8.6" height="8.6" rx="1.8" fill="#5059C9" />
+    <path d="M4.2 10h4.5v1.4H7.15v4.2H5.7v-4.2H4.2V10Z" fill="#FFFFFF" />
   </svg>
 );
 
@@ -63,8 +64,8 @@ const TpmDirectoryPage = () => {
                 </h1>
                 <p className="mt-2 max-w-2xl text-sm leading-6 text-[#5e6c84] sm:text-base">
                   {isArabic
-                    ? "ابحث باسم الإدارة لمعرفة مدير المشروع التقني المسؤول عن تنسيق التسليم التقني لجميع الخدمات التابعة لها."
-                    : "Search by department to find the Technical Project Manager responsible for coordinating technology delivery across its services."}
+                    ? "ابحث باسم الإدارة لمعرفة مدير المشروع التقني المسؤول عن التسليم التقني للخدمات التابعة لها."
+                    : "Search by department to find the Technical Project Manager responsible for technology delivery across its services."}
                 </p>
               </div>
 
