@@ -271,6 +271,12 @@ const Index = () => {
                 <ExternalLink className="h-4 w-4" aria-hidden="true" />
               </a>
             </section>
+
+            <div className="mt-5 border-t border-[#dfe1e6] px-3 pt-4 text-center">
+              <p className="text-[11px] font-medium tracking-wide text-[#7a869a]">
+                {isArabic ? "تم التطوير بواسطة Technology Delivery" : "Developed by Technology Delivery"}
+              </p>
+            </div>
           </div>
         </aside>
 
