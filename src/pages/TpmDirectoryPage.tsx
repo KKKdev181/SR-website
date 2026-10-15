@@ -1,11 +1,26 @@
 import { useMemo, useState } from "react";
-import { Building2, Mail, MessageCircle, Search, UserRound, UsersRound } from "lucide-react";
+import { Building2, Mail, Search, UserRound, UsersRound } from "lucide-react";
 import Header from "@/components/portal/Header";
 import Footer from "@/components/portal/Footer";
 import { departmentAssignments, tpmContacts } from "@/data/departmentAssignments";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const normalize = (value: string) => value.toLowerCase().trim();
+
+const TeamsIcon = ({ className = "h-4 w-4" }: { className?: string }) => (
+  <svg
+    viewBox="0 0 24 24"
+    className={className}
+    aria-hidden="true"
+    focusable="false"
+  >
+    <rect x="8.2" y="6.2" width="9.4" height="11.2" rx="2.1" fill="currentColor" opacity="0.95" />
+    <rect x="3.2" y="8.1" width="7.8" height="8.1" rx="1.7" fill="currentColor" />
+    <circle cx="17.9" cy="6.1" r="2.1" fill="currentColor" opacity="0.78" />
+    <circle cx="20.1" cy="9.6" r="1.6" fill="currentColor" opacity="0.6" />
+    <path d="M5.1 10.25h4.1v1.35H7.85v3.95H6.45V11.6H5.1z" fill="white" />
+  </svg>
+);
 
 const TpmDirectoryPage = () => {
   const { language } = useLanguage();
@@ -169,7 +184,7 @@ const TpmDirectoryPage = () => {
                                   <div className="flex shrink-0 items-center gap-1.5">
                                     <a
                                       href={`mailto:${contact.email}`}
-                                      className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#dfe1e6] bg-white text-[#44546f] transition hover:border-[#b3d4ff] hover:bg-[#f4f8ff] hover:text-[#0c66e4] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0c66e4]"
+                                      className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#d9d7f7] bg-[#f7f6ff] text-[#5b5fc7] transition hover:border-[#a9a7e8] hover:bg-[#ecebff] hover:text-[#464775] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5b5fc7]"
                                       aria-label={`${isArabic ? "إرسال بريد إلى" : "Email"} ${tpm}`}
                                       title={isArabic ? "إرسال بريد" : "Email"}
                                     >
@@ -184,7 +199,7 @@ const TpmDirectoryPage = () => {
                                       aria-label={`${isArabic ? "فتح محادثة Teams مع" : "Open Teams chat with"} ${tpm}`}
                                       title={isArabic ? "محادثة Teams" : "Teams chat"}
                                     >
-                                      <MessageCircle className="h-4 w-4" aria-hidden="true" />
+                                      <TeamsIcon className="h-[18px] w-[18px]" />
                                     </a>
                                   </div>
                                 )}
