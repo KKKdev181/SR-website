@@ -109,7 +109,7 @@ const applicationRequestPriority: Record<string, number> = {
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchFocused, setSearchFocused] = useState(false);
-  const selectedAiModel = "gpt-oss-120b";
+  const [searchMode, setSearchMode] = useState<"catalog" | "ai">("catalog");
   const [aiAvailable, setAiAvailable] = useState(false);
   const [aiLoading, setAiLoading] = useState(false);
   const [aiResult, setAiResult] = useState<AiResult | null>(null);
@@ -183,6 +183,7 @@ const Index = () => {
   }, [activeCategory, activeSubcategory, categoryRequests, subcategories]);
 
   const searchSuggestions = useMemo(() => {
+    if (searchMode !== "catalog") return [];
     const query = normalizeSearch(searchQuery);
     if (query.length < 2) return [];
 
@@ -202,12 +203,12 @@ const Index = () => {
       })
       .sort((a, b) => a.score - b.score || a.localized.title.localeCompare(b.localized.title))
       .slice(0, 7);
-  }, [searchQuery, subcategoryRequests, isArabic]);
+  }, [searchQuery, subcategoryRequests, isArabic, searchMode]);
 
   const filteredRequests = useMemo(() => {
     let result = [...subcategoryRequests];
 
-    if (searchQuery.trim()) {
+    if (searchMode === "catalog" && searchQuery.trim()) {
       result = result.filter((request) => matchesSearch(request, searchQuery.trim()));
     }
 
@@ -224,7 +225,7 @@ const Index = () => {
     }
 
     return result;
-  }, [activeCategory, subcategoryRequests, searchQuery]);
+  }, [activeCategory, subcategoryRequests, searchQuery, searchMode]);
 
   if (toolParam === "project-journey-checklist") {
     return <Navigate replace to="/tools/project-journey-checklist" />;
@@ -267,7 +268,7 @@ const Index = () => {
 
   const askAi = async () => {
     const query = searchQuery.trim();
-    if (!query || !selectedAiModel || aiLoading) return;
+    if (!query || !aiAvailable || aiLoading) return;
 
     setAiLoading(true);
     setAiError("");
@@ -404,112 +405,155 @@ const Index = () => {
             <p className="mt-1 text-sm leading-6 text-[#5e6c84]">{description}</p>
           </div>
 
-          <div className="relative z-30 mb-4 flex flex-col gap-3 lg:flex-row">
-            <div className="relative min-w-0 flex-1">
-              <Search className={`pointer-events-none absolute top-[22px] z-10 h-5 w-5 -translate-y-1/2 text-[#7a869a] ${isArabic ? "right-4" : "left-4"}`} />
-              <input
-                value={searchQuery}
-                onChange={(event) => {
-                  setSearchQuery(event.target.value);
+          <section className="relative z-30 mb-5">
+            <div className="mb-3 inline-flex rounded-xl border border-[#dfe1e6] bg-white p-1 shadow-sm">
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchMode("catalog");
                   setAiResult(null);
                   setAiError("");
                 }}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" && event.ctrlKey && aiAvailable) {
-                    event.preventDefault();
-                    askAi();
-                  }
-                }}
-                onFocus={() => setSearchFocused(true)}
-                onBlur={() => window.setTimeout(() => setSearchFocused(false), 120)}
-                placeholder={
-                  aiAvailable
-                    ? isArabic
-                      ? "ابحث عن طلب أو اكتب احتياجك واسأل AI..."
-                      : "Search requests or describe what you need..."
-                    : copy.catalog.searchPlaceholder
-                }
-                autoComplete="off"
-                aria-autocomplete="list"
-                aria-expanded={searchFocused && searchQuery.trim().length >= 2}
-                aria-controls="request-search-suggestions"
-                className={`h-11 w-full rounded-lg border border-[#dfe1e6] bg-white text-sm text-[#172b4d] shadow-sm outline-none transition placeholder:text-[#97a0af] focus:border-[#0c66e4] focus:ring-2 focus:ring-[#0c66e4]/15 ${isArabic ? "pr-12 pl-4" : "pl-12 pr-4"}`}
-                aria-label={copy.catalog.searchLabel}
-              />
-
-              {searchFocused && searchQuery.trim().length >= 2 && (
-                <div
-                  id="request-search-suggestions"
-                  role="listbox"
-                  className="absolute inset-x-0 top-[calc(100%+6px)] overflow-hidden rounded-xl border border-[#dfe1e6] bg-white shadow-[0_12px_32px_rgba(9,30,66,0.16)]"
-                  dir={isArabic ? "rtl" : "ltr"}
-                >
-                  <div className="border-b border-[#f1f2f4] px-4 py-2.5 text-[11px] font-bold uppercase tracking-wide text-[#6b778c]">
-                    {searchSuggestions.length > 0
-                      ? isArabic
-                        ? "طلبات مقترحة"
-                        : "Suggested requests"
-                      : isArabic
-                        ? "لا توجد اقتراحات مطابقة"
-                        : "No matching suggestions"}
-                  </div>
-
-                  {searchSuggestions.map(({ request, localized }) => {
-                    const category = getPortalCategory(request);
-                    const categoryLabel = category ? (isArabic ? category.ar : category.en) : localized.section;
-
-                    return (
-                      <button
-                        key={request.id}
-                        type="button"
-                        role="option"
-                        onMouseDown={(event) => event.preventDefault()}
-                        onClick={() => chooseSuggestion(request)}
-                        className="group flex w-full items-center justify-between gap-4 border-b border-[#f1f2f4] px-4 py-3 text-start transition last:border-b-0 hover:bg-[#f7f9fc] focus:bg-[#f7f9fc] focus:outline-none"
-                      >
-                        <div className="min-w-0 flex-1">
-                          <div className="truncate text-sm font-semibold text-[#172b4d] group-hover:text-[#0c66e4]">
-                            {localized.title}
-                          </div>
-                          <div className="mt-1 flex min-w-0 items-center gap-2">
-                            <span className="shrink-0 rounded-full bg-[#e9f2ff] px-2 py-0.5 text-[10px] font-medium text-[#0c66e4]">
-                              {categoryLabel}
-                            </span>
-                            <span className="truncate text-xs text-[#7a869a]">{localized.description}</span>
-                          </div>
-                        </div>
-                        <ArrowUpRight className={`h-4 w-4 shrink-0 text-[#97a0af] transition group-hover:text-[#0c66e4] ${isArabic ? "-rotate-90" : ""}`} aria-hidden="true" />
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-
-            <div className="flex shrink-0 gap-2 lg:w-auto">
-              <div
-                className="hidden h-11 items-center rounded-lg border border-[#dfe1e6] bg-white px-3 text-xs font-semibold text-[#44546f] shadow-sm sm:flex"
-                title="AI model"
+                className={`inline-flex h-9 items-center gap-2 rounded-lg px-3.5 text-sm font-semibold transition ${searchMode === "catalog" ? "bg-[#e9f2ff] text-[#0c66e4]" : "text-[#5e6c84] hover:bg-[#f7f8f9]"}`}
               >
-                gpt-oss-120b
-              </div>
-
+                <Search className="h-4 w-4" aria-hidden="true" />
+                <span>{isArabic ? "البحث في الخدمات" : "Search Services"}</span>
+              </button>
               <button
                 type="button"
-                onClick={askAi}
-                disabled={!aiAvailable || !searchQuery.trim() || aiLoading}
-                className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-lg bg-[#0c66e4] px-4 text-sm font-bold text-white shadow-sm transition hover:bg-[#0055cc] disabled:cursor-not-allowed disabled:bg-[#dfe1e6] disabled:text-[#97a0af]"
-                title={isArabic ? "اسأل AI عن الطلب المناسب" : "Ask AI for the right request"}
+                onClick={() => {
+                  setSearchMode("ai");
+                  setSearchFocused(false);
+                  setAiError("");
+                }}
+                disabled={!aiAvailable}
+                className={`inline-flex h-9 items-center gap-2 rounded-lg px-3.5 text-sm font-semibold transition ${searchMode === "ai" ? "bg-[#0c66e4] text-white shadow-sm" : "text-[#5e6c84] hover:bg-[#f7f8f9]"} disabled:cursor-not-allowed disabled:opacity-45`}
               >
-                {aiLoading ? (
-                  <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-                ) : (
-                  <Sparkles className="h-4 w-4" aria-hidden="true" />
-                )}
-                <span>{isArabic ? "اسأل AI" : "Ask AI"}</span>
+                <Sparkles className="h-4 w-4" aria-hidden="true" />
+                <span>{isArabic ? "اسأل مساعد التقنية" : "Ask Technology Center AI"}</span>
               </button>
             </div>
-          </div>
+
+            {searchMode === "catalog" ? (
+              <div className="relative">
+                <Search className={`pointer-events-none absolute top-1/2 z-10 h-5 w-5 -translate-y-1/2 text-[#7a869a] ${isArabic ? "right-4" : "left-4"}`} />
+                <input
+                  value={searchQuery}
+                  onChange={(event) => {
+                    setSearchQuery(event.target.value);
+                    setAiResult(null);
+                    setAiError("");
+                  }}
+                  onFocus={() => setSearchFocused(true)}
+                  onBlur={() => window.setTimeout(() => setSearchFocused(false), 120)}
+                  placeholder={copy.catalog.searchPlaceholder}
+                  autoComplete="off"
+                  aria-autocomplete="list"
+                  aria-expanded={searchFocused && searchQuery.trim().length >= 2}
+                  aria-controls="request-search-suggestions"
+                  className={`h-12 w-full rounded-xl border border-[#dfe1e6] bg-white text-sm text-[#172b4d] shadow-sm outline-none transition placeholder:text-[#97a0af] focus:border-[#0c66e4] focus:ring-2 focus:ring-[#0c66e4]/15 ${isArabic ? "pr-12 pl-4" : "pl-12 pr-4"}`}
+                  aria-label={copy.catalog.searchLabel}
+                />
+
+                {searchFocused && searchQuery.trim().length >= 2 && (
+                  <div
+                    id="request-search-suggestions"
+                    role="listbox"
+                    className="absolute inset-x-0 top-[calc(100%+6px)] overflow-hidden rounded-xl border border-[#dfe1e6] bg-white shadow-[0_12px_32px_rgba(9,30,66,0.16)]"
+                    dir={isArabic ? "rtl" : "ltr"}
+                  >
+                    <div className="border-b border-[#f1f2f4] px-4 py-2.5 text-[11px] font-bold uppercase tracking-wide text-[#6b778c]">
+                      {searchSuggestions.length > 0
+                        ? isArabic
+                          ? "طلبات مقترحة"
+                          : "Suggested requests"
+                        : isArabic
+                          ? "لا توجد اقتراحات مطابقة"
+                          : "No matching suggestions"}
+                    </div>
+
+                    {searchSuggestions.map(({ request, localized }) => {
+                      const category = getPortalCategory(request);
+                      const categoryLabel = category ? (isArabic ? category.ar : category.en) : localized.section;
+
+                      return (
+                        <button
+                          key={request.id}
+                          type="button"
+                          role="option"
+                          onMouseDown={(event) => event.preventDefault()}
+                          onClick={() => chooseSuggestion(request)}
+                          className="group flex w-full items-center justify-between gap-4 border-b border-[#f1f2f4] px-4 py-3 text-start transition last:border-b-0 hover:bg-[#f7f9fc] focus:bg-[#f7f9fc] focus:outline-none"
+                        >
+                          <div className="min-w-0 flex-1">
+                            <div className="truncate text-sm font-semibold text-[#172b4d] group-hover:text-[#0c66e4]">
+                              {localized.title}
+                            </div>
+                            <div className="mt-1 flex min-w-0 items-center gap-2">
+                              <span className="shrink-0 rounded-full bg-[#e9f2ff] px-2 py-0.5 text-[10px] font-medium text-[#0c66e4]">
+                                {categoryLabel}
+                              </span>
+                              <span className="truncate text-xs text-[#7a869a]">{localized.description}</span>
+                            </div>
+                          </div>
+                          <ArrowUpRight className={`h-4 w-4 shrink-0 text-[#97a0af] transition group-hover:text-[#0c66e4] ${isArabic ? "-rotate-90" : ""}`} aria-hidden="true" />
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="rounded-2xl border border-[#b3d4ff] bg-[#f7fbff] p-3 shadow-sm">
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <div className="relative min-w-0 flex-1">
+                    <Bot className={`pointer-events-none absolute top-1/2 z-10 h-5 w-5 -translate-y-1/2 text-[#0c66e4] ${isArabic ? "right-4" : "left-4"}`} aria-hidden="true" />
+                    <input
+                      value={searchQuery}
+                      onChange={(event) => {
+                        setSearchQuery(event.target.value);
+                        setAiResult(null);
+                        setAiError("");
+                      }}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter" && aiAvailable) {
+                          event.preventDefault();
+                          askAi();
+                        }
+                      }}
+                      placeholder={
+                        isArabic
+                          ? "اكتب احتياجك بطريقتك، مثلاً: أبي اتصال بين سيرفرين"
+                          : "Describe what you need, e.g. I need connection between two servers"
+                      }
+                      autoComplete="off"
+                      className={`h-12 w-full rounded-xl border border-[#b3d4ff] bg-white text-sm text-[#172b4d] shadow-sm outline-none transition placeholder:text-[#7a869a] focus:border-[#0c66e4] focus:ring-2 focus:ring-[#0c66e4]/15 ${isArabic ? "pr-12 pl-4" : "pl-12 pr-4"}`}
+                      aria-label={isArabic ? "اسأل مساعد التقنية" : "Ask Technology Center AI"}
+                    />
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={askAi}
+                    disabled={!aiAvailable || !searchQuery.trim() || aiLoading}
+                    className="inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-[#0c66e4] px-5 text-sm font-bold text-white shadow-sm transition hover:bg-[#0055cc] disabled:cursor-not-allowed disabled:bg-[#dfe1e6] disabled:text-[#97a0af]"
+                  >
+                    {aiLoading ? (
+                      <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                    ) : (
+                      <Sparkles className="h-4 w-4" aria-hidden="true" />
+                    )}
+                    <span>{isArabic ? "اسأل AI" : "Ask AI"}</span>
+                  </button>
+                </div>
+                <p className="mt-2 px-1 text-xs text-[#6b778c]">
+                  {isArabic
+                    ? "اكتب بشكل طبيعي أو عامي، والمساعد يرشح لك الطلب أو يشرح لك خطوات الموقع."
+                    : "Use normal language. The assistant can recommend the right request or explain portal guidance."}
+                </p>
+              </div>
+            )}
+          </section>
 
           {aiError && (
             <div className="mb-4 rounded-xl border border-[#ffbdad] bg-[#ffebe6] px-4 py-3 text-sm text-[#ae2a19]">
@@ -528,9 +572,8 @@ const Index = () => {
                 </span>
                 <div>
                   <h2 className="text-sm font-bold text-[#172b4d]">
-                    {isArabic ? "اقتراح مساعد Technology Center" : "Technology Center AI Recommendation"}
+                    {isArabic ? "مساعد Technology Center" : "Technology Center AI"}
                   </h2>
-                  <p className="text-[11px] text-[#6b778c]">{selectedAiModel}</p>
                 </div>
               </div>
 
@@ -632,19 +675,23 @@ const Index = () => {
             </div>
           )}
 
-          <p className="mb-4 text-sm text-[#44546f]">
-            <span className="font-semibold text-[#172b4d]">{filteredRequests.length}</span>{" "}
-            {copy.catalog.servicesFound}
-          </p>
+          {searchMode === "catalog" && (
+            <>
+              <p className="mb-4 text-sm text-[#44546f]">
+                <span className="font-semibold text-[#172b4d]">{filteredRequests.length}</span>{" "}
+                {copy.catalog.servicesFound}
+              </p>
 
-          {filteredRequests.length === 0 ? (
-            <EmptyState />
-          ) : (
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {filteredRequests.map((request) => (
-                <RequestCard key={request.id} request={request} showJourneyStep={activeCategory === "new-product-project"} />
-              ))}
-            </div>
+              {filteredRequests.length === 0 ? (
+                <EmptyState />
+              ) : (
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+                  {filteredRequests.map((request) => (
+                    <RequestCard key={request.id} request={request} showJourneyStep={activeCategory === "new-product-project"} />
+                  ))}
+                </div>
+              )}
+            </>
           )}
         </main>
       </div>
