@@ -10,7 +10,7 @@ const API_KEY = process.env.TD_AI_API_KEY || "";
 const MODELS_PATH = process.env.TD_AI_MODELS_PATH || "/v1/models";
 const CHAT_PATH = process.env.TD_AI_CHAT_PATH || "/v1/chat/completions";
 const ALLOWED_ORIGIN = process.env.TD_AI_ALLOWED_ORIGIN || "*";
-const FIXED_MODEL = "gpt-oss:120b";
+const FIXED_MODEL = "gpt-oss-120b";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
