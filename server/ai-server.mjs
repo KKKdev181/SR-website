@@ -54,6 +54,54 @@ const getDeterministicRecommendation = (query, catalog) => {
   ];
 
   const isServerConnection = serverConnectionSignals.some((signal) => text.includes(signal));
+
+  const genericServerSignals = [
+    "i want server",
+    "i need server",
+    "need a server",
+    "need server",
+    "new server",
+    "add server",
+    "ابي سيرفر",
+    "ابغى سيرفر",
+    "احتاج سيرفر",
+    "محتاج سيرفر",
+    "سيرفر جديد",
+    "اضيف سيرفر",
+    "ابي اضيف سيرفر",
+    "ابغى اضيف سيرفر",
+  ];
+
+  const isGenericServerRequest = genericServerSignals.some((signal) => text.includes(signal));
+
+  if (isGenericServerRequest && !isServerConnection) {
+    const drSignals = [" dr", "dr ", "disaster recovery", "تعافي", "دي ار"];
+    const isDr = drSignals.some((signal) => ` ${text} `.includes(signal));
+
+    const targetTitle = isDr
+      ? "Create New DR Servers for Project/Service"
+      : "Scale Up: Add New Server";
+
+    const item = findCatalogItem(catalog, targetTitle);
+    if (item) {
+      return {
+        answer: isDr
+          ? "This is the request for provisioning a new server in the DR environment."
+          : "This is the request used when you need to add a new server to an existing project or service.",
+        recommendations: [
+          {
+            title: item.title,
+            reason: isDr
+              ? "Use it when the required server is for Disaster Recovery."
+              : "Use it when you need a new server added to your current environment.",
+            url: item.url,
+          },
+        ],
+        matchedByRule: true,
+      };
+    }
+  }
+
   if (!isServerConnection) return null;
 
   const isDevQa = devQaSignals.some((signal) => text.includes(signal));
@@ -246,7 +294,9 @@ First infer the user's technical intent, then map it to the most precise request
 Use ONLY requests present in the provided catalog. Never invent a request, URL, approval, or process.
 Prefer ONE exact request when the user's intent clearly matches a single service. Only recommend multiple requests when they are genuinely required.
 If the user says they need communication or connectivity between two servers, prefer "Access Provisioning: Communication Provisioning for Staging & Production" unless they explicitly say Dev/QA, in which case prefer "Network & Security Access Request (Security Access Network Requests (Dev/QA))".
-If the user's need is unclear, say what information is missing.
+If the user simply says they want or need a server, prefer "Scale Up: Add New Server" unless they explicitly mention DR, in which case prefer "Create New DR Servers for Project/Service".
+Do not ask for sizing, environment, project name, CPU, RAM, or storage before recommending the request when one catalog request already clearly matches the intent.
+If the user's need is unclear, ask only the minimum clarification needed.
 Return ONLY valid JSON in this exact shape:
 {"answer":"short helpful answer","recommendations":[{"title":"exact catalog title","reason":"short reason","url":"exact catalog URL"}]}
 
