@@ -319,6 +319,10 @@ const Index = () => {
     }
   };
 
+  const aiResponseIsArabic = /[\u0600-\u06ff]/.test(
+    aiResult?.answer || searchQuery,
+  );
+
   const categoryButtonClass = (isActive: boolean) =>
     `flex min-h-11 min-w-max items-center justify-between gap-4 rounded-lg px-3 py-2 text-sm transition lg:w-full lg:min-w-0 ${
       isActive
@@ -514,7 +518,10 @@ const Index = () => {
           )}
 
           {aiResult && (
-            <section className="mb-5 overflow-hidden rounded-xl border border-[#b3d4ff] bg-white shadow-sm" dir={isArabic ? "rtl" : "ltr"}>
+            <section
+              className="mb-5 overflow-hidden rounded-xl border border-[#b3d4ff] bg-white shadow-sm"
+              dir={aiResponseIsArabic ? "rtl" : "ltr"}
+            >
               <div className="flex items-center gap-2 border-b border-[#dfe1e6] bg-[#f7fbff] px-4 py-3">
                 <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#e9f2ff] text-[#0c66e4]">
                   <Bot className="h-4 w-4" aria-hidden="true" />
@@ -529,7 +536,13 @@ const Index = () => {
 
               <div className="p-4">
                 {aiResult.answer && (
-                  <p className="text-sm leading-6 text-[#44546f]">{aiResult.answer}</p>
+                  <p
+                    dir="auto"
+                    className={`whitespace-pre-line text-[15px] leading-8 text-[#334e68] ${aiResponseIsArabic ? "text-right" : "text-left"}`}
+                    style={aiResponseIsArabic ? { fontFamily: "'Noto Sans Arabic', Arial, sans-serif" } : undefined}
+                  >
+                    {aiResult.answer}
+                  </p>
                 )}
 
                 {aiResult.recommendations.length > 0 && (
@@ -544,10 +557,10 @@ const Index = () => {
                       >
                         <div className="flex items-start justify-between gap-3">
                           <div>
-                            <h3 className="text-sm font-bold text-[#172b4d] group-hover:text-[#0c66e4]">
+                            <h3 dir="auto" className="text-start text-sm font-bold text-[#172b4d] group-hover:text-[#0c66e4]">
                               {recommendation.title}
                             </h3>
-                            <p className="mt-1 text-xs leading-5 text-[#5e6c84]">
+                            <p dir="auto" className="mt-1 text-start text-xs leading-6 text-[#5e6c84]">
                               {recommendation.reason}
                             </p>
                           </div>
