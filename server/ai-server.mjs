@@ -30,6 +30,106 @@ const KNOWLEDGE_FILES = [
   "src/pages/TpmDirectoryPage.tsx",
 ];
 
+const DEPARTMENT_ASSIGNMENTS_FILE = resolve(
+  REPO_ROOT,
+  "src/data/departmentAssignments.ts",
+);
+
+const parseDepartmentAssignments = () => {
+  try {
+    const source = readFileSync(DEPARTMENT_ASSIGNMENTS_FILE, "utf8");
+    const matches = [...source.matchAll(
+      /\{\s*department:\s*"([^"]+)",\s*tpms:\s*\[([^\]]*)\],\s*serviceCount:\s*(\d+)\s*\}/g,
+    )];
+
+    return matches.map((match) => ({
+      department: match[1],
+      tpms: [...match[2].matchAll(/"([^"]+)"/g)].map((item) => item[1]),
+      serviceCount: Number(match[3]),
+    }));
+  } catch (error) {
+    console.warn(
+      "Department assignments could not be loaded.",
+      error?.message || error,
+    );
+    return [];
+  }
+};
+
+const departmentAssignments = parseDepartmentAssignments();
+
+const TPM_ALIASES = [
+  {
+    name: "Khaled Othman Abaalkhail",
+    aliases: ["khaled", "khaled othman", "abaalkhail", "خالد", "خالد اباالخيل", "خالد أباالخيل"],
+  },
+  {
+    name: "Maryam A. Aljasham",
+    aliases: ["maryam", "aljasham", "مريم", "مريم الجشعم", "مريم الجشام"],
+  },
+  {
+    name: "Mohammad A. Alsamari",
+    aliases: ["mohammad alsamari", "alsamari", "محمد السماري", "السماري"],
+  },
+  {
+    name: "Mohammed S. Abu Thunayn",
+    aliases: ["mohammed abu thunayn", "abu thunayn", "محمد ابو ثنين", "ابو ثنين"],
+  },
+];
+
+const resolveTpmFromQuery = (query) => {
+  const text = normalizeIntentText(query);
+
+  return TPM_ALIASES.find((person) =>
+    person.aliases.some((alias) => text.includes(normalizeIntentText(alias))),
+  )?.name || null;
+};
+
+const getTpmPortfolioAnswer = (query) => {
+  const text = normalizeIntentText(query);
+  const asksPortfolio =
+    text.includes("وش الخدمات") ||
+    text.includes("وش الاقسام") ||
+    text.includes("وش الإدارات") ||
+    text.includes("وش الادارات") ||
+    text.includes("ماسكها") ||
+    text.includes("مسؤول عنها") ||
+    text.includes("responsible for") ||
+    text.includes("departments") ||
+    text.includes("portfolio");
+
+  if (!asksPortfolio) return null;
+
+  const tpmName = resolveTpmFromQuery(query);
+  if (!tpmName) return null;
+
+  const owned = departmentAssignments.filter((item) =>
+    item.tpms.includes(tpmName),
+  );
+
+  if (owned.length === 0) return null;
+
+  const totalServices = owned.reduce(
+    (sum, item) => sum + (Number(item.serviceCount) || 0),
+    0,
+  );
+
+  const hasArabic = /[\u0600-\u06ff]/.test(query);
+  const answer = hasArabic
+    ? `حسب دليل TPM في البوابة، ${tpmName} مسؤول عن ${owned.length} إدارة/قسم بإجمالي ${totalServices} خدمة مرتبطة بها:\n\n${owned
+        .map((item, index) => `${index + 1}. ${item.department} (${item.serviceCount})`)
+        .join("\n")}`
+    : `According to the TPM Directory, ${tpmName} is assigned to ${owned.length} departments covering ${totalServices} services:\n\n${owned
+        .map((item, index) => `${index + 1}. ${item.department} (${item.serviceCount})`)
+        .join("\n")}`;
+
+  return {
+    answer,
+    recommendations: [],
+    matchedByRule: true,
+  };
+};
+
 const knowledgeChunks = KNOWLEDGE_FILES.flatMap((relativePath) => {
   try {
     const text = readFileSync(resolve(REPO_ROOT, relativePath), "utf8");
@@ -342,6 +442,11 @@ const server = http.createServer(async (req, res) => {
       const catalog = Array.isArray(body.catalog) ? body.catalog.slice(0, 150) : [];
 
       if (!query) return json(res, 400, { error: "Query is required." });
+
+      const tpmPortfolioAnswer = getTpmPortfolioAnswer(query);
+      if (tpmPortfolioAnswer) {
+        return json(res, 200, tpmPortfolioAnswer);
+      }
 
       const directRecommendation = getDeterministicRecommendation(query, catalog);
       if (directRecommendation) {
