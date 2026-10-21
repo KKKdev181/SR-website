@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { ArrowUpRight, CircleHelp, ExternalLink, Search } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { ArrowUpRight, Bot, CircleHelp, ExternalLink, Loader2, Search, Sparkles } from "lucide-react";
 import { Navigate, useSearchParams } from "react-router-dom";
 import Header from "@/components/portal/Header";
 import RequestCard from "@/components/portal/RequestCard";
@@ -21,6 +21,28 @@ import type { ServiceRequest } from "@/data/requests";
 
 const GENERAL_REQUEST_URL =
   "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/836?returnUrl=%2Fcategory%2Fnsr";
+
+type AiModel = {
+  id: string;
+  label: string;
+};
+
+type AiRecommendation = {
+  title: string;
+  reason: string;
+  url: string;
+};
+
+type AiResult = {
+  answer: string;
+  recommendations: AiRecommendation[];
+};
+
+const getAiGatewayUrl = () => {
+  const configured = import.meta.env.VITE_AI_GATEWAY_URL?.trim();
+  if (configured) return configured.replace(/\/$/, "");
+  return `${window.location.protocol}//${window.location.hostname}:8084`;
+};
 
 const normalizeSearch = (value: string): string =>
   value
@@ -74,37 +96,13 @@ const applicationRequestPriority: Record<string, number> = {
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchFocused, setSearchFocused] = useState(false);
-  const [availableAiModels] = useState<{ id: string; label: string }[]>(() => {
-    try {
-      const saved = JSON.parse(localStorage.getItem("td-ai-models") ?? "[]");
-      if (Array.isArray(saved) && saved.length > 0) {
-        return saved.filter(
-          (item): item is { id: string; label: string } =>
-            Boolean(item) &&
-            typeof item === "object" &&
-            typeof item.id === "string" &&
-            typeof item.label === "string",
-        );
-      }
-
-      const provider = JSON.parse(localStorage.getItem("td-ai-provider") ?? "{}");
-      if (provider && typeof provider.model === "string" && provider.model) {
-        return [{ id: provider.model, label: provider.model }];
-      }
-    } catch {
-      return [];
-    }
-
-    return [];
-  });
-  const [selectedAiModel, setSelectedAiModel] = useState(() => {
-    try {
-      const provider = JSON.parse(localStorage.getItem("td-ai-provider") ?? "{}");
-      return typeof provider.model === "string" ? provider.model : "";
-    } catch {
-      return "";
-    }
-  });
+  const [availableAiModels, setAvailableAiModels] = useState<AiModel[]>([]);
+  const [selectedAiModel, setSelectedAiModel] = useState("");
+  const [aiModelsLoading, setAiModelsLoading] = useState(true);
+  const [aiAvailable, setAiAvailable] = useState(false);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiResult, setAiResult] = useState<AiResult | null>(null);
+  const [aiError, setAiError] = useState("");
   const [activeCategory, setActiveCategory] = useState<PortalCategoryId>("all");
   const [activeSubcategory, setActiveSubcategory] = useState("all");
   const [searchParams, setSearchParams] = useSearchParams();
@@ -114,6 +112,52 @@ const Index = () => {
   const activeTool: PortalTool | null = validTools.has(toolParam as PortalTool)
     ? (toolParam as PortalTool)
     : null;
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const loadModels = async () => {
+      setAiModelsLoading(true);
+      setAiError("");
+
+      try {
+        const response = await fetch(`${getAiGatewayUrl()}/models`, {
+          signal: controller.signal,
+          headers: { Accept: "application/json" },
+        });
+
+        if (!response.ok) throw new Error(`AI gateway returned HTTP ${response.status}`);
+
+        const payload = await response.json();
+        const models = Array.isArray(payload?.models) ? payload.models : [];
+        const validModels = models.filter(
+          (item: unknown): item is AiModel =>
+            Boolean(item) &&
+            typeof item === "object" &&
+            typeof (item as AiModel).id === "string" &&
+            typeof (item as AiModel).label === "string",
+        );
+
+        setAvailableAiModels(validModels);
+        setSelectedAiModel((current) =>
+          current && validModels.some((model) => model.id === current)
+            ? current
+            : validModels[0]?.id ?? "",
+        );
+        setAiAvailable(validModels.length > 0);
+      } catch (reason) {
+        if ((reason as Error)?.name !== "AbortError") {
+          setAvailableAiModels([]);
+          setSelectedAiModel("");
+          setAiAvailable(false);
+        }
+      } finally {
+        setAiModelsLoading(false);
+      }
+    };
+
+    loadModels();
+    return () => controller.abort();
+  }, []);
 
   const categoryCounts = useMemo(
     () =>
@@ -238,18 +282,62 @@ const Index = () => {
 
   const changeAiModel = (model: string) => {
     setSelectedAiModel(model);
+    setAiResult(null);
+    setAiError("");
+  };
+
+  const askAi = async () => {
+    const query = searchQuery.trim();
+    if (!query || !selectedAiModel || aiLoading) return;
+
+    setAiLoading(true);
+    setAiError("");
+    setAiResult(null);
+    setSearchFocused(false);
 
     try {
-      const current = JSON.parse(localStorage.getItem("td-ai-provider") ?? "{}");
-      localStorage.setItem(
-        "td-ai-provider",
-        JSON.stringify({
-          ...current,
-          model,
+      const response = await fetch(`${getAiGatewayUrl()}/chat`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          query,
+          model: selectedAiModel,
+          language,
+          catalog: requests.map((request) => ({
+            title: request.title,
+            description: request.shortDescription,
+            category: request.section,
+            url: request.jiraUrl,
+          })),
         }),
-      );
+      });
+
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(
+          typeof payload?.error === "string"
+            ? payload.error
+            : `AI gateway returned HTTP ${response.status}`,
+        );
+      }
+
+      setAiResult({
+        answer: typeof payload?.answer === "string" ? payload.answer : "",
+        recommendations: Array.isArray(payload?.recommendations)
+          ? payload.recommendations.slice(0, 5)
+          : [],
+      });
     } catch {
-      localStorage.setItem("td-ai-provider", JSON.stringify({ model }));
+      setAiError(
+        isArabic
+          ? "تعذر الوصول إلى مساعد AI حالياً. البحث العادي ما زال يعمل."
+          : "AI is currently unavailable. Normal search is still working.",
+      );
+    } finally {
+      setAiLoading(false);
     }
   };
 
@@ -334,15 +422,31 @@ const Index = () => {
             <p className="mt-1 text-sm leading-6 text-[#5e6c84]">{description}</p>
           </div>
 
-          <div className="relative z-30 mb-5 flex flex-col gap-3 sm:flex-row">
+          <div className="relative z-30 mb-4 flex flex-col gap-3 lg:flex-row">
             <div className="relative min-w-0 flex-1">
               <Search className={`pointer-events-none absolute top-[22px] z-10 h-5 w-5 -translate-y-1/2 text-[#7a869a] ${isArabic ? "right-4" : "left-4"}`} />
               <input
                 value={searchQuery}
-                onChange={(event) => setSearchQuery(event.target.value)}
+                onChange={(event) => {
+                  setSearchQuery(event.target.value);
+                  setAiResult(null);
+                  setAiError("");
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" && event.ctrlKey && aiAvailable) {
+                    event.preventDefault();
+                    askAi();
+                  }
+                }}
                 onFocus={() => setSearchFocused(true)}
                 onBlur={() => window.setTimeout(() => setSearchFocused(false), 120)}
-                placeholder={copy.catalog.searchPlaceholder}
+                placeholder={
+                  aiAvailable
+                    ? isArabic
+                      ? "ابحث عن طلب أو اكتب احتياجك واسأل AI..."
+                      : "Search requests or describe what you need..."
+                    : copy.catalog.searchPlaceholder
+                }
                 autoComplete="off"
                 aria-autocomplete="list"
                 aria-expanded={searchFocused && searchQuery.trim().length >= 2}
@@ -358,49 +462,49 @@ const Index = () => {
                   className="absolute inset-x-0 top-[calc(100%+6px)] overflow-hidden rounded-xl border border-[#dfe1e6] bg-white shadow-[0_12px_32px_rgba(9,30,66,0.16)]"
                   dir={isArabic ? "rtl" : "ltr"}
                 >
-                <div className="border-b border-[#f1f2f4] px-4 py-2.5 text-[11px] font-bold uppercase tracking-wide text-[#6b778c]">
-                  {searchSuggestions.length > 0
-                    ? isArabic
-                      ? "طلبات مقترحة"
-                      : "Suggested requests"
-                    : isArabic
-                      ? "لا توجد اقتراحات مطابقة"
-                      : "No matching suggestions"}
-                </div>
+                  <div className="border-b border-[#f1f2f4] px-4 py-2.5 text-[11px] font-bold uppercase tracking-wide text-[#6b778c]">
+                    {searchSuggestions.length > 0
+                      ? isArabic
+                        ? "طلبات مقترحة"
+                        : "Suggested requests"
+                      : isArabic
+                        ? "لا توجد اقتراحات مطابقة"
+                        : "No matching suggestions"}
+                  </div>
 
-                {searchSuggestions.map(({ request, localized }) => {
-                  const category = getPortalCategory(request);
-                  const categoryLabel = category ? (isArabic ? category.ar : category.en) : localized.section;
+                  {searchSuggestions.map(({ request, localized }) => {
+                    const category = getPortalCategory(request);
+                    const categoryLabel = category ? (isArabic ? category.ar : category.en) : localized.section;
 
-                  return (
-                    <button
-                      key={request.id}
-                      type="button"
-                      role="option"
-                      onMouseDown={(event) => event.preventDefault()}
-                      onClick={() => chooseSuggestion(request)}
-                      className="group flex w-full items-center justify-between gap-4 border-b border-[#f1f2f4] px-4 py-3 text-start transition last:border-b-0 hover:bg-[#f7f9fc] focus:bg-[#f7f9fc] focus:outline-none"
-                    >
-                      <div className="min-w-0 flex-1">
-                        <div className="truncate text-sm font-semibold text-[#172b4d] group-hover:text-[#0c66e4]">
-                          {localized.title}
+                    return (
+                      <button
+                        key={request.id}
+                        type="button"
+                        role="option"
+                        onMouseDown={(event) => event.preventDefault()}
+                        onClick={() => chooseSuggestion(request)}
+                        className="group flex w-full items-center justify-between gap-4 border-b border-[#f1f2f4] px-4 py-3 text-start transition last:border-b-0 hover:bg-[#f7f9fc] focus:bg-[#f7f9fc] focus:outline-none"
+                      >
+                        <div className="min-w-0 flex-1">
+                          <div className="truncate text-sm font-semibold text-[#172b4d] group-hover:text-[#0c66e4]">
+                            {localized.title}
+                          </div>
+                          <div className="mt-1 flex min-w-0 items-center gap-2">
+                            <span className="shrink-0 rounded-full bg-[#e9f2ff] px-2 py-0.5 text-[10px] font-medium text-[#0c66e4]">
+                              {categoryLabel}
+                            </span>
+                            <span className="truncate text-xs text-[#7a869a]">{localized.description}</span>
+                          </div>
                         </div>
-                        <div className="mt-1 flex min-w-0 items-center gap-2">
-                          <span className="shrink-0 rounded-full bg-[#e9f2ff] px-2 py-0.5 text-[10px] font-medium text-[#0c66e4]">
-                            {categoryLabel}
-                          </span>
-                          <span className="truncate text-xs text-[#7a869a]">{localized.description}</span>
-                        </div>
-                      </div>
-                      <ArrowUpRight className={`h-4 w-4 shrink-0 text-[#97a0af] transition group-hover:text-[#0c66e4] ${isArabic ? "-rotate-90" : ""}`} aria-hidden="true" />
-                    </button>
-                  );
-                })}
+                        <ArrowUpRight className={`h-4 w-4 shrink-0 text-[#97a0af] transition group-hover:text-[#0c66e4] ${isArabic ? "-rotate-90" : ""}`} aria-hidden="true" />
+                      </button>
+                    );
+                  })}
                 </div>
               )}
             </div>
 
-            <div className="shrink-0 sm:w-[220px]">
+            <div className="flex shrink-0 gap-2 lg:w-auto">
               <label htmlFor="ai-model-selector" className="sr-only">
                 {isArabic ? "موديل الذكاء الاصطناعي" : "AI model"}
               </label>
@@ -408,12 +512,14 @@ const Index = () => {
                 id="ai-model-selector"
                 value={selectedAiModel}
                 onChange={(event) => changeAiModel(event.target.value)}
-                disabled={availableAiModels.length === 0}
-                className="h-11 w-full rounded-lg border border-[#dfe1e6] bg-white px-3 text-sm font-semibold text-[#172b4d] shadow-sm outline-none transition focus:border-[#0c66e4] focus:ring-2 focus:ring-[#0c66e4]/15 disabled:cursor-not-allowed disabled:bg-[#f7f8f9] disabled:text-[#97a0af]"
+                disabled={!aiAvailable || aiModelsLoading}
+                className="h-11 min-w-0 flex-1 rounded-lg border border-[#dfe1e6] bg-white px-3 text-sm font-semibold text-[#172b4d] shadow-sm outline-none transition focus:border-[#0c66e4] focus:ring-2 focus:ring-[#0c66e4]/15 disabled:cursor-not-allowed disabled:bg-[#f7f8f9] disabled:text-[#97a0af] lg:w-[220px]"
                 title={isArabic ? "اختر موديل الذكاء الاصطناعي" : "Choose AI model"}
               >
-                {availableAiModels.length === 0 ? (
-                  <option value="">{isArabic ? "موديل AI" : "AI Model"}</option>
+                {aiModelsLoading ? (
+                  <option value="">{isArabic ? "جاري تحميل الموديلات..." : "Loading models..."}</option>
+                ) : availableAiModels.length === 0 ? (
+                  <option value="">{isArabic ? "AI غير متاح" : "AI unavailable"}</option>
                 ) : (
                   availableAiModels.map((model) => (
                     <option key={model.id} value={model.id}>
@@ -422,8 +528,77 @@ const Index = () => {
                   ))
                 )}
               </select>
+
+              <button
+                type="button"
+                onClick={askAi}
+                disabled={!aiAvailable || !selectedAiModel || !searchQuery.trim() || aiLoading}
+                className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-lg bg-[#0c66e4] px-4 text-sm font-bold text-white shadow-sm transition hover:bg-[#0055cc] disabled:cursor-not-allowed disabled:bg-[#dfe1e6] disabled:text-[#97a0af]"
+                title={isArabic ? "اسأل AI عن الطلب المناسب" : "Ask AI for the right request"}
+              >
+                {aiLoading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                ) : (
+                  <Sparkles className="h-4 w-4" aria-hidden="true" />
+                )}
+                <span>{isArabic ? "اسأل AI" : "Ask AI"}</span>
+              </button>
             </div>
           </div>
+
+          {aiError && (
+            <div className="mb-4 rounded-xl border border-[#ffbdad] bg-[#ffebe6] px-4 py-3 text-sm text-[#ae2a19]">
+              {aiError}
+            </div>
+          )}
+
+          {aiResult && (
+            <section className="mb-5 overflow-hidden rounded-xl border border-[#b3d4ff] bg-white shadow-sm" dir={isArabic ? "rtl" : "ltr"}>
+              <div className="flex items-center gap-2 border-b border-[#dfe1e6] bg-[#f7fbff] px-4 py-3">
+                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#e9f2ff] text-[#0c66e4]">
+                  <Bot className="h-4 w-4" aria-hidden="true" />
+                </span>
+                <div>
+                  <h2 className="text-sm font-bold text-[#172b4d]">
+                    {isArabic ? "اقتراح مساعد Technology Center" : "Technology Center AI Recommendation"}
+                  </h2>
+                  <p className="text-[11px] text-[#6b778c]">{selectedAiModel}</p>
+                </div>
+              </div>
+
+              <div className="p-4">
+                {aiResult.answer && (
+                  <p className="text-sm leading-6 text-[#44546f]">{aiResult.answer}</p>
+                )}
+
+                {aiResult.recommendations.length > 0 && (
+                  <div className="mt-4 grid gap-3 md:grid-cols-2">
+                    {aiResult.recommendations.map((recommendation, index) => (
+                      <a
+                        key={`${recommendation.title}-${index}`}
+                        href={recommendation.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group rounded-lg border border-[#dfe1e6] bg-[#fafbfc] p-3 transition hover:border-[#0c66e4] hover:bg-[#f7fbff]"
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <h3 className="text-sm font-bold text-[#172b4d] group-hover:text-[#0c66e4]">
+                              {recommendation.title}
+                            </h3>
+                            <p className="mt-1 text-xs leading-5 text-[#5e6c84]">
+                              {recommendation.reason}
+                            </p>
+                          </div>
+                          <ArrowUpRight className="h-4 w-4 shrink-0 text-[#97a0af] group-hover:text-[#0c66e4]" aria-hidden="true" />
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </section>
+          )}
 
           {activeCategory !== "all" && visibleSubcategories.length > 0 && (
             <section className="mb-5" aria-label={isArabic ? "تصفية داخل التصنيف" : "Filter within category"}>
