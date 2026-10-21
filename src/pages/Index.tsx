@@ -22,11 +22,6 @@ import type { ServiceRequest } from "@/data/requests";
 const GENERAL_REQUEST_URL =
   "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/836?returnUrl=%2Fcategory%2Fnsr";
 
-type AiModel = {
-  id: string;
-  label: string;
-};
-
 type AiRecommendation = {
   title: string;
   reason: string;
@@ -114,9 +109,7 @@ const applicationRequestPriority: Record<string, number> = {
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchFocused, setSearchFocused] = useState(false);
-  const [availableAiModels, setAvailableAiModels] = useState<AiModel[]>([]);
-  const [selectedAiModel, setSelectedAiModel] = useState("");
-  const [aiModelsLoading, setAiModelsLoading] = useState(true);
+  const selectedAiModel = "gpt-oss:120b";
   const [aiAvailable, setAiAvailable] = useState(false);
   const [aiLoading, setAiLoading] = useState(false);
   const [aiResult, setAiResult] = useState<AiResult | null>(null);
@@ -132,52 +125,23 @@ const Index = () => {
     : null;
 
   useEffect(() => {
-    const controller = new AbortController();
-    const loadModels = async () => {
-      setAiModelsLoading(true);
-      setAiError("");
-
+    const checkAi = async () => {
       try {
         const response = await fetchWithTimeout(
-          `${getAiGatewayUrl()}/models`,
-          {
-            headers: { Accept: "application/json" },
-          },
-          8000,
+          `${getAiGatewayUrl()}/health`,
+          { headers: { Accept: "application/json" } },
+          5000,
         );
 
-        if (!response.ok) throw new Error(`AI gateway returned HTTP ${response.status}`);
-
+        if (!response.ok) throw new Error("AI gateway unavailable");
         const payload = await response.json();
-        const models = Array.isArray(payload?.models) ? payload.models : [];
-        const validModels = models.filter(
-          (item: unknown): item is AiModel =>
-            Boolean(item) &&
-            typeof item === "object" &&
-            typeof (item as AiModel).id === "string" &&
-            typeof (item as AiModel).label === "string",
-        );
-
-        setAvailableAiModels(validModels);
-        setSelectedAiModel((current) =>
-          current && validModels.some((model) => model.id === current)
-            ? current
-            : validModels[0]?.id ?? "",
-        );
-        setAiAvailable(validModels.length > 0);
-      } catch (reason) {
-        if ((reason as Error)?.name !== "AbortError") {
-          setAvailableAiModels([]);
-          setSelectedAiModel("");
-          setAiAvailable(false);
-        }
-      } finally {
-        setAiModelsLoading(false);
+        setAiAvailable(Boolean(payload?.ok && payload?.configured));
+      } catch {
+        setAiAvailable(false);
       }
     };
 
-    loadModels();
-    return () => controller.abort();
+    checkAi();
   }, []);
 
   const categoryCounts = useMemo(
@@ -301,12 +265,6 @@ const Index = () => {
     setActiveSubcategory("all");
   };
 
-  const changeAiModel = (model: string) => {
-    setSelectedAiModel(model);
-    setAiResult(null);
-    setAiError("");
-  };
-
   const askAi = async () => {
     const query = searchQuery.trim();
     if (!query || !selectedAiModel || aiLoading) return;
@@ -325,7 +283,6 @@ const Index = () => {
         },
         body: JSON.stringify({
           query,
-          model: selectedAiModel,
           language,
           catalog: requests.map((request) => ({
             title: request.title,
@@ -526,34 +483,17 @@ const Index = () => {
             </div>
 
             <div className="flex shrink-0 gap-2 lg:w-auto">
-              <label htmlFor="ai-model-selector" className="sr-only">
-                {isArabic ? "موديل الذكاء الاصطناعي" : "AI model"}
-              </label>
-              <select
-                id="ai-model-selector"
-                value={selectedAiModel}
-                onChange={(event) => changeAiModel(event.target.value)}
-                disabled={!aiAvailable || aiModelsLoading}
-                className="h-11 min-w-0 flex-1 rounded-lg border border-[#dfe1e6] bg-white px-3 text-sm font-semibold text-[#172b4d] shadow-sm outline-none transition focus:border-[#0c66e4] focus:ring-2 focus:ring-[#0c66e4]/15 disabled:cursor-not-allowed disabled:bg-[#f7f8f9] disabled:text-[#97a0af] lg:w-[220px]"
-                title={isArabic ? "اختر موديل الذكاء الاصطناعي" : "Choose AI model"}
+              <div
+                className="hidden h-11 items-center rounded-lg border border-[#dfe1e6] bg-white px-3 text-xs font-semibold text-[#44546f] shadow-sm sm:flex"
+                title="AI model"
               >
-                {aiModelsLoading ? (
-                  <option value="">{isArabic ? "جاري تحميل الموديلات..." : "Loading models..."}</option>
-                ) : availableAiModels.length === 0 ? (
-                  <option value="">{isArabic ? "AI غير متاح" : "AI unavailable"}</option>
-                ) : (
-                  availableAiModels.map((model) => (
-                    <option key={model.id} value={model.id}>
-                      {model.label}
-                    </option>
-                  ))
-                )}
-              </select>
+                gpt-oss:120b
+              </div>
 
               <button
                 type="button"
                 onClick={askAi}
-                disabled={!aiAvailable || !selectedAiModel || !searchQuery.trim() || aiLoading}
+                disabled={!aiAvailable || !searchQuery.trim() || aiLoading}
                 className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-lg bg-[#0c66e4] px-4 text-sm font-bold text-white shadow-sm transition hover:bg-[#0055cc] disabled:cursor-not-allowed disabled:bg-[#dfe1e6] disabled:text-[#97a0af]"
                 title={isArabic ? "اسأل AI عن الطلب المناسب" : "Ask AI for the right request"}
               >
