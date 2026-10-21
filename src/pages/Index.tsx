@@ -109,7 +109,7 @@ const applicationRequestPriority: Record<string, number> = {
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchFocused, setSearchFocused] = useState(false);
-  const selectedAiModel = "gpt-oss:120b";
+  const selectedAiModel = "gpt-oss-120b";
   const [aiAvailable, setAiAvailable] = useState(false);
   const [aiLoading, setAiLoading] = useState(false);
   const [aiResult, setAiResult] = useState<AiResult | null>(null);
@@ -487,7 +487,7 @@ const Index = () => {
                 className="hidden h-11 items-center rounded-lg border border-[#dfe1e6] bg-white px-3 text-xs font-semibold text-[#44546f] shadow-sm sm:flex"
                 title="AI model"
               >
-                gpt-oss:120b
+                gpt-oss-120b
               </div>
 
               <button
