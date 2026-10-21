@@ -73,7 +73,7 @@ const retrieveWebsiteKnowledge = (query) => {
     })
     .filter((chunk) => chunk.score > 0)
     .sort((a, b) => b.score - a.score)
-    .slice(0, 8);
+    .slice(0, 5);
 };
 
 const normalizeIntentText = (value = "") =>
@@ -337,7 +337,8 @@ const server = http.createServer(async (req, res) => {
       const body = await readJson(req);
       const query = String(body.query || "").trim();
       const model = FIXED_MODEL;
-      const language = body.language === "ar" ? "Arabic" : "English";
+      const hasArabic = /[\u0600-\u06ff]/.test(query);
+      const language = hasArabic || body.language === "ar" ? "Arabic" : "English";
       const catalog = Array.isArray(body.catalog) ? body.catalog.slice(0, 150) : [];
 
       if (!query) return json(res, 400, { error: "Query is required." });
@@ -351,8 +352,8 @@ const server = http.createServer(async (req, res) => {
         .map(
           (item, index) =>
             `${index + 1}. ${String(item.title || "").slice(0, 180)}
-Description: ${String(item.description || "").slice(0, 420)}
-Category: ${String(item.category || "").slice(0, 120)}
+Description: ${String(item.description || "").slice(0, 260)}
+Category: ${String(item.category || "").slice(0, 100)}
 URL: ${String(item.url || "").slice(0, 500)}`,
         )
         .join("\n\n");
@@ -387,17 +388,54 @@ ${websiteKnowledgeText || "No additional website knowledge matched this query."}
 REQUEST CATALOG:
 ${catalogText}`;
 
-      const payload = await upstream(CHAT_PATH, {
-        method: "POST",
-        body: JSON.stringify({
-          model,
-          temperature: 0.2,
-          messages: [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: query },
-          ],
-        }),
-      });
+      let payload;
+
+      try {
+        payload = await upstream(CHAT_PATH, {
+          method: "POST",
+          body: JSON.stringify({
+            model,
+            temperature: 0.2,
+            messages: [
+              { role: "system", content: systemPrompt },
+              { role: "user", content: query },
+            ],
+          }),
+        });
+      } catch (primaryError) {
+        console.warn("Primary grounded AI request failed; retrying with compact context.", primaryError?.message || primaryError);
+
+        const compactCatalog = catalog
+          .map(
+            (item, index) =>
+              `${index + 1}. ${String(item.title || "").slice(0, 160)} | ${String(item.description || "").slice(0, 140)} | ${String(item.url || "").slice(0, 360)}`,
+          )
+          .join("\n");
+
+        const compactPrompt = `You are the Technology Center assistant.
+Answer in ${language}.
+Understand Saudi Arabic, informal Arabic, and non-technical wording.
+Explain portal guidance clearly and recommend the most precise request when applicable.
+Use only the catalog below. Do not invent request names or links.
+Prefer one request when the intent is clear.
+Return ONLY valid JSON:
+{"answer":"helpful answer","recommendations":[{"title":"exact catalog title","reason":"short reason","url":"exact catalog URL"}]}
+
+CATALOG:
+${compactCatalog}`;
+
+        payload = await upstream(CHAT_PATH, {
+          method: "POST",
+          body: JSON.stringify({
+            model,
+            temperature: 0.2,
+            messages: [
+              { role: "system", content: compactPrompt },
+              { role: "user", content: query },
+            ],
+          }),
+        });
+      }
 
       const text = extractAssistantText(payload);
       const result = parseAiResult(text);
