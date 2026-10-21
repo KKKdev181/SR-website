@@ -8,6 +8,79 @@ const MODELS_PATH = process.env.TD_AI_MODELS_PATH || "/v1/models";
 const CHAT_PATH = process.env.TD_AI_CHAT_PATH || "/v1/chat/completions";
 const ALLOWED_ORIGIN = process.env.TD_AI_ALLOWED_ORIGIN || "*";
 
+const normalizeIntentText = (value = "") =>
+  String(value)
+    .toLowerCase()
+    .replace(/[أإآ]/g, "ا")
+    .replace(/ى/g, "ي")
+    .replace(/ة/g, "ه")
+    .replace(/\s+/g, " ")
+    .trim();
+
+const findCatalogItem = (catalog, title) =>
+  catalog.find((item) => String(item?.title || "").trim() === title);
+
+const getDeterministicRecommendation = (query, catalog) => {
+  const text = normalizeIntentText(query);
+
+  const devQaSignals = [
+    "dev/qa",
+    "dev qa",
+    "development",
+    "qa",
+    "تطوير",
+    "اختبار",
+  ];
+
+  const serverConnectionSignals = [
+    "connection between servers",
+    "connect between servers",
+    "connect two servers",
+    "server to server",
+    "server-to-server",
+    "communication between servers",
+    "open port between servers",
+    "firewall between servers",
+    "i want connection between servers",
+    "ابي اتصال بين سيرفرين",
+    "ابغى اتصال بين سيرفرين",
+    "ابي اربط سيرفرين",
+    "ابغى اربط سيرفرين",
+    "ربط بين سيرفرين",
+    "تواصل بين سيرفرين",
+    "فتح بورت بين سيرفرين",
+    "سيرفر يتصل بسيرفر",
+    "سيرفر يكلم سيرفر",
+  ];
+
+  const isServerConnection = serverConnectionSignals.some((signal) => text.includes(signal));
+  if (!isServerConnection) return null;
+
+  const isDevQa = devQaSignals.some((signal) => text.includes(signal));
+  const targetTitle = isDevQa
+    ? "Network & Security Access Request (Security Access Network Requests (Dev/QA))"
+    : "Access Provisioning: Communication Provisioning for Staging & Production";
+
+  const item = findCatalogItem(catalog, targetTitle);
+  if (!item) return null;
+
+  return {
+    answer: isDevQa
+      ? "This is the request used to open server-to-server communication in Dev/QA."
+      : "This is the request used to enable communication between source and destination servers in Staging/Production.",
+    recommendations: [
+      {
+        title: item.title,
+        reason: isDevQa
+          ? "Use it for firewall or network access between servers in Dev/QA."
+          : "Use it when one server needs to communicate with another server or endpoint in Staging/Production.",
+        url: item.url,
+      },
+    ],
+    matchedByRule: true,
+  };
+};
+
 const json = (res, status, payload) => {
   const body = JSON.stringify(payload);
   res.writeHead(status, {
@@ -151,6 +224,11 @@ const server = http.createServer(async (req, res) => {
       if (!query) return json(res, 400, { error: "Query is required." });
       if (!model) return json(res, 400, { error: "Model is required." });
 
+      const directRecommendation = getDeterministicRecommendation(query, catalog);
+      if (directRecommendation) {
+        return json(res, 200, directRecommendation);
+      }
+
       const catalogText = catalog
         .map(
           (item, index) =>
@@ -163,8 +241,11 @@ URL: ${String(item.url || "").slice(0, 500)}`,
 
       const systemPrompt = `You are the Technology Center request advisor for an internal service portal.
 Answer in ${language}.
+Understand Saudi Arabic, informal Arabic, English, Arabizi, abbreviations, and non-technical descriptions.
+First infer the user's technical intent, then map it to the most precise request in the catalog.
 Use ONLY requests present in the provided catalog. Never invent a request, URL, approval, or process.
-Recommend at most 5 requests and explain briefly why each one is relevant.
+Prefer ONE exact request when the user's intent clearly matches a single service. Only recommend multiple requests when they are genuinely required.
+If the user says they need communication or connectivity between two servers, prefer "Access Provisioning: Communication Provisioning for Staging & Production" unless they explicitly say Dev/QA, in which case prefer "Network & Security Access Request (Security Access Network Requests (Dev/QA))".
 If the user's need is unclear, say what information is missing.
 Return ONLY valid JSON in this exact shape:
 {"answer":"short helpful answer","recommendations":[{"title":"exact catalog title","reason":"short reason","url":"exact catalog URL"}]}
