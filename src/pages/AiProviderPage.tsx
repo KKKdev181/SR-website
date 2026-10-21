@@ -146,6 +146,7 @@ const AiProviderPage = () => {
       }
 
       setModels(discoveredModels);
+      localStorage.setItem("td-ai-models", JSON.stringify(discoveredModels));
       setSelectedModel(discoveredModels[0].id);
       setConnectionOk(true);
     } catch (reason) {
