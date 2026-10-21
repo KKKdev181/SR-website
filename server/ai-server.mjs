@@ -58,77 +58,14 @@ const parseDepartmentAssignments = () => {
 
 const departmentAssignments = parseDepartmentAssignments();
 
-const TPM_ALIASES = [
-  {
-    name: "Khaled Othman Abaalkhail",
-    aliases: ["khaled", "khaled othman", "abaalkhail", "خالد", "خالد اباالخيل", "خالد أباالخيل"],
-  },
-  {
-    name: "Maryam A. Aljasham",
-    aliases: ["maryam", "aljasham", "مريم", "مريم الجشعم", "مريم الجشام"],
-  },
-  {
-    name: "Mohammad A. Alsamari",
-    aliases: ["mohammad alsamari", "alsamari", "محمد السماري", "السماري"],
-  },
-  {
-    name: "Mohammed S. Abu Thunayn",
-    aliases: ["mohammed abu thunayn", "abu thunayn", "محمد ابو ثنين", "ابو ثنين"],
-  },
-];
-
-const resolveTpmFromQuery = (query) => {
-  const text = normalizeIntentText(query);
-
-  return TPM_ALIASES.find((person) =>
-    person.aliases.some((alias) => text.includes(normalizeIntentText(alias))),
-  )?.name || null;
-};
-
-const getTpmPortfolioAnswer = (query) => {
-  const text = normalizeIntentText(query);
-  const asksPortfolio =
-    text.includes("وش الخدمات") ||
-    text.includes("وش الاقسام") ||
-    text.includes("وش الإدارات") ||
-    text.includes("وش الادارات") ||
-    text.includes("ماسكها") ||
-    text.includes("مسؤول عنها") ||
-    text.includes("responsible for") ||
-    text.includes("departments") ||
-    text.includes("portfolio");
-
-  if (!asksPortfolio) return null;
-
-  const tpmName = resolveTpmFromQuery(query);
-  if (!tpmName) return null;
-
-  const owned = departmentAssignments.filter((item) =>
-    item.tpms.includes(tpmName),
-  );
-
-  if (owned.length === 0) return null;
-
-  const totalServices = owned.reduce(
-    (sum, item) => sum + (Number(item.serviceCount) || 0),
-    0,
-  );
-
-  const hasArabic = /[\u0600-\u06ff]/.test(query);
-  const answer = hasArabic
-    ? `حسب دليل TPM في البوابة، ${tpmName} مسؤول عن ${owned.length} إدارة/قسم بإجمالي ${totalServices} خدمة مرتبطة بها:\n\n${owned
-        .map((item, index) => `${index + 1}. ${item.department} (${item.serviceCount})`)
-        .join("\n")}`
-    : `According to the TPM Directory, ${tpmName} is assigned to ${owned.length} departments covering ${totalServices} services:\n\n${owned
-        .map((item, index) => `${index + 1}. ${item.department} (${item.serviceCount})`)
-        .join("\n")}`;
-
-  return {
-    answer,
-    recommendations: [],
-    matchedByRule: true,
-  };
-};
+const tpmDirectoryContext = departmentAssignments.length
+  ? departmentAssignments
+      .map(
+        (item) =>
+          `Department: ${item.department} | TPM: ${item.tpms.join(", ")} | Services: ${item.serviceCount}`,
+      )
+      .join("\n")
+  : "TPM directory data is unavailable.";
 
 const knowledgeChunks = KNOWLEDGE_FILES.flatMap((relativePath) => {
   try {
@@ -184,118 +121,6 @@ const normalizeIntentText = (value = "") =>
     .replace(/ة/g, "ه")
     .replace(/\s+/g, " ")
     .trim();
-
-const findCatalogItem = (catalog, title) =>
-  catalog.find((item) => String(item?.title || "").trim() === title);
-
-const getDeterministicRecommendation = (query, catalog) => {
-  const text = normalizeIntentText(query);
-
-  const devQaSignals = [
-    "dev/qa",
-    "dev qa",
-    "development",
-    "qa",
-    "تطوير",
-    "اختبار",
-  ];
-
-  const serverConnectionSignals = [
-    "connection between servers",
-    "connect between servers",
-    "connect two servers",
-    "server to server",
-    "server-to-server",
-    "communication between servers",
-    "open port between servers",
-    "firewall between servers",
-    "i want connection between servers",
-    "ابي اتصال بين سيرفرين",
-    "ابغى اتصال بين سيرفرين",
-    "ابي اربط سيرفرين",
-    "ابغى اربط سيرفرين",
-    "ربط بين سيرفرين",
-    "تواصل بين سيرفرين",
-    "فتح بورت بين سيرفرين",
-    "سيرفر يتصل بسيرفر",
-    "سيرفر يكلم سيرفر",
-  ];
-
-  const isServerConnection = serverConnectionSignals.some((signal) => text.includes(signal));
-
-  const genericServerSignals = [
-    "i want server",
-    "i need server",
-    "need a server",
-    "need server",
-    "new server",
-    "add server",
-    "ابي سيرفر",
-    "ابغى سيرفر",
-    "احتاج سيرفر",
-    "محتاج سيرفر",
-    "سيرفر جديد",
-    "اضيف سيرفر",
-    "ابي اضيف سيرفر",
-    "ابغى اضيف سيرفر",
-  ];
-
-  const isGenericServerRequest = genericServerSignals.some((signal) => text.includes(signal));
-
-  if (isGenericServerRequest && !isServerConnection) {
-    const drSignals = [" dr", "dr ", "disaster recovery", "تعافي", "دي ار"];
-    const isDr = drSignals.some((signal) => ` ${text} `.includes(signal));
-
-    const targetTitle = isDr
-      ? "Create New DR Servers for Project/Service"
-      : "Scale Up: Add New Server";
-
-    const item = findCatalogItem(catalog, targetTitle);
-    if (item) {
-      return {
-        answer: isDr
-          ? "This is the request for provisioning a new server in the DR environment."
-          : "This is the request used when you need to add a new server to an existing project or service.",
-        recommendations: [
-          {
-            title: item.title,
-            reason: isDr
-              ? "Use it when the required server is for Disaster Recovery."
-              : "Use it when you need a new server added to your current environment.",
-            url: item.url,
-          },
-        ],
-        matchedByRule: true,
-      };
-    }
-  }
-
-  if (!isServerConnection) return null;
-
-  const isDevQa = devQaSignals.some((signal) => text.includes(signal));
-  const targetTitle = isDevQa
-    ? "Network & Security Access Request (Security Access Network Requests (Dev/QA))"
-    : "Access Provisioning: Communication Provisioning for Staging & Production";
-
-  const item = findCatalogItem(catalog, targetTitle);
-  if (!item) return null;
-
-  return {
-    answer: isDevQa
-      ? "This is the request used to open server-to-server communication in Dev/QA."
-      : "This is the request used to enable communication between source and destination servers in Staging/Production.",
-    recommendations: [
-      {
-        title: item.title,
-        reason: isDevQa
-          ? "Use it for firewall or network access between servers in Dev/QA."
-          : "Use it when one server needs to communicate with another server or endpoint in Staging/Production.",
-        url: item.url,
-      },
-    ],
-    matchedByRule: true,
-  };
-};
 
 const json = (res, status, payload) => {
   const body = JSON.stringify(payload);
@@ -443,16 +268,6 @@ const server = http.createServer(async (req, res) => {
 
       if (!query) return json(res, 400, { error: "Query is required." });
 
-      const tpmPortfolioAnswer = getTpmPortfolioAnswer(query);
-      if (tpmPortfolioAnswer) {
-        return json(res, 200, tpmPortfolioAnswer);
-      }
-
-      const directRecommendation = getDeterministicRecommendation(query, catalog);
-      if (directRecommendation) {
-        return json(res, 200, directRecommendation);
-      }
-
       const catalogText = catalog
         .map(
           (item, index) =>
@@ -471,24 +286,37 @@ URL: ${String(item.url || "").slice(0, 500)}`,
         )
         .join("\n\n");
 
-      const systemPrompt = `You are the Technology Center request advisor for an internal service portal.
-Answer in ${language}.
-Understand Saudi Arabic, informal Arabic, English, Arabizi, abbreviations, and non-technical descriptions.
-First infer the user's technical intent, then map it to the most precise request in the catalog.
-Use ONLY requests present in the provided catalog. Never invent a request, URL, approval, or process.
-Prefer ONE exact request when the user's intent clearly matches a single service. Only recommend multiple requests when they are genuinely required.
-If the user says they need communication or connectivity between two servers, prefer "Access Provisioning: Communication Provisioning for Staging & Production" unless they explicitly say Dev/QA, in which case prefer "Network & Security Access Request (Security Access Network Requests (Dev/QA))".
-If the user simply says they want or need a server, prefer "Scale Up: Add New Server" unless they explicitly mention DR, in which case prefer "Create New DR Servers for Project/Service".
-Do not ask for sizing, environment, project name, CPU, RAM, or storage before recommending the request when one catalog request already clearly matches the intent.
-You also have retrieved knowledge from the actual Technology Center website, including the Project Journey, developer onboarding guidance, department-to-TPM directory, categories, and request definitions.
-Use that website knowledge when the user asks about the project journey, prerequisites, developer access, TPM ownership, departments, environments, tools, or portal guidance.
-Treat the website knowledge and request catalog as the source of truth. Do not invent information that is not present.
-If the user's need is unclear, ask only the minimum clarification needed.
-Return ONLY valid JSON in this exact shape:
-{"answer":"short helpful answer","recommendations":[{"title":"exact catalog title","reason":"short reason","url":"exact catalog URL"}]}
+      const systemPrompt = `You are the Technology Center AI assistant inside an internal service portal.
+Answer in ${language} and match the user's tone. Understand Saudi Arabic, informal Arabic, English, Arabizi, abbreviations, typos, and non-technical wording.
 
-WEBSITE KNOWLEDGE:
-${websiteKnowledgeText || "No additional website knowledge matched this query."}
+Your job is to reason over the portal data below, not rely on memorized phrase rules.
+Use the portal data as the source of truth. Never invent a request, owner, department, URL, process, or fact that is not supported by the provided data.
+
+When a user asks for a request:
+- infer the actual technical need from natural language;
+- compare it against the request catalog;
+- recommend the smallest number of matching requests, preferably one when one request clearly fits;
+- explain briefly why.
+
+When a user asks about TPM ownership or departments:
+- use the full TPM directory below;
+- names may be written in Arabic, English, or as an approximate transliteration;
+- infer the closest matching person from the directory only when the match is reasonably clear;
+- list the departments/services assigned to that person from the directory;
+- if multiple people could match, ask one short clarification question instead of guessing.
+
+When a user asks how the portal/process works:
+- use the retrieved website knowledge and explain it clearly.
+If the answer is not present in the provided portal data, say that clearly instead of making up an answer.
+
+Return ONLY valid JSON in this exact shape:
+{"answer":"helpful answer","recommendations":[{"title":"exact catalog title","reason":"short reason","url":"exact catalog URL"}]}
+
+FULL TPM DIRECTORY:
+${tpmDirectoryContext}
+
+RELEVANT WEBSITE KNOWLEDGE:
+${websiteKnowledgeText || "No extra website chunks matched this query."}
 
 REQUEST CATALOG:
 ${catalogText}`;
@@ -517,14 +345,16 @@ ${catalogText}`;
           )
           .join("\n");
 
-        const compactPrompt = `You are the Technology Center assistant.
-Answer in ${language}.
-Understand Saudi Arabic, informal Arabic, and non-technical wording.
-Explain portal guidance clearly and recommend the most precise request when applicable.
-Use only the catalog below. Do not invent request names or links.
-Prefer one request when the intent is clear.
+        const compactPrompt = `You are the Technology Center AI assistant.
+Answer in ${language}. Understand Saudi Arabic, informal Arabic, English, approximate name transliterations, and non-technical wording.
+Reason from the provided portal data only. Do not invent information.
+For request questions, choose the most precise request from the catalog.
+For TPM/department questions, use the directory and infer Arabic/English transliterations only when reasonably clear.
 Return ONLY valid JSON:
 {"answer":"helpful answer","recommendations":[{"title":"exact catalog title","reason":"short reason","url":"exact catalog URL"}]}
+
+TPM DIRECTORY:
+${tpmDirectoryContext}
 
 CATALOG:
 ${compactCatalog}`;
