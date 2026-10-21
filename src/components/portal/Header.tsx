@@ -1,4 +1,4 @@
-import { Bot, ClipboardCheck, ExternalLink, Globe2, Headset, Inbox, ListChecks, Mail, Route, UsersRound } from "lucide-react";
+import { ClipboardCheck, ExternalLink, Globe2, Headset, Inbox, ListChecks, Mail, Route, UsersRound } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -82,14 +82,6 @@ const Header = () => {
             >
               <UsersRound className="h-4 w-4" aria-hidden="true" />
               <span className="whitespace-nowrap">{isArabic ? "مدير المشروع التقني" : "Find Your TPM"}</span>
-            </Link>
-
-            <Link
-              to="/tools/ai-provider"
-              className="inline-flex min-h-10 shrink-0 items-center gap-2 rounded-lg border border-white/30 bg-white/10 px-3.5 text-sm font-semibold text-white transition hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
-            >
-              <Bot className="h-4 w-4" aria-hidden="true" />
-              <span className="whitespace-nowrap">{isArabic ? "إعداد AI" : "AI Setup"}</span>
             </Link>
           </div>
 
