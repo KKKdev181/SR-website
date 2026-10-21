@@ -41,7 +41,25 @@ type AiResult = {
 const getAiGatewayUrl = () => {
   const configured = import.meta.env.VITE_AI_GATEWAY_URL?.trim();
   if (configured) return configured.replace(/\/$/, "");
-  return `${window.location.protocol}//${window.location.hostname}:8084`;
+  return "/api/ai";
+};
+
+const fetchWithTimeout = async (
+  input: RequestInfo | URL,
+  init: RequestInit = {},
+  timeoutMs = 8000,
+) => {
+  const controller = new AbortController();
+  const timeout = window.setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    return await fetch(input, {
+      ...init,
+      signal: controller.signal,
+    });
+  } finally {
+    window.clearTimeout(timeout);
+  }
 };
 
 const normalizeSearch = (value: string): string =>
@@ -120,10 +138,13 @@ const Index = () => {
       setAiError("");
 
       try {
-        const response = await fetch(`${getAiGatewayUrl()}/models`, {
-          signal: controller.signal,
-          headers: { Accept: "application/json" },
-        });
+        const response = await fetchWithTimeout(
+          `${getAiGatewayUrl()}/models`,
+          {
+            headers: { Accept: "application/json" },
+          },
+          8000,
+        );
 
         if (!response.ok) throw new Error(`AI gateway returned HTTP ${response.status}`);
 
@@ -296,7 +317,7 @@ const Index = () => {
     setSearchFocused(false);
 
     try {
-      const response = await fetch(`${getAiGatewayUrl()}/chat`, {
+      const response = await fetchWithTimeout(`${getAiGatewayUrl()}/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -313,7 +334,7 @@ const Index = () => {
             url: request.jiraUrl,
           })),
         }),
-      });
+      }, 45000);
 
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) {
