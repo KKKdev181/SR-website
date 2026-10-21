@@ -74,6 +74,37 @@ const applicationRequestPriority: Record<string, number> = {
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchFocused, setSearchFocused] = useState(false);
+  const [availableAiModels] = useState<{ id: string; label: string }[]>(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem("td-ai-models") ?? "[]");
+      if (Array.isArray(saved) && saved.length > 0) {
+        return saved.filter(
+          (item): item is { id: string; label: string } =>
+            Boolean(item) &&
+            typeof item === "object" &&
+            typeof item.id === "string" &&
+            typeof item.label === "string",
+        );
+      }
+
+      const provider = JSON.parse(localStorage.getItem("td-ai-provider") ?? "{}");
+      if (provider && typeof provider.model === "string" && provider.model) {
+        return [{ id: provider.model, label: provider.model }];
+      }
+    } catch {
+      return [];
+    }
+
+    return [];
+  });
+  const [selectedAiModel, setSelectedAiModel] = useState(() => {
+    try {
+      const provider = JSON.parse(localStorage.getItem("td-ai-provider") ?? "{}");
+      return typeof provider.model === "string" ? provider.model : "";
+    } catch {
+      return "";
+    }
+  });
   const [activeCategory, setActiveCategory] = useState<PortalCategoryId>("all");
   const [activeSubcategory, setActiveSubcategory] = useState("all");
   const [searchParams, setSearchParams] = useSearchParams();
@@ -205,6 +236,23 @@ const Index = () => {
     setActiveSubcategory("all");
   };
 
+  const changeAiModel = (model: string) => {
+    setSelectedAiModel(model);
+
+    try {
+      const current = JSON.parse(localStorage.getItem("td-ai-provider") ?? "{}");
+      localStorage.setItem(
+        "td-ai-provider",
+        JSON.stringify({
+          ...current,
+          model,
+        }),
+      );
+    } catch {
+      localStorage.setItem("td-ai-provider", JSON.stringify({ model }));
+    }
+  };
+
   const categoryButtonClass = (isActive: boolean) =>
     `flex min-h-11 min-w-max items-center justify-between gap-4 rounded-lg px-3 py-2 text-sm transition lg:w-full lg:min-w-0 ${
       isActive
@@ -286,29 +334,30 @@ const Index = () => {
             <p className="mt-1 text-sm leading-6 text-[#5e6c84]">{description}</p>
           </div>
 
-          <div className="relative z-30 mb-5">
-            <Search className={`pointer-events-none absolute top-[22px] z-10 h-5 w-5 -translate-y-1/2 text-[#7a869a] ${isArabic ? "right-4" : "left-4"}`} />
-            <input
-              value={searchQuery}
-              onChange={(event) => setSearchQuery(event.target.value)}
-              onFocus={() => setSearchFocused(true)}
-              onBlur={() => window.setTimeout(() => setSearchFocused(false), 120)}
-              placeholder={copy.catalog.searchPlaceholder}
-              autoComplete="off"
-              aria-autocomplete="list"
-              aria-expanded={searchFocused && searchQuery.trim().length >= 2}
-              aria-controls="request-search-suggestions"
-              className={`h-11 w-full rounded-lg border border-[#dfe1e6] bg-white text-sm text-[#172b4d] shadow-sm outline-none transition placeholder:text-[#97a0af] focus:border-[#0c66e4] focus:ring-2 focus:ring-[#0c66e4]/15 ${isArabic ? "pr-12 pl-4" : "pl-12 pr-4"}`}
-              aria-label={copy.catalog.searchLabel}
-            />
+          <div className="relative z-30 mb-5 flex flex-col gap-3 sm:flex-row">
+            <div className="relative min-w-0 flex-1">
+              <Search className={`pointer-events-none absolute top-[22px] z-10 h-5 w-5 -translate-y-1/2 text-[#7a869a] ${isArabic ? "right-4" : "left-4"}`} />
+              <input
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+                onFocus={() => setSearchFocused(true)}
+                onBlur={() => window.setTimeout(() => setSearchFocused(false), 120)}
+                placeholder={copy.catalog.searchPlaceholder}
+                autoComplete="off"
+                aria-autocomplete="list"
+                aria-expanded={searchFocused && searchQuery.trim().length >= 2}
+                aria-controls="request-search-suggestions"
+                className={`h-11 w-full rounded-lg border border-[#dfe1e6] bg-white text-sm text-[#172b4d] shadow-sm outline-none transition placeholder:text-[#97a0af] focus:border-[#0c66e4] focus:ring-2 focus:ring-[#0c66e4]/15 ${isArabic ? "pr-12 pl-4" : "pl-12 pr-4"}`}
+                aria-label={copy.catalog.searchLabel}
+              />
 
-            {searchFocused && searchQuery.trim().length >= 2 && (
-              <div
-                id="request-search-suggestions"
-                role="listbox"
-                className="absolute inset-x-0 top-[calc(100%+6px)] overflow-hidden rounded-xl border border-[#dfe1e6] bg-white shadow-[0_12px_32px_rgba(9,30,66,0.16)]"
-                dir={isArabic ? "rtl" : "ltr"}
-              >
+              {searchFocused && searchQuery.trim().length >= 2 && (
+                <div
+                  id="request-search-suggestions"
+                  role="listbox"
+                  className="absolute inset-x-0 top-[calc(100%+6px)] overflow-hidden rounded-xl border border-[#dfe1e6] bg-white shadow-[0_12px_32px_rgba(9,30,66,0.16)]"
+                  dir={isArabic ? "rtl" : "ltr"}
+                >
                 <div className="border-b border-[#f1f2f4] px-4 py-2.5 text-[11px] font-bold uppercase tracking-wide text-[#6b778c]">
                   {searchSuggestions.length > 0
                     ? isArabic
@@ -347,8 +396,33 @@ const Index = () => {
                     </button>
                   );
                 })}
-              </div>
-            )}
+                </div>
+              )}
+            </div>
+
+            <div className="shrink-0 sm:w-[220px]">
+              <label htmlFor="ai-model-selector" className="sr-only">
+                {isArabic ? "موديل الذكاء الاصطناعي" : "AI model"}
+              </label>
+              <select
+                id="ai-model-selector"
+                value={selectedAiModel}
+                onChange={(event) => changeAiModel(event.target.value)}
+                disabled={availableAiModels.length === 0}
+                className="h-11 w-full rounded-lg border border-[#dfe1e6] bg-white px-3 text-sm font-semibold text-[#172b4d] shadow-sm outline-none transition focus:border-[#0c66e4] focus:ring-2 focus:ring-[#0c66e4]/15 disabled:cursor-not-allowed disabled:bg-[#f7f8f9] disabled:text-[#97a0af]"
+                title={isArabic ? "اختر موديل الذكاء الاصطناعي" : "Choose AI model"}
+              >
+                {availableAiModels.length === 0 ? (
+                  <option value="">{isArabic ? "موديل AI" : "AI Model"}</option>
+                ) : (
+                  availableAiModels.map((model) => (
+                    <option key={model.id} value={model.id}>
+                      {model.label}
+                    </option>
+                  ))
+                )}
+              </select>
+            </div>
           </div>
 
           {activeCategory !== "all" && visibleSubcategories.length > 0 && (
