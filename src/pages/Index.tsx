@@ -427,15 +427,15 @@ const Index = () => {
                   setAiError("");
                 }}
                 disabled={!aiAvailable}
-                className={`relative inline-flex h-9 items-center gap-2 rounded-lg px-4 text-sm font-bold transition ${searchMode === "ai" ? "bg-gradient-to-r from-[#6554c0] to-[#0c66e4] text-white shadow-[0_4px_12px_rgba(101,84,192,0.28)]" : "border border-[#d9d4ff] bg-[#f5f3ff] text-[#5243aa] hover:border-[#b8acf7] hover:bg-[#eee9ff]"} disabled:cursor-not-allowed disabled:opacity-45`}
+                className={`relative inline-flex h-9 items-center gap-2 rounded-lg px-4 text-sm font-bold transition ${searchMode === "ai" ? "bg-[#0c66e4] text-white shadow-sm" : "border border-[#b3d4ff] bg-[#f7fbff] text-[#0c66e4] hover:bg-[#e9f2ff]"} disabled:cursor-not-allowed disabled:opacity-45`}
               >
-                <span className="relative flex h-5 w-5 items-center justify-center rounded-full bg-white/80 text-[#5243aa] shadow-sm">
+                <span className={`relative flex h-5 w-5 items-center justify-center rounded-full ${searchMode === "ai" ? "bg-white/15 text-white" : "bg-[#e9f2ff] text-[#0c66e4]"}`}>
                   <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
                 </span>
-                <span>{isArabic ? "جرّب المساعد الذكي" : "Try AI Assistant"}</span>
+                <span>{isArabic ? "اسأل مساعد Technology Center" : "Ask Technology Center AI"}</span>
                 {searchMode !== "ai" && (
-                  <span className="rounded-full bg-[#6554c0] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">
-                    {isArabic ? "جديد" : "New"}
+                  <span className="rounded-full border border-[#b3d4ff] bg-white px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#0c66e4]">
+                    AI
                   </span>
                 )}
               </button>
@@ -511,10 +511,10 @@ const Index = () => {
                 )}
               </div>
             ) : (
-              <div className="rounded-2xl border border-[#d9d4ff] bg-gradient-to-br from-[#fbfaff] via-white to-[#f4f8ff] p-4 shadow-[0_8px_24px_rgba(82,67,170,0.10)]">
+              <div className="rounded-2xl border border-[#b3d4ff] bg-white p-4 shadow-[0_6px_18px_rgba(9,30,66,0.08)]">
                 <div className="flex flex-col gap-3 sm:flex-row">
                   <div className="relative min-w-0 flex-1">
-                    <span className={`pointer-events-none absolute top-1/2 z-10 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full bg-[#eee9ff] text-[#5243aa] ${isArabic ? "right-3" : "left-3"}`}>
+                    <span className={`pointer-events-none absolute top-1/2 z-10 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full bg-[#e9f2ff] text-[#0c66e4] ${isArabic ? "right-3" : "left-3"}`}>
                       <Bot className="h-4 w-4" aria-hidden="true" />
                     </span>
                     <input
@@ -536,7 +536,7 @@ const Index = () => {
                           : "Describe what you need, e.g. I need connection between two servers"
                       }
                       autoComplete="off"
-                      className={`h-12 w-full rounded-xl border border-[#d9d4ff] bg-white text-sm text-[#172b4d] shadow-sm outline-none transition placeholder:text-[#7a869a] focus:border-[#6554c0] focus:ring-2 focus:ring-[#6554c0]/15 ${isArabic ? "pr-14 pl-4" : "pl-14 pr-4"}`}
+                      className={`h-12 w-full rounded-xl border border-[#dfe1e6] bg-white text-sm text-[#172b4d] shadow-sm outline-none transition placeholder:text-[#7a869a] focus:border-[#0c66e4] focus:ring-2 focus:ring-[#0c66e4]/15 ${isArabic ? "pr-14 pl-4" : "pl-14 pr-4"}`}
                       aria-label={isArabic ? "اسأل مساعد التقنية" : "Ask Technology Center AI"}
                     />
                   </div>
@@ -545,7 +545,7 @@ const Index = () => {
                     type="button"
                     onClick={askAi}
                     disabled={!aiAvailable || !searchQuery.trim() || aiLoading}
-                    className="inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#6554c0] to-[#0c66e4] px-5 text-sm font-bold text-white shadow-[0_4px_12px_rgba(101,84,192,0.24)] transition hover:brightness-95 disabled:cursor-not-allowed disabled:bg-[#dfe1e6] disabled:text-[#97a0af] disabled:shadow-none"
+                    className="inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-[#0c66e4] px-5 text-sm font-bold text-white shadow-sm transition hover:bg-[#0055cc] disabled:cursor-not-allowed disabled:bg-[#dfe1e6] disabled:text-[#97a0af] disabled:shadow-none"
                   >
                     {aiLoading ? (
                       <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
@@ -556,7 +556,7 @@ const Index = () => {
                   </button>
                 </div>
                 <div className="mt-3 flex flex-wrap items-center gap-2 px-1 text-xs text-[#6b778c]">
-                  <span className="font-semibold text-[#5243aa]">
+                  <span className="font-semibold text-[#0c66e4]">
                     {isArabic ? "اسأل بطريقتك:" : "Ask naturally:"}
                   </span>
                   <span>{isArabic ? "ابي سيرفر" : "I need a server"}</span>
@@ -580,7 +580,7 @@ const Index = () => {
               className="mb-5 overflow-hidden rounded-xl border border-[#b3d4ff] bg-white shadow-sm"
               dir={aiResponseIsArabic ? "rtl" : "ltr"}
             >
-              <div className="flex items-center gap-2 border-b border-[#dfe1e6] bg-[#f7fbff] px-4 py-3">
+              <div className="flex items-center gap-2 border-b border-[#dfe1e6] bg-[#f7f9fc] px-4 py-3">
                 <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#e9f2ff] text-[#0c66e4]">
                   <Bot className="h-4 w-4" aria-hidden="true" />
                 </span>
