@@ -18,6 +18,7 @@ import { localizeRequest } from "@/i18n/requestLocalization";
 import { getArabicSearchAliases } from "@/i18n/requestSearchAliases";
 import { useLanguage } from "@/contexts/LanguageContext";
 import type { ServiceRequest } from "@/data/requests";
+import { trackCountlyEvent } from "@/utils/countlyTracking";
 
 const GENERAL_REQUEST_URL =
   "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/836?returnUrl=%2Fcategory%2Fnsr";
@@ -275,6 +276,11 @@ const Index = () => {
     setAiResult(null);
     setSearchFocused(false);
 
+    trackCountlyEvent("AI_Assistant_Used", {
+      language,
+      category: activeCategory,
+    });
+
     try {
       const response = await fetchWithTimeout(`${getAiGatewayUrl()}/chat`, {
         method: "POST",
@@ -425,6 +431,10 @@ const Index = () => {
                   setSearchMode("ai");
                   setSearchFocused(false);
                   setAiError("");
+                  trackCountlyEvent("AI_Assistant_Opened", {
+                    language,
+                    category: activeCategory,
+                  });
                 }}
                 disabled={!aiAvailable}
                 className={`relative inline-flex h-9 items-center gap-2 rounded-lg px-4 text-sm font-bold transition ${searchMode === "ai" ? "bg-[#0c66e4] text-white shadow-sm" : "border border-[#b3d4ff] bg-[#f7fbff] text-[#0c66e4] hover:bg-[#e9f2ff]"} disabled:cursor-not-allowed disabled:opacity-45`}
