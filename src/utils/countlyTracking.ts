@@ -3,6 +3,11 @@ declare global {
     Countly?: {
       q?: unknown[][];
       track_pageview?: (page: string) => void;
+      add_event?: (event: {
+        key: string;
+        count?: number;
+        segmentation?: Record<string, string | number | boolean>;
+      }) => void;
     };
   }
 }
@@ -23,3 +28,24 @@ const trackCurrentPage = () => {
 };
 
 window.addEventListener("hashchange", trackCurrentPage);
+
+
+export const trackCountlyEvent = (
+  key: string,
+  segmentation?: Record<string, string | number | boolean>,
+) => {
+  const event = {
+    key,
+    count: 1,
+    ...(segmentation ? { segmentation } : {}),
+  };
+
+  if (window.Countly?.add_event) {
+    window.Countly.add_event(event);
+    return;
+  }
+
+  window.Countly = window.Countly || {};
+  window.Countly.q = window.Countly.q || [];
+  window.Countly.q.push(["add_event", event]);
+};
