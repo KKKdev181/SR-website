@@ -1,9 +1,10 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Building2, Mail, Search, UserRound, UsersRound } from "lucide-react";
 import Header from "@/components/portal/Header";
 import Footer from "@/components/portal/Footer";
 import { departmentAssignments, tpmContacts } from "@/data/departmentAssignments";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { trackCountlyEvent } from "@/utils/countlyTracking";
 
 const normalize = (value: string) => value.toLowerCase().trim();
 
@@ -36,6 +37,12 @@ const TpmDirectoryPage = () => {
   const isArabic = language === "ar";
   const [query, setQuery] = useState("");
   const [selectedTpm, setSelectedTpm] = useState("all");
+
+  useEffect(() => {
+    trackCountlyEvent("TPM_Directory_Opened", {
+      language,
+    });
+  }, [language]);
 
   const tpms = useMemo(
     () => Array.from(new Set(departmentAssignments.flatMap((item) => item.tpms))).sort(),
