@@ -265,6 +265,20 @@ const server = http.createServer(async (req, res) => {
       const hasArabic = /[\u0600-\u06ff]/.test(query);
       const language = hasArabic || body.language === "ar" ? "Arabic" : "English";
       const catalog = Array.isArray(body.catalog) ? body.catalog.slice(0, 150) : [];
+      const history = Array.isArray(body.history)
+        ? body.history
+            .filter(
+              (item) =>
+                item &&
+                (item.role === "user" || item.role === "assistant") &&
+                typeof item.content === "string",
+            )
+            .slice(-10)
+            .map((item) => ({
+              role: item.role,
+              content: item.content.slice(0, 2000),
+            }))
+        : [];
 
       if (!query) return json(res, 400, { error: "Query is required." });
 
@@ -307,6 +321,9 @@ When a user asks about TPM ownership or departments:
 
 When a user asks how the portal/process works:
 - use the retrieved website knowledge and explain it clearly.
+
+This is a multi-turn conversation. Use the prior conversation messages to resolve follow-up questions, pronouns, missing context, and phrases such as "what about production?", "and for Dev/QA?", "which one?", or "open it".
+Do not force the user to repeat information already stated earlier in the conversation.
 If the answer is not present in the provided portal data, say that clearly instead of making up an answer.
 
 Return ONLY valid JSON in this exact shape:
@@ -331,6 +348,7 @@ ${catalogText}`;
             temperature: 0.2,
             messages: [
               { role: "system", content: systemPrompt },
+              ...history,
               { role: "user", content: query },
             ],
           }),
@@ -366,6 +384,7 @@ ${compactCatalog}`;
             temperature: 0.2,
             messages: [
               { role: "system", content: compactPrompt },
+              ...history,
               { role: "user", content: query },
             ],
           }),
