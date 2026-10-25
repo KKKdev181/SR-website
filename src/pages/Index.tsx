@@ -34,6 +34,13 @@ type AiResult = {
   recommendations: AiRecommendation[];
 };
 
+type AiChatMessage = {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+  recommendations?: AiRecommendation[];
+};
+
 const getAiGatewayUrl = () => {
   const configured = import.meta.env.VITE_AI_GATEWAY_URL?.trim();
   if (configured) return configured.replace(/\/$/, "");
@@ -113,7 +120,7 @@ const Index = () => {
   const [searchMode, setSearchMode] = useState<"catalog" | "ai">("catalog");
   const [aiAvailable, setAiAvailable] = useState(false);
   const [aiLoading, setAiLoading] = useState(false);
-  const [aiResult, setAiResult] = useState<AiResult | null>(null);
+  const [aiMessages, setAiMessages] = useState<AiChatMessage[]>([]);
   const [aiError, setAiError] = useState("");
   const [activeCategory, setActiveCategory] = useState<PortalCategoryId>("all");
   const [activeSubcategory, setActiveSubcategory] = useState("all");
@@ -271,9 +278,21 @@ const Index = () => {
     const query = searchQuery.trim();
     if (!query || !aiAvailable || aiLoading) return;
 
+    const history = aiMessages.slice(-10).map((message) => ({
+      role: message.role,
+      content: message.content,
+    }));
+
+    const userMessage: AiChatMessage = {
+      id: `user-${Date.now()}`,
+      role: "user",
+      content: query,
+    };
+
+    setAiMessages((current) => [...current, userMessage]);
+    setSearchQuery("");
     setAiLoading(true);
     setAiError("");
-    setAiResult(null);
     setSearchFocused(false);
 
     trackCountlyEvent("AI_Assistant_Used", {
@@ -290,6 +309,7 @@ const Index = () => {
         },
         body: JSON.stringify({
           query,
+          history,
           language,
           catalog: requests.map((request) => ({
             title: request.title,
@@ -309,26 +329,38 @@ const Index = () => {
         );
       }
 
-      setAiResult({
+      const result: AiResult = {
         answer: typeof payload?.answer === "string" ? payload.answer : "",
         recommendations: Array.isArray(payload?.recommendations)
           ? payload.recommendations.slice(0, 5)
           : [],
-      });
+      };
+
+      setAiMessages((current) => [
+        ...current,
+        {
+          id: `assistant-${Date.now()}`,
+          role: "assistant",
+          content: result.answer,
+          recommendations: result.recommendations,
+        },
+      ]);
     } catch {
       setAiError(
         isArabic
-          ? "تعذر الوصول إلى مساعد AI حالياً. البحث العادي ما زال يعمل."
-          : "AI is currently unavailable. Normal search is still working.",
+          ? "تعذر الوصول إلى مساعد AI حالياً. حاول مرة أخرى."
+          : "AI is currently unavailable. Please try again.",
       );
     } finally {
       setAiLoading(false);
     }
   };
 
-  const aiResponseIsArabic = /[\u0600-\u06ff]/.test(
-    aiResult?.answer || searchQuery,
-  );
+  const clearAiChat = () => {
+    setAiMessages([]);
+    setSearchQuery("");
+    setAiError("");
+  };
 
   const categoryButtonClass = (isActive: boolean) =>
     `flex min-h-11 min-w-max items-center justify-between gap-4 rounded-lg px-3 py-2 text-sm transition lg:w-full lg:min-w-0 ${
@@ -417,7 +449,7 @@ const Index = () => {
                 type="button"
                 onClick={() => {
                   setSearchMode("catalog");
-                  setAiResult(null);
+                  
                   setAiError("");
                 }}
                 className={`inline-flex h-9 items-center gap-2 rounded-lg px-3.5 text-sm font-semibold transition ${searchMode === "catalog" ? "bg-[#e9f2ff] text-[#0c66e4]" : "text-[#6b778c] hover:bg-[#f7f8f9]"}`}
@@ -458,7 +490,7 @@ const Index = () => {
                   value={searchQuery}
                   onChange={(event) => {
                     setSearchQuery(event.target.value);
-                    setAiResult(null);
+                    
                     setAiError("");
                   }}
                   onFocus={() => setSearchFocused(true)}
@@ -531,7 +563,7 @@ const Index = () => {
                       value={searchQuery}
                       onChange={(event) => {
                         setSearchQuery(event.target.value);
-                        setAiResult(null);
+                        
                         setAiError("");
                       }}
                       onKeyDown={(event) => {
@@ -585,56 +617,102 @@ const Index = () => {
             </div>
           )}
 
-          {aiResult && (
-            <section
-              className="mb-5 overflow-hidden rounded-xl border border-[#b3d4ff] bg-white shadow-sm"
-              dir={aiResponseIsArabic ? "rtl" : "ltr"}
-            >
-              <div className="flex items-center gap-2 border-b border-[#dfe1e6] bg-[#f7f9fc] px-4 py-3">
-                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#e9f2ff] text-[#0c66e4]">
-                  <Bot className="h-4 w-4" aria-hidden="true" />
-                </span>
-                <div>
-                  <h2 className="text-sm font-bold text-[#172b4d]">
-                    {isArabic ? "مساعد Technology Center" : "Technology Center AI"}
-                  </h2>
+          {searchMode === "ai" && (aiMessages.length > 0 || aiLoading) && (
+            <section className="mb-5 overflow-hidden rounded-2xl border border-[#dfe1e6] bg-white shadow-sm">
+              <div className="flex items-center justify-between gap-3 border-b border-[#dfe1e6] bg-[#f7f9fc] px-4 py-3">
+                <div className="flex items-center gap-2">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#e9f2ff] text-[#0c66e4]">
+                    <Bot className="h-4 w-4" aria-hidden="true" />
+                  </span>
+                  <div>
+                    <h2 className="text-sm font-bold text-[#172b4d]">
+                      {isArabic ? "مساعد Technology Center" : "Technology Center AI"}
+                    </h2>
+                    <p className="text-[11px] text-[#6b778c]">
+                      {isArabic ? "اسأل سؤالاً إضافياً وسأكمل من نفس السياق" : "Ask a follow-up and I’ll keep the context"}
+                    </p>
+                  </div>
                 </div>
+
+                <button
+                  type="button"
+                  onClick={clearAiChat}
+                  className="rounded-md border border-[#dfe1e6] bg-white px-3 py-1.5 text-xs font-semibold text-[#44546f] transition hover:bg-[#f1f2f4]"
+                >
+                  {isArabic ? "محادثة جديدة" : "New chat"}
+                </button>
               </div>
 
-              <div className="p-4">
-                {aiResult.answer && (
-                  <p
-                    dir="auto"
-                    className={`whitespace-pre-line text-[15px] leading-8 text-[#334e68] ${aiResponseIsArabic ? "text-right" : "text-left"}`}
-                    style={aiResponseIsArabic ? { fontFamily: "'Noto Sans Arabic', Arial, sans-serif" } : undefined}
-                  >
-                    {aiResult.answer}
-                  </p>
-                )}
+              <div className="max-h-[520px] space-y-4 overflow-y-auto p-4 sm:p-5">
+                {aiMessages.map((message) => {
+                  const messageIsArabic = /[\u0600-\u06ff]/.test(message.content);
 
-                {aiResult.recommendations.length > 0 && (
-                  <div className="mt-4 grid gap-3 md:grid-cols-2">
-                    {aiResult.recommendations.map((recommendation, index) => (
-                      <a
-                        key={`${recommendation.title}-${index}`}
-                        href={recommendation.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group rounded-lg border border-[#dfe1e6] bg-[#fafbfc] p-3 transition hover:border-[#0c66e4] hover:bg-[#f7fbff]"
-                      >
-                        <div className="flex items-start justify-between gap-3">
-                          <div>
-                            <h3 dir="auto" className="text-start text-sm font-bold text-[#172b4d] group-hover:text-[#0c66e4]">
-                              {recommendation.title}
-                            </h3>
-                            <p dir="auto" className="mt-1 text-start text-xs leading-6 text-[#5e6c84]">
-                              {recommendation.reason}
-                            </p>
-                          </div>
-                          <ArrowUpRight className="h-4 w-4 shrink-0 text-[#97a0af] group-hover:text-[#0c66e4]" aria-hidden="true" />
+                  if (message.role === "user") {
+                    return (
+                      <div key={message.id} className={`flex ${messageIsArabic ? "justify-start" : "justify-end"}`}>
+                        <div
+                          dir="auto"
+                          className="max-w-[82%] rounded-2xl bg-[#0c66e4] px-4 py-3 text-sm leading-6 text-white shadow-sm"
+                        >
+                          {message.content}
                         </div>
-                      </a>
-                    ))}
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <div key={message.id} className="flex items-start gap-3">
+                      <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#e9f2ff] text-[#0c66e4]">
+                        <Bot className="h-4 w-4" aria-hidden="true" />
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <div
+                          dir="auto"
+                          className="rounded-2xl border border-[#dfe1e6] bg-[#fafbfc] px-4 py-3 text-[15px] leading-8 text-[#334e68]"
+                          style={messageIsArabic ? { fontFamily: "'Noto Sans Arabic', Arial, sans-serif" } : undefined}
+                        >
+                          <p className="whitespace-pre-line">{message.content}</p>
+                        </div>
+
+                        {message.recommendations && message.recommendations.length > 0 && (
+                          <div className="mt-3 grid gap-2 md:grid-cols-2">
+                            {message.recommendations.map((recommendation, index) => (
+                              <a
+                                key={`${message.id}-${recommendation.title}-${index}`}
+                                href={recommendation.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="group rounded-xl border border-[#dfe1e6] bg-white p-3 transition hover:border-[#0c66e4] hover:bg-[#f7fbff]"
+                              >
+                                <div className="flex items-start justify-between gap-3">
+                                  <div>
+                                    <h3 dir="auto" className="text-start text-sm font-bold text-[#172b4d] group-hover:text-[#0c66e4]">
+                                      {recommendation.title}
+                                    </h3>
+                                    <p dir="auto" className="mt-1 text-start text-xs leading-5 text-[#5e6c84]">
+                                      {recommendation.reason}
+                                    </p>
+                                  </div>
+                                  <ArrowUpRight className="h-4 w-4 shrink-0 text-[#97a0af] group-hover:text-[#0c66e4]" aria-hidden="true" />
+                                </div>
+                              </a>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+
+                {aiLoading && (
+                  <div className="flex items-start gap-3">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#e9f2ff] text-[#0c66e4]">
+                      <Bot className="h-4 w-4" aria-hidden="true" />
+                    </span>
+                    <div className="inline-flex items-center gap-2 rounded-2xl border border-[#dfe1e6] bg-[#fafbfc] px-4 py-3 text-sm text-[#6b778c]">
+                      <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                      <span>{isArabic ? "جاري التفكير..." : "Thinking..."}</span>
+                    </div>
                   </div>
                 )}
               </div>
