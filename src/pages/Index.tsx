@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowUpRight, Bot, CircleHelp, ExternalLink, Loader2, Search, Sparkles } from "lucide-react";
 import { Navigate, useSearchParams } from "react-router-dom";
 import Header from "@/components/portal/Header";
@@ -122,6 +122,7 @@ const Index = () => {
   const [aiLoading, setAiLoading] = useState(false);
   const [aiMessages, setAiMessages] = useState<AiChatMessage[]>([]);
   const [aiError, setAiError] = useState("");
+  const aiMessagesEndRef = useRef<HTMLDivElement | null>(null);
   const [activeCategory, setActiveCategory] = useState<PortalCategoryId>("all");
   const [activeSubcategory, setActiveSubcategory] = useState("all");
   const [searchParams, setSearchParams] = useSearchParams();
@@ -131,6 +132,10 @@ const Index = () => {
   const activeTool: PortalTool | null = validTools.has(toolParam as PortalTool)
     ? (toolParam as PortalTool)
     : null;
+
+  useEffect(() => {
+    aiMessagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }, [aiMessages, aiLoading]);
 
   useEffect(() => {
     const checkAi = async () => {
@@ -552,7 +557,7 @@ const Index = () => {
                   </div>
                 )}
               </div>
-            ) : (
+            ) : aiMessages.length === 0 ? (
               <div className="rounded-2xl border border-[#b3d4ff] bg-white p-4 shadow-[0_6px_18px_rgba(9,30,66,0.08)]">
                 <div className="flex flex-col gap-3 sm:flex-row">
                   <div className="relative min-w-0 flex-1">
@@ -563,7 +568,6 @@ const Index = () => {
                       value={searchQuery}
                       onChange={(event) => {
                         setSearchQuery(event.target.value);
-                        
                         setAiError("");
                       }}
                       onKeyDown={(event) => {
@@ -608,7 +612,7 @@ const Index = () => {
                   <span>{isArabic ? "مين TPM حق الإدارة؟" : "Who is my TPM?"}</span>
                 </div>
               </div>
-            )}
+            ) : null}
           </section>
 
           {aiError && (
@@ -715,6 +719,50 @@ const Index = () => {
                     </div>
                   </div>
                 )}
+                <div ref={aiMessagesEndRef} />
+              </div>
+
+              <div className="border-t border-[#dfe1e6] bg-[#f7f9fc] p-3 sm:p-4">
+                <div className="flex items-end gap-2">
+                  <div className="relative min-w-0 flex-1">
+                    <span className={`pointer-events-none absolute top-1/2 z-10 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full bg-[#e9f2ff] text-[#0c66e4] ${isArabic ? "right-3" : "left-3"}`}>
+                      <Bot className="h-4 w-4" aria-hidden="true" />
+                    </span>
+                    <input
+                      value={searchQuery}
+                      onChange={(event) => {
+                        setSearchQuery(event.target.value);
+                        setAiError("");
+                      }}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter" && !event.shiftKey && aiAvailable) {
+                          event.preventDefault();
+                          askAi();
+                        }
+                      }}
+                      placeholder={isArabic ? "اكتب سؤالك التالي..." : "Ask a follow-up..."}
+                      autoComplete="off"
+                      className={`h-12 w-full rounded-xl border border-[#dfe1e6] bg-white text-sm text-[#172b4d] shadow-sm outline-none transition placeholder:text-[#97a0af] focus:border-[#0c66e4] focus:ring-2 focus:ring-[#0c66e4]/15 ${isArabic ? "pr-14 pl-4" : "pl-14 pr-4"}`}
+                      aria-label={isArabic ? "اكتب سؤالك التالي" : "Ask a follow-up"}
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={askAi}
+                    disabled={!aiAvailable || !searchQuery.trim() || aiLoading}
+                    className="inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-[#0c66e4] px-5 text-sm font-bold text-white shadow-sm transition hover:bg-[#0055cc] disabled:cursor-not-allowed disabled:bg-[#dfe1e6] disabled:text-[#97a0af]"
+                  >
+                    {aiLoading ? (
+                      <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                    ) : (
+                      <Sparkles className="h-4 w-4" aria-hidden="true" />
+                    )}
+                    <span>{isArabic ? "إرسال" : "Send"}</span>
+                  </button>
+                </div>
+                <p className="mt-2 px-1 text-[11px] text-[#7a869a]">
+                  {isArabic ? "المساعد يحتفظ بسياق هذه المحادثة حتى تبدأ محادثة جديدة." : "The assistant keeps the context of this chat until you start a new one."}
+                </p>
               </div>
             </section>
           )}
