@@ -415,16 +415,6 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-[#f4f5f7] text-[#172b4d]">
       <Header />
-
-      {showAiCoachmark && (
-        <button
-          type="button"
-          aria-label={isArabic ? "إغلاق تعريف مساعد AI" : "Close AI introduction"}
-          onClick={dismissAiCoachmark}
-          className="fixed inset-0 z-40 cursor-default bg-[#091e42]/40 backdrop-blur-[1px]"
-        />
-      )}
-
       <div className="mx-auto grid max-w-[1920px] grid-cols-1 lg:grid-cols-[290px_minmax(0,1fr)]">
         <aside className="border-b border-[#dfe1e6] bg-white lg:sticky lg:top-16 lg:h-[calc(100vh-64px)] lg:self-start lg:overflow-y-auto lg:border-b-0 lg:border-e">
           <div className="px-3 py-5">
@@ -510,7 +500,7 @@ const Index = () => {
                 <Search className="h-4 w-4" aria-hidden="true" />
                 <span>{isArabic ? "البحث في الخدمات" : "Search Services"}</span>
               </button>
-              <div className={`relative ${showAiCoachmark ? "z-[70]" : ""}`}>
+              <div className="relative">
                 <button
                   type="button"
                   onClick={() => {
@@ -524,7 +514,7 @@ const Index = () => {
                     });
                   }}
                   disabled={!aiAvailable}
-                  className={`relative inline-flex h-9 items-center gap-2 rounded-lg px-4 text-sm font-bold transition ${searchMode === "ai" ? "bg-[#0c66e4] text-white shadow-sm" : "border border-[#b3d4ff] bg-[#f7fbff] text-[#0c66e4] hover:bg-[#e9f2ff]"} ${showAiCoachmark ? "bg-white ring-4 ring-white shadow-[0_0_0_2px_rgba(12,102,228,0.25),0_12px_30px_rgba(9,30,66,0.18)]" : ""} disabled:cursor-not-allowed disabled:opacity-45`}
+                  className={`relative inline-flex h-9 items-center gap-2 rounded-lg px-4 text-sm font-bold transition ${searchMode === "ai" ? "bg-[#0c66e4] text-white shadow-sm" : "border border-[#b3d4ff] bg-[#f7fbff] text-[#0c66e4] hover:bg-[#e9f2ff]"} disabled:cursor-not-allowed disabled:opacity-45`}
                 >
                   <span className={`relative flex h-5 w-5 items-center justify-center rounded-full ${searchMode === "ai" ? "bg-white/15 text-white" : "bg-[#e9f2ff] text-[#0c66e4]"}`}>
                     <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
@@ -541,11 +531,11 @@ const Index = () => {
                   <div
                     role="dialog"
                     aria-label={isArabic ? "ميزة جديدة: مساعد Technology Center" : "New feature: Technology Center AI"}
-                    className={`absolute top-[calc(100%+12px)] z-[80] w-[320px] rounded-2xl border border-white/70 bg-white p-5 text-start shadow-[0_24px_60px_rgba(9,30,66,0.30)] ${isArabic ? "right-0" : "left-0"}`}
+                    className={`absolute top-[calc(100%+12px)] z-50 w-[310px] rounded-xl border border-[#b3d4ff] bg-white p-4 text-start shadow-[0_14px_36px_rgba(9,30,66,0.20)] ${isArabic ? "right-0" : "left-0"}`}
                     dir={isArabic ? "rtl" : "ltr"}
                   >
                     <span
-                      className={`absolute -top-2 h-4 w-4 rotate-45 border-l border-t border-white/70 bg-white ${isArabic ? "right-7" : "left-7"}`}
+                      className={`absolute -top-2 h-4 w-4 rotate-45 border-l border-t border-[#b3d4ff] bg-white ${isArabic ? "right-7" : "left-7"}`}
                       aria-hidden="true"
                     />
 
