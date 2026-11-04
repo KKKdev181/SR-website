@@ -23,6 +23,8 @@ import { trackCountlyEvent } from "@/utils/countlyTracking";
 const GENERAL_REQUEST_URL =
   "https://jira.elm.sa/plugins/servlet/desk/portal/14/create/836?returnUrl=%2Fcategory%2Fnsr";
 
+const AI_INTRO_STORAGE_KEY = "td-ai-intro-seen-v1";
+
 type AiRecommendation = {
   title: string;
   reason: string;
@@ -122,6 +124,7 @@ const Index = () => {
   const [aiLoading, setAiLoading] = useState(false);
   const [aiMessages, setAiMessages] = useState<AiChatMessage[]>([]);
   const [aiError, setAiError] = useState("");
+  const [showAiCoachmark, setShowAiCoachmark] = useState(false);
   const aiMessagesEndRef = useRef<HTMLDivElement | null>(null);
   const [activeCategory, setActiveCategory] = useState<PortalCategoryId>("all");
   const [activeSubcategory, setActiveSubcategory] = useState("all");
@@ -136,6 +139,19 @@ const Index = () => {
   useEffect(() => {
     aiMessagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }, [aiMessages, aiLoading]);
+
+  useEffect(() => {
+    if (!aiAvailable) return;
+
+    try {
+      const hasSeenAiIntro = window.localStorage.getItem(AI_INTRO_STORAGE_KEY) === "1";
+      if (!hasSeenAiIntro) {
+        setShowAiCoachmark(true);
+      }
+    } catch {
+      // If storage is unavailable, do not block normal portal usage.
+    }
+  }, [aiAvailable]);
 
   useEffect(() => {
     const checkAi = async () => {
@@ -367,6 +383,28 @@ const Index = () => {
     setAiError("");
   };
 
+  const dismissAiCoachmark = () => {
+    setShowAiCoachmark(false);
+
+    try {
+      window.localStorage.setItem(AI_INTRO_STORAGE_KEY, "1");
+    } catch {
+      // Ignore storage errors.
+    }
+  };
+
+  const openAiFromCoachmark = () => {
+    dismissAiCoachmark();
+    setSearchMode("ai");
+    setSearchFocused(false);
+    setAiError("");
+
+    trackCountlyEvent("AI_Assistant_Opened", {
+      language,
+      category: activeCategory,
+    });
+  };
+
   const categoryButtonClass = (isActive: boolean) =>
     `flex min-h-11 min-w-max items-center justify-between gap-4 rounded-lg px-3 py-2 text-sm transition lg:w-full lg:min-w-0 ${
       isActive
@@ -462,30 +500,87 @@ const Index = () => {
                 <Search className="h-4 w-4" aria-hidden="true" />
                 <span>{isArabic ? "البحث في الخدمات" : "Search Services"}</span>
               </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setSearchMode("ai");
-                  setSearchFocused(false);
-                  setAiError("");
-                  trackCountlyEvent("AI_Assistant_Opened", {
-                    language,
-                    category: activeCategory,
-                  });
-                }}
-                disabled={!aiAvailable}
-                className={`relative inline-flex h-9 items-center gap-2 rounded-lg px-4 text-sm font-bold transition ${searchMode === "ai" ? "bg-[#0c66e4] text-white shadow-sm" : "border border-[#b3d4ff] bg-[#f7fbff] text-[#0c66e4] hover:bg-[#e9f2ff]"} disabled:cursor-not-allowed disabled:opacity-45`}
-              >
-                <span className={`relative flex h-5 w-5 items-center justify-center rounded-full ${searchMode === "ai" ? "bg-white/15 text-white" : "bg-[#e9f2ff] text-[#0c66e4]"}`}>
-                  <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-                </span>
-                <span>{isArabic ? "اسأل مساعد Technology Center" : "Ask Technology Center AI"}</span>
-                {searchMode !== "ai" && (
-                  <span className="rounded-full border border-[#b3d4ff] bg-white px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#0c66e4]">
-                    AI
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => {
+                    dismissAiCoachmark();
+                    setSearchMode("ai");
+                    setSearchFocused(false);
+                    setAiError("");
+                    trackCountlyEvent("AI_Assistant_Opened", {
+                      language,
+                      category: activeCategory,
+                    });
+                  }}
+                  disabled={!aiAvailable}
+                  className={`relative inline-flex h-9 items-center gap-2 rounded-lg px-4 text-sm font-bold transition ${searchMode === "ai" ? "bg-[#0c66e4] text-white shadow-sm" : "border border-[#b3d4ff] bg-[#f7fbff] text-[#0c66e4] hover:bg-[#e9f2ff]"} disabled:cursor-not-allowed disabled:opacity-45`}
+                >
+                  <span className={`relative flex h-5 w-5 items-center justify-center rounded-full ${searchMode === "ai" ? "bg-white/15 text-white" : "bg-[#e9f2ff] text-[#0c66e4]"}`}>
+                    <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
                   </span>
+                  <span>{isArabic ? "اسأل مساعد Technology Center" : "Ask Technology Center AI"}</span>
+                  {searchMode !== "ai" && (
+                    <span className="rounded-full border border-[#b3d4ff] bg-white px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#0c66e4]">
+                      AI
+                    </span>
+                  )}
+                </button>
+
+                {showAiCoachmark && searchMode !== "ai" && (
+                  <div
+                    role="dialog"
+                    aria-label={isArabic ? "ميزة جديدة: مساعد Technology Center" : "New feature: Technology Center AI"}
+                    className={`absolute top-[calc(100%+12px)] z-50 w-[310px] rounded-xl border border-[#b3d4ff] bg-white p-4 text-start shadow-[0_14px_36px_rgba(9,30,66,0.20)] ${isArabic ? "right-0" : "left-0"}`}
+                    dir={isArabic ? "rtl" : "ltr"}
+                  >
+                    <span
+                      className={`absolute -top-2 h-4 w-4 rotate-45 border-l border-t border-[#b3d4ff] bg-white ${isArabic ? "right-7" : "left-7"}`}
+                      aria-hidden="true"
+                    />
+
+                    <div className="relative">
+                      <div className="mb-3 flex items-start gap-3">
+                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#e9f2ff] text-[#0c66e4]">
+                          <Sparkles className="h-4 w-4" aria-hidden="true" />
+                        </span>
+                        <div>
+                          <div className="mb-1 inline-flex rounded-full bg-[#e9f2ff] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#0c66e4]">
+                            {isArabic ? "جديد" : "New"}
+                          </div>
+                          <h3 className="text-sm font-bold text-[#172b4d]">
+                            {isArabic ? "جرّب مساعد Technology Center" : "Meet Technology Center AI"}
+                          </h3>
+                        </div>
+                      </div>
+
+                      <p className="text-xs leading-5 text-[#5e6c84]">
+                        {isArabic
+                          ? "اكتب احتياجك بطريقتك، والمساعد يساعدك في الوصول للطلب أو المعلومة المناسبة."
+                          : "Describe what you need in normal language and get the right request or portal guidance."}
+                      </p>
+
+                      <div className="mt-4 flex items-center justify-end gap-2">
+                        <button
+                          type="button"
+                          onClick={dismissAiCoachmark}
+                          className="rounded-md px-3 py-2 text-xs font-semibold text-[#44546f] transition hover:bg-[#f1f2f4]"
+                        >
+                          {isArabic ? "لاحقاً" : "Got it"}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={openAiFromCoachmark}
+                          className="inline-flex items-center gap-1.5 rounded-md bg-[#0c66e4] px-3 py-2 text-xs font-bold text-white transition hover:bg-[#0055cc]"
+                        >
+                          <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+                          <span>{isArabic ? "جرّب الآن" : "Try AI"}</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 )}
-              </button>
+              </div>
             </div>
 
             {searchMode === "catalog" ? (
