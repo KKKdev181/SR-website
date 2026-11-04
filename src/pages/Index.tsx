@@ -557,7 +557,7 @@ const Index = () => {
                       <p className="text-xs leading-5 text-[#5e6c84]">
                         {isArabic
                           ? "اكتب احتياجك بطريقتك، والمساعد يساعدك في الوصول للطلب أو المعلومة المناسبة."
-                          : "Describe what you need in normal language and get the right request or portal guidance."}
+                          : "Describe your need in your own words, and AI will help you find the right request or guidance."}
                       </p>
 
                       <div className="mt-4 flex items-center justify-end gap-2">
