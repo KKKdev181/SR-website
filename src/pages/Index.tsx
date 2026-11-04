@@ -496,8 +496,15 @@ const Index = () => {
             <p className="mt-1 text-sm leading-6 text-[#5e6c84]">{description}</p>
           </div>
 
-          <section className={`relative mb-5 ${showAiCoachmark ? "z-[60]" : "z-30"}`}>
-            <div className="mb-3 inline-flex rounded-xl border border-[#dfe1e6] bg-white p-1.5 shadow-sm">
+          <section className={`relative mb-5 ${showAiCoachmark ? "z-[50]" : "z-30"}`}>
+            {showAiCoachmark && (
+              <div
+                className="pointer-events-none absolute inset-0 z-[55] rounded-2xl bg-[#091e42]/40 backdrop-blur-[1px]"
+                aria-hidden="true"
+              />
+            )}
+
+            <div className="relative z-[54] mb-3 inline-flex rounded-xl border border-[#dfe1e6] bg-white p-1.5 shadow-sm">
               <button
                 type="button"
                 onClick={() => {
@@ -510,7 +517,7 @@ const Index = () => {
                 <Search className="h-4 w-4" aria-hidden="true" />
                 <span>{isArabic ? "البحث في الخدمات" : "Search Services"}</span>
               </button>
-              <div className="relative">
+              <div className={`relative ${showAiCoachmark ? "z-[60]" : ""}`}>
                 <button
                   type="button"
                   onClick={() => {
@@ -594,7 +601,7 @@ const Index = () => {
             </div>
 
             {searchMode === "catalog" ? (
-              <div className="relative">
+              <div className="relative z-[54]">
                 <Search className={`pointer-events-none absolute top-1/2 z-10 h-5 w-5 -translate-y-1/2 text-[#7a869a] ${isArabic ? "right-4" : "left-4"}`} />
                 <input
                   value={searchQuery}
@@ -663,7 +670,7 @@ const Index = () => {
                 )}
               </div>
             ) : aiMessages.length === 0 ? (
-              <div className="rounded-2xl border border-[#b3d4ff] bg-white p-4 shadow-[0_6px_18px_rgba(9,30,66,0.08)]">
+              <div className="relative z-[54] rounded-2xl border border-[#b3d4ff] bg-white p-4 shadow-[0_6px_18px_rgba(9,30,66,0.08)]">
                 <div className="flex flex-col gap-3 sm:flex-row">
                   <div className="relative min-w-0 flex-1">
                     <span className={`pointer-events-none absolute top-1/2 z-10 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full bg-[#e9f2ff] text-[#0c66e4] ${isArabic ? "right-3" : "left-3"}`}>
