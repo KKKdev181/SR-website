@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { URL } from "node:url";
+import * as XLSX from "xlsx";
 
 const PORT = Number(process.env.TD_AI_PORT || 8084);
 const BASE_URL = (process.env.TD_AI_BASE_URL || "https://llms.elm.sa").replace(/\/+$/, "");
@@ -15,6 +16,7 @@ const FIXED_MODEL = "gpt-oss-120b";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const REPO_ROOT = resolve(__dirname, "..");
+const DELIVERY_STRUCTURE_FILE = resolve(__dirname, "knowledge", "Delivery Structure.xlsx");
 
 const KNOWLEDGE_FILES = [
   "src/data/requestRows1.ts",
@@ -66,6 +68,103 @@ const tpmDirectoryContext = departmentAssignments.length
       )
       .join("\n")
   : "TPM directory data is unavailable.";
+
+const loadDeliveryStructure = () => {
+  try {
+    const workbook = XLSX.readFile(DELIVERY_STRUCTURE_FILE);
+    const records = [];
+
+    for (const sheetName of workbook.SheetNames) {
+      const sheet = workbook.Sheets[sheetName];
+      const rows = XLSX.utils.sheet_to_json(sheet, {
+        header: 1,
+        defval: "",
+        raw: false,
+      });
+
+      for (const row of rows) {
+        const service = String(row?.[0] || "").trim();
+        const pm = String(row?.[1] || "").trim();
+        const department = String(row?.[2] || "").trim();
+        const tpm = String(row?.[3] || "").trim();
+
+        if (!service && !pm && !department && !tpm) continue;
+
+        const combinedHeader = normalizeIntentText(
+          [service, pm, department, tpm].join(" "),
+        );
+
+        const looksLikeHeader =
+          combinedHeader.includes("project manager") ||
+          combinedHeader.includes("technical project manager") ||
+          combinedHeader.includes("department") ||
+          combinedHeader.includes("service name");
+
+        if (looksLikeHeader) continue;
+
+        records.push({
+          sheet: sheetName,
+          service,
+          pm,
+          department,
+          tpm,
+        });
+      }
+    }
+
+    console.log(`Delivery Structure records loaded: ${records.length}`);
+    return records;
+  } catch (error) {
+    console.warn(
+      "Delivery Structure Excel could not be loaded.",
+      error?.message || error,
+    );
+    return [];
+  }
+};
+
+const deliveryStructureRecords = loadDeliveryStructure();
+
+const scoreDeliveryRecord = (record, query) => {
+  const normalizedQuery = normalizeIntentText(query);
+  const tokens = Array.from(new Set(tokenizeForKnowledge(query)));
+  let score = 0;
+
+  const fields = [
+    [record.service, 8],
+    [record.tpm, 7],
+    [record.pm, 5],
+    [record.department, 4],
+    [record.sheet, 1],
+  ];
+
+  for (const [value, weight] of fields) {
+    const normalizedValue = normalizeIntentText(value);
+    if (!normalizedValue) continue;
+
+    if (normalizedQuery.includes(normalizedValue)) {
+      score += weight * 4;
+    }
+
+    for (const token of tokens) {
+      if (normalizedValue.includes(token)) {
+        score += weight + (token.length >= 5 ? 2 : 0);
+      }
+    }
+  }
+
+  return score;
+};
+
+const retrieveDeliveryStructure = (query) =>
+  deliveryStructureRecords
+    .map((record) => ({
+      ...record,
+      score: scoreDeliveryRecord(record, query),
+    }))
+    .filter((record) => record.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 10);
 
 const knowledgeChunks = KNOWLEDGE_FILES.flatMap((relativePath) => {
   try {
@@ -248,6 +347,7 @@ const server = http.createServer(async (req, res) => {
         provider: BASE_URL,
         model: FIXED_MODEL,
         knowledgeChunks: knowledgeChunks.length,
+        deliveryRecords: deliveryStructureRecords.length,
       });
     }
 
@@ -293,6 +393,16 @@ URL: ${String(item.url || "").slice(0, 500)}`,
         .join("\n\n");
 
       const retrievedKnowledge = retrieveWebsiteKnowledge(query);
+      const retrievedDeliveryRecords = retrieveDeliveryStructure(
+        [query, ...history.map((item) => item.content)].join(" "),
+      );
+      const deliveryStructureText = retrievedDeliveryRecords
+        .map(
+          (item, index) =>
+            `[Delivery record ${index + 1}] Service/Project: ${item.service || "-"} | PM: ${item.pm || "-"} | Department: ${item.department || "-"} | TPM: ${item.tpm || "-"} | Sheet: ${item.sheet}`,
+        )
+        .join("\n");
+
       const websiteKnowledgeText = retrievedKnowledge
         .map(
           (chunk, index) =>
@@ -312,12 +422,12 @@ When a user asks for a request:
 - recommend the smallest number of matching requests, preferably one when one request clearly fits;
 - explain briefly why.
 
-When a user asks about TPM ownership or departments:
-- use the full TPM directory below;
+When a user asks about TPM ownership, project ownership, PMs, projects, services, or departments:
+- use RELEVANT DELIVERY STRUCTURE first for project/service-level ownership;
+- use the full TPM directory for department-level ownership;
 - names may be written in Arabic, English, or as an approximate transliteration;
-- infer the closest matching person from the directory only when the match is reasonably clear;
-- list the departments/services assigned to that person from the directory;
-- if multiple people could match, ask one short clarification question instead of guessing.
+- infer the closest matching person only when the match is reasonably clear;
+- if multiple records could match, ask one short clarification question instead of guessing.
 
 When a user asks how the portal/process works:
 - use the retrieved website knowledge and explain it clearly.
@@ -331,6 +441,9 @@ Return ONLY valid JSON in this exact shape:
 
 FULL TPM DIRECTORY:
 ${tpmDirectoryContext}
+
+RELEVANT DELIVERY STRUCTURE:
+${deliveryStructureText || "No matching delivery structure records were found."}
 
 RELEVANT WEBSITE KNOWLEDGE:
 ${websiteKnowledgeText || "No extra website chunks matched this query."}
@@ -367,12 +480,15 @@ ${catalogText}`;
 Answer in ${language}. Understand Saudi Arabic, informal Arabic, English, approximate name transliterations, and non-technical wording.
 Reason from the provided portal data only. Do not invent information.
 For request questions, choose the most precise request from the catalog.
-For TPM/department questions, use the directory and infer Arabic/English transliterations only when reasonably clear.
+For project/service/PM/TPM questions, use the delivery structure records first, then the TPM directory. Infer Arabic/English transliterations only when reasonably clear.
 Return ONLY valid JSON:
 {"answer":"helpful answer","recommendations":[{"title":"exact catalog title","reason":"short reason","url":"exact catalog URL"}]}
 
 TPM DIRECTORY:
 ${tpmDirectoryContext}
+
+DELIVERY STRUCTURE:
+${deliveryStructureText || "No matching delivery structure records were found."}
 
 CATALOG:
 ${compactCatalog}`;
@@ -411,4 +527,5 @@ server.listen(PORT, "0.0.0.0", () => {
   console.log(`API key configured: ${API_KEY ? "yes" : "no"}`);
   console.log(`Fixed model: ${FIXED_MODEL}`);
   console.log(`Website knowledge chunks: ${knowledgeChunks.length}`);
+  console.log(`Delivery Structure records: ${deliveryStructureRecords.length}`);
 });
